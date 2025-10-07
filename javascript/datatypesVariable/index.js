@@ -59,3 +59,39 @@ x="hello";
 console.log(typeof x); //string
 x=true;
 console.log(typeof x); //boolean  
+
+
+
+// output
+
+/**
+
+Hello World !
+Hello World !
+Hello World !
+Hello World !
+Hello World !
+┌─────────┬─────────┐
+│ (index) │ Values  │
+├─────────┼─────────┤
+│ name    │ 'hello' │
+│ age     │ 23      │
+└─────────┴─────────┘
+Assertion failed: this is not true
+10 20 30
+number
+string
+boolean
+object
+undefined
+symbol
+object
+function
+object
+true
+number
+string
+boolean
+
+
+*/
