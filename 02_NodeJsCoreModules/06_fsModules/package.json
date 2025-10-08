@@ -1,0 +1,13 @@
+{
+  "name": "06_fsmodules",
+  "version": "1.0.0",
+  "description": "The **File System (`fs`) module** in Node.js allows developers to interact with the operating system's file system. It provides functionalities to **read, write, update, delete, rename, and manage files and directories**.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
