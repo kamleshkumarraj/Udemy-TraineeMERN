@@ -32,3 +32,5 @@ class ChatApp extends EventEmitter{
     this.emit("message", username, message);
   }
 }
+
+module.exports = ChatApp;
