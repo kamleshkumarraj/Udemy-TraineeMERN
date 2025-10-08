@@ -24,12 +24,12 @@ class ChatApp extends EventEmitter{
     this.emit("logout", username);
   }
 
-  sendMessage(username, message){
+  sendMessage(receiverName, username, message){
     if( !this.users.has(username) ){
       console.log(`${username} is not logged in. Please login to send messages.`);
       return;
     }
-    this.emit("message", username, message);
+    this.emit("sendMessage", receiverName, username, message);
   }
 }
 
