@@ -9,6 +9,7 @@ const fileContent = fs.readFileSync("file.txt", "utf-8");
 
 console.log(fileContent);
 
+//--------------------------------------------------------------------
 
 // here we import the class Arithmetic from func.js file that is user created file.
 
@@ -29,7 +30,7 @@ console.log(opr.div(5,3));
 
 // --------------------------------------------------------------------
 
-// now we explain import export in ejs modules6
 
-// for using ejs module wee have to need to add "type":"module" in package.json file
+
+
 
