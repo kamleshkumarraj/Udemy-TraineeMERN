@@ -17,7 +17,6 @@
 9. Module resolution, `package.json` **`type`**, `.mjs` / `.cjs` rules, and `exports` field
 10. Practical migration & publishing strategies
 11. Short checklist for debugging module issues
-12. Hindi (English-script) summary of key points
 
 ---
 
