@@ -1,0 +1,38 @@
+📘 Node.js File System (fs) Module — Complete Guide
+📖 Introduction
+
+The fs (File System) module in Node.js allows developers to interact with the file system of the operating system — enabling reading, writing, updating, deleting, and managing files or directories.
+
+It provides both Synchronous (Blocking) and Asynchronous (Non-blocking) methods, making it powerful for building scalable backend systems.
+
+⚙️ Importing the fs Module
+
+In CommonJS (default in Node.js):
+
+const fs = require('fs');
+
+
+In ES Modules (EJS / .mjs):
+
+import fs from 'fs';
+
+📂 Managing File Paths (with path Module)
+
+When working with files, always use the path module to avoid OS-specific path issues.
+
+Example:
+const path = require('path');
+
+// Resolve file paths
+const filePath = path.join(__dirname, 'data', 'example.txt');
+console.log(filePath);
+
+// Output Example:
+// C:\Users\Kamlesh\project\data\example.txt
+
+Method	Description	Example
+path.join()	Joins multiple segments correctly	path.join(__dirname, 'folder', 'file.txt')
+path.resolve()	Returns absolute path	path.resolve('folder', 'file.txt')
+path.basename()	Returns filename	path.basename('/foo/bar/file.txt') → 'file.txt'
+path.extname()	Returns file extension	path.extname('file.txt') → '.txt'
+path.dirname()	Returns directory name	path.dirname('/foo/bar/file.txt') → '/foo/bar'
