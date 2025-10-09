@@ -98,3 +98,35 @@ export const loginUser = asyncErrorHandler(async (req, res, next) => {
     },
   });
 });
+
+// now we write code for logout the user
+export const logoutUser = asyncErrorHandler(async (req, res, next) => {
+  res.clearCookie('token');
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
+  res.status(200).json({
+    success: true,
+    message: "User logged out successfully",
+  });
+});
+
+// now we write code for get user profile
+export const getUserProfile = asyncErrorHandler(async (req, res, next) => {
+  const userId = req.user; // we get the user from the auth middleware.
+
+  // fetch user from the file using userId
+  const userDataContent =
+    JSON.parse(
+      await fs.readFile("../../public/data/users/users.json", "utf-8")
+    ) || [];
+
+  const user = userDataContent.find((user) => user._id === userId);
+
+  res.status(200).json({
+    success: true,
+    message: "User profile fetched successfully",
+    data: user,
+  })
+});
