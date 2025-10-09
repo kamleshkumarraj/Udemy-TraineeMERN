@@ -1,11 +1,11 @@
 // first we write code for register the user on our website.
 
-import { asyncErrorHandler } from "../errors/asyncErrorHandler.js";
-import fs from "fs/promises";
-import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
+import fs from "fs/promises";
 import jwt from "jsonwebtoken";
+import { v4 as uuid } from "uuid";
 import { SECRET_KEY } from "../constant.js";
+import { asyncErrorHandler } from "../errors/asyncErrorHandler.js";
 
 // now we write code for register the user.
 export const registerUser = asyncErrorHandler(async (req, res, next) => {
@@ -85,7 +85,6 @@ export const loginUser = asyncErrorHandler(async (req, res, next) => {
   }
 
   // we create like jsonwebtoken using userdata id and email and using secret key.
-  const SECRET_KEY = SECRET_KEY;
   const token = jwt.sign({ id: user._id, email: user.email }, SECRET_KEY, {
     expiresIn: "1d",
   });
@@ -101,7 +100,7 @@ export const loginUser = asyncErrorHandler(async (req, res, next) => {
 
 // now we write code for logout the user
 export const logoutUser = asyncErrorHandler(async (req, res, next) => {
-  res.clearCookie('token');
+  res.clearCookie("token");
   res.cookie("token", null, {
     expires: new Date(Date.now()),
     httpOnly: true,
@@ -128,7 +127,7 @@ export const getUserProfile = asyncErrorHandler(async (req, res, next) => {
     success: true,
     message: "User profile fetched successfully",
     data: user,
-  })
+  });
 });
 
 // now we write api for update user profile
@@ -167,7 +166,7 @@ export const updateUserProfile = asyncErrorHandler(async (req, res, next) => {
     success: true,
     message: "User profile updated successfully",
     data: user,
-  })
+  });
 });
 
 // now we write api for change password.
@@ -209,7 +208,7 @@ export const changePassword = asyncErrorHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Password changed successfully",
-  })
+  });
 });
 
 // now we write api for delete user profile
@@ -241,5 +240,5 @@ export const deleteUserProfile = asyncErrorHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "User profile deleted successfully",
-  })
+  });
 });
