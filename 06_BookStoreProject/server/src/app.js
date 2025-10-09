@@ -21,7 +21,6 @@ process.on("uncaughtException", (err) => {
 });
 
 
-
 // global error handling middleware
 app.use((err, req, res, next) => {
   const error = err?.message || "Something went wrong!";
