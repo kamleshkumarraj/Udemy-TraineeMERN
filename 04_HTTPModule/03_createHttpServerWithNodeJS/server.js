@@ -10,7 +10,7 @@ const server = http.createServer((req, res) => {
   // res.writeHead(200, { 'Content-Type': 'application/json' })
   const baseUrl = `http://${req.headers.host}`;
   const parsedUrl = new URL(req.url, baseUrl);
-  
+
   const endpoint = parsedUrl.pathname;
 
   switch (endpoint) {
@@ -70,7 +70,7 @@ const server = http.createServer((req, res) => {
     }
 
     // now we create endpoint for updating a book.
-    case "/api/v1/update-book" : {
+    case "/api/v1/update-book": {
       if (req.method === "PUT") {
         let body = "";
         // first check req body is not-empty.
@@ -124,7 +124,50 @@ const server = http.createServer((req, res) => {
       break;
     }
 
-    default : {
+    // now we create endpoint for deleting a book.
+    case "/api/v1/delete-book": {
+      if (req.method === "DELETE") {
+        // first we get id from query parameter.
+        const bookId = parsedUrl.searchParams.get("id");
+        if (!bookId) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ message: "Book id is required" }));
+          return;
+        }
+
+        (async function () {
+          try {
+            const bookData = await fs.readFile("./books.json", "utf-8");
+            const bookDataObj = JSON.parse(bookData);
+            const filteredBookData = bookDataObj.filter(
+              (book) => book.id !== Number(bookId)
+            );
+
+            // now we store this data into the books.json file.
+            await fs.writeFile(
+              "./books.json",
+              JSON.stringify(filteredBookData)
+            );
+
+            // now we send response to client.
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({ message: "Book is deleted successfully" })
+            );
+          } catch (error) {
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({ message: "Error in deleting book", error })
+            );
+          }
+        })();
+      } else {
+        res.writeHead(405, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "Only DELETE method is allowed" }));
+      }
+    }
+
+    default: {
       res.writeHead(404, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ message: "Route not found" }));
     }
