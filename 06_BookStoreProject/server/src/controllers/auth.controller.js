@@ -9,9 +9,9 @@ import { asyncErrorHandler } from "../errors/asyncErrorHandler.js";
 
 // now we write code for register the user.
 export const registerUser = asyncErrorHandler(async (req, res, next) => {
-  const { firstName, lastName, email, password, address } = req.body;
+  const { firstName, lastName, email, password, address,role } = req.body;
 
-  if (!firstName || !lastName || !email || !password || !address) {
+  if (!firstName || !lastName || !email || !password || !address || !role) {
     return res.status(400).json({
       success: false,
       message: "All fields are required",
@@ -27,6 +27,7 @@ export const registerUser = asyncErrorHandler(async (req, res, next) => {
     email,
     password: hashedPassword,
     address,
+    role
   };
 
   // first we read the existing data from the file.
