@@ -65,7 +65,53 @@ const server = http.createServer((req, res) => {
       break;
     }
 
-    
+    case "/api/v1/update-book" : {
+      if (req.method === "PUT") {
+        let body = "";
+        // first check req body is not-empty.
+        req.on("data", (chunk) => {
+          body += chunk;
+        });
+
+        // first we get id from query parameter.
+        const url = new URL(req.url, `http://${req.headers.host}`);
+        const bookId = url.searchParams.get("id");
+
+        // when req body is fully received then we perform some operation.
+        req.on("end", async () => {
+          try {
+            // now we store this data into the books.json file.
+            const updatedBook = JSON.parse(body);
+            const bookData = await fs.readFile("./books.json", "utf-8");
+            const bookDataObj = JSON.parse(bookData);
+            const bookIndex = bookDataObj.findIndex(
+              (book) => book.id === Number(bookId)
+            );
+            bookDataObj[bookIndex] = updatedBook;
+
+            // now we store this data into the books.json file.
+            await fs.writeFile("./books.json", JSON.stringify(bookDataObj));
+
+            // now we send response to client.
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({ message: "Book is updated successfully" })
+            );
+          } catch (error) {
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({ message: "Error in updating book", error })
+            );
+          }
+        });
+      } else {
+        res.writeHead(405, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "Only PUT method is allowed" }));
+      }
+      break;
+    }
+
+
   }
 });
 
