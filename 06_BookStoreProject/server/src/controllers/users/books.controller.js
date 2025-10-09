@@ -1,3 +1,4 @@
+// we write api for issue the book.
 export const issueBook = asyncErrorHandler(async (req, res, next) => {
   const userId = req.user._id;
   const { bookId } = req.body || [];
@@ -92,3 +93,77 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
     data: issuedBookDoc,
   });
 });
+
+
+// now we write api for returning a book
+export const returnBook = asyncErrorHandler(async (req, res, next) => {
+  const userId = req.user._id;
+  const { bookId } = req.body || [];
+  if (bookId.length === 0) {
+    return next(new ErrorHandler("Book ID is required", 400));
+  }
+
+  // fetch all books from the file that user want to return.
+  const bookDataContent =
+    (
+      JSON.parse(
+        await fs.readFile("../../public/data/books/books.json", "utf-8")
+      ) || []
+    ).filter((book) => bookId.includes(book.id)) || [];
+
+  if (bookDataContent.length === 0) {
+    return next(new ErrorHandler("No books found", 404));
+  }
+
+  // now we increase book quantity and also write in file again.
+  const allBooks =
+    JSON.parse(
+      await fs.readFile("../../public/data/books/books.json", "utf-8")
+    ) || [];
+
+  for (const book of bookDataContent) {
+    const bookIndex = allBooks.findIndex((b) => b.id === book.id);
+    if (bookIndex !== -1) {
+      allBooks[bookIndex].qty += 1;
+    }
+  }
+  await fs.writeFile(
+    "../../public/data/books/books.json",
+    JSON.stringify(allBooks)
+  );
+
+  // now we remove also book from issued book.
+  const issuedBookDataContent =
+    JSON.parse(
+      await fs.readFile(
+        "../../public/data/issuedBooks/issuedBooks.json",
+        "utf-8"
+      )
+    ) || [];
+
+  const issuedBook = issuedBookDataContent.find(
+    (issuedBook) => issuedBook.issuedBy === userId
+  );
+
+  if (!issuedBook) {
+    return next(new ErrorHandler("No issued book found", 404));
+  }
+
+  // now we remove the book from the issued book.
+  for (const book of bookDataContent) {
+    const bookIndex = issuedBook.books.findIndex((b) => b.id === book.id);
+    if (bookIndex !== -1) {
+      issuedBook.books.splice(bookIndex, 1);
+    }
+  }
+  await fs.writeFile(
+    "../../public/data/issuedBooks/issuedBooks.json",
+    JSON.stringify(issuedBookDataContent)
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "Book returned successfully",
+  });
+});
+  
