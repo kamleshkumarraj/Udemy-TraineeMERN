@@ -1,4 +1,4 @@
-import { app } from "./app";
+import { app } from "./app.js";
 
 // server listening
 const PORT = process.env.PORT || 4000;
