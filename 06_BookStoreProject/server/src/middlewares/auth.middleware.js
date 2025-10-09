@@ -1,6 +1,7 @@
 import { SECRET_KEY } from "../constant.js";
 import { asyncErrorHandler } from "../errors/asyncErrorHandler.js";
 import jwt from 'jsonwebtoken'
+import fs from 'fs/promises'
 
 // we write middleware for verify user is logged in or not.
 export const isLoggedIn = asyncErrorHandler(async (req, res, next) => {
@@ -11,7 +12,7 @@ export const isLoggedIn = asyncErrorHandler(async (req, res, next) => {
 
   // now we verify the token and extract data and save in req object.
   const decoded = jwt.verify(token, SECRET_KEY);
-  console.log(decoded)
+  // console.log(decoded)
   // if token is not valid then throw error.
   if (!decoded) {
     return next(new Error("You are not logged in", 401));
