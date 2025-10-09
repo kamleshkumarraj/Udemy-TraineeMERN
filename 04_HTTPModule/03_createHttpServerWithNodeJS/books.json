@@ -19,19 +19,5 @@
     "author": "Harper Lee",
     "genre": "Classic",
     "year": 1960
-  },
-  {
-    "id": 4,
-    "title": "The Great Gatsby",
-    "author": "F. Scott Fitzgerald",
-    "genre": "Classic",
-    "year": 1925
-  },
-  {
-    "id": 5,
-    "title": "Pride and Prejudice",
-    "author": "Kamlesh Raj Kushwaha",
-    "genre": "Romance",
-    "year": 1813
   }
 ]

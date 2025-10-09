@@ -126,45 +126,55 @@ const server = http.createServer((req, res) => {
 
     // now we create endpoint for deleting a book.
     case "/api/v1/delete-book": {
-      if (req.method === "DELETE") {
-        // first we get id from query parameter.
-        const bookId = parsedUrl.searchParams.get("id");
-        if (!bookId) {
-          res.writeHead(400, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ message: "Book id is required" }));
-          return;
-        }
-
-        (async function () {
-          try {
-            const bookData = await fs.readFile("./books.json", "utf-8");
-            const bookDataObj = JSON.parse(bookData);
-            const filteredBookData = bookDataObj.filter(
-              (book) => book.id !== Number(bookId)
-            );
-
-            // now we store this data into the books.json file.
-            await fs.writeFile(
-              "./books.json",
-              JSON.stringify(filteredBookData)
-            );
-
-            // now we send response to client.
-            res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(
-              JSON.stringify({ message: "Book is deleted successfully" })
-            );
-          } catch (error) {
-            res.writeHead(500, { "Content-Type": "application/json" });
-            res.end(
-              JSON.stringify({ message: "Error in deleting book", error })
-            );
-          }
-        })();
-      } else {
+      if (req.method !== "DELETE") {
         res.writeHead(405, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ message: "Only DELETE method is allowed" }));
+        break;
       }
+
+      const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+      const bookId = parsedUrl.searchParams.get("id");
+
+      if (!bookId) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "Book id is required" }));
+        break; // ✅ ensures we never go below
+      }
+
+      try {
+        (async function () {
+          const bookData = await fs.readFile("./books.json", "utf-8");
+          const bookDataObj = JSON.parse(bookData);
+
+          const existingBook = bookDataObj.find(
+            (book) => Number(book.id) === Number(bookId)
+          );
+          if (!existingBook) {
+            res.writeHead(404, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ message: "Book not found" }));
+            return;
+          }
+
+          const filteredBookData = bookDataObj.filter(
+            (book) => Number(book.id) !== Number(bookId)
+          );
+
+          await fs.writeFile("./books.json", JSON.stringify(filteredBookData));
+
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ message: "Book deleted successfully" }));
+        })();
+      } catch (error) {
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            message: "Error deleting book",
+            error: error.message,
+          })
+        );
+      }
+
+      break;
     }
 
     default: {
