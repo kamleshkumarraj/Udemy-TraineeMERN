@@ -1,4 +1,6 @@
 import express from 'express';
+import { authRouter } from './routes/auth.routes.js';
+import { bookHandleByAdminRoute } from './routes/admin/books.routes.js';
 
 // server creation and server middleware configuration setup.
 export const app = express();
@@ -16,8 +18,11 @@ app.route("/").get((req, res) => {
   });
 })
 
-//now we configure our routes for user management.
+//now we configure our routes for user authentication.
+app.route("/api/v1/auth", authRouter)
 
+// now we define routing for handling books by admin.
+app.route("/api/v1/admin/books", bookHandleByAdminRoute)
 
 // now we write code for unhandled rejections and uncaught exceptions
 // unhandled promise rejections
