@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
 import { SECRET_KEY } from "../constant.js";
 import { asyncErrorHandler } from "../errors/asyncErrorHandler.js";
+import { ErrorHandler } from "../errors/error.js";
 
 // now we write code for register the user.
 export const registerUser = asyncErrorHandler(async (req, res, next) => {
@@ -86,7 +87,7 @@ export const loginUser = asyncErrorHandler(async (req, res, next) => {
   }
 
   // we create like jsonwebtoken using userdata id and email and using secret key.
-  const token = jwt.sign({ id: user._id, email: user.email }, SECRET_KEY, {
+  const token = jwt.sign({ _id: user._id, email: user.email }, SECRET_KEY, {
     expiresIn: "1d",
   });
   // now we set the token in the cookie.
@@ -115,14 +116,16 @@ export const logoutUser = asyncErrorHandler(async (req, res, next) => {
 // now we write code for get user profile
 export const getUserProfile = asyncErrorHandler(async (req, res, next) => {
   const userId = req.user._id; // we get the user from the auth middleware.
-
+  console.log(userId)
   // fetch user from the file using userId
   const userDataContent =
     JSON.parse(
-      await fs.readFile("../../public/data/users/users.json", "utf-8")
+      await fs.readFile("./src/data/users/users.json", "utf-8")
     ) || [];
-
+    console.log(userDataContent)
   const user = userDataContent.find((user) => user._id === userId);
+
+  if(!user) return next(new ErrorHandler("User not found", 400));
 
   res.status(200).json({
     success: true,
@@ -133,13 +136,13 @@ export const getUserProfile = asyncErrorHandler(async (req, res, next) => {
 
 // now we write api for update user profile
 export const updateUserProfile = asyncErrorHandler(async (req, res, next) => {
-  const userId = req.user; // we get the user from the auth middleware.
+  const userId = req.user._id; // we get the user from the auth middleware.
   const data = req.body;
 
   // fetch user from the file using userId
   const userDataContent =
     JSON.parse(
-      await fs.readFile("../../public/data/users/users.json", "utf-8")
+      await fs.readFile("./src/data/users/users.json", "utf-8")
     ) || [];
 
   const user = userDataContent.find((user) => user._id === userId);
@@ -159,7 +162,7 @@ export const updateUserProfile = asyncErrorHandler(async (req, res, next) => {
   }
 
   await fs.writeFile(
-    "../../public/data/users/users.json",
+    "./src/data/users/users.json",
     JSON.stringify(userDataContent)
   );
 
@@ -172,13 +175,13 @@ export const updateUserProfile = asyncErrorHandler(async (req, res, next) => {
 
 // now we write api for change password.
 export const changePassword = asyncErrorHandler(async (req, res, next) => {
-  const userId = req.user; // we get the user from the auth middleware.
+  const userId = req.user._id; // we get the user from the auth middleware.
   const { oldPassword, newPassword } = req.body;
 
   // fetch user from the file using userId
   const userDataContent =
     JSON.parse(
-      await fs.readFile("../../public/data/users/users.json", "utf-8")
+      await fs.readFile("./src/data/users/users.json", "utf-8")
     ) || [];
 
   const user = userDataContent.find((user) => user._id === userId);
@@ -202,7 +205,7 @@ export const changePassword = asyncErrorHandler(async (req, res, next) => {
   user.password = await bcrypt.hash(newPassword, 10);
 
   await fs.writeFile(
-    "../../public/data/users/users.json",
+    "./src/data/users/users.json",
     JSON.stringify(userDataContent)
   );
 
@@ -219,7 +222,7 @@ export const deleteUserProfile = asyncErrorHandler(async (req, res, next) => {
   // fetch user from the file using userId
   const userDataContent =
     JSON.parse(
-      await fs.readFile("../../public/data/users/users.json", "utf-8")
+      await fs.readFile("./src/data/users/users.json", "utf-8")
     ) || [];
 
   const user = userDataContent.find((user) => user._id === userId);
@@ -234,7 +237,7 @@ export const deleteUserProfile = asyncErrorHandler(async (req, res, next) => {
   userDataContent.splice(userDataContent.indexOf(user), 1);
 
   await fs.writeFile(
-    "../../public/data/users/users.json",
+    "./src/data/users/users.json",
     JSON.stringify(userDataContent)
   );
 

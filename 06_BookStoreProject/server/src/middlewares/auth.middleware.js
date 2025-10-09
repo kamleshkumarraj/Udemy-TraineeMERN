@@ -11,7 +11,7 @@ export const isLoggedIn = asyncErrorHandler(async (req, res, next) => {
 
   // now we verify the token and extract data and save in req object.
   const decoded = jwt.verify(token, SECRET_KEY);
-
+  console.log(decoded)
   // if token is not valid then throw error.
   if (!decoded) {
     return next(new Error("You are not logged in", 401));
@@ -26,7 +26,7 @@ export const isAdmin = asyncErrorHandler(async (req, res, next) => {
   //first we get user from file using id.
   const [user] =
     (JSON.parse(
-      await fs.readFile("../../public/data/users/users.json", "utf-8")
+      await fs.readFile("./src/data/users/users.json", "utf-8")
   ) || []).filter((user) => user.id === req.user.id) || [];
 
   const { role } = user;

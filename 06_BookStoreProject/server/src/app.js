@@ -2,6 +2,7 @@ import express from 'express';
 import { authRouter } from './routes/auth.routes.js';
 import { bookHandleByAdminRoute } from './routes/admin/books.routes.js';
 import { bookHandleByUserRoute } from './routes/users/books.routes.js';
+import cookieParser from 'cookie-parser';
 
 // server creation and server middleware configuration setup.
 export const app = express();
@@ -9,6 +10,7 @@ export const app = express();
 // middleware
 app.use(express.json()); // built-in middleware to parse JSON request bodies
 app.use(express.urlencoded({ extended: true })); // built-in middleware to parse URL-encoded request bodies
+app.use(cookieParser())
 
 
 // now we define routes for our project.
