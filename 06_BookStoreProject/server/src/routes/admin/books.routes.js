@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { createBook, deleteBook, getAllBooks, updateBook } from "../../controllers/admin/books.controller.js";
+import { isAdmin, isLoggedIn } from "../../middlewares/auth.middleware.js";
 
 export const bookHandleByAdminRoute = Router();
 
-bookHandleByAdminRoute.route('/create-book').post(createBook);
-bookHandleByAdminRoute.route('/update-book').post(updateBook);
-bookHandleByAdminRoute.route('/delete-book').delete(deleteBook);
-bookHandleByAdminRoute.route('/get-books').patch(getAllBooks);
+bookHandleByAdminRoute.route('/create-book').post(isLoggedIn, isAdmin, createBook);
+bookHandleByAdminRoute.route('/update-book').post(isLoggedIn, isAdmin, updateBook);
+bookHandleByAdminRoute.route('/delete-book').delete(isLoggedIn, isAdmin, deleteBook);
+bookHandleByAdminRoute.route('/get-books').patch(isLoggedIn, isAdmin, getAllBooks);
