@@ -1,0 +1,14 @@
+{
+  "name": "03_createhttpserverwithnodejs",
+  "version": "1.0.0",
+  "description": "This document provides a full, interview-ready understanding of how to create and handle an HTTP server in Node.js using the built-in `http` module. It covers server setup, request (`req`) and response (`res`) handling, parsing request bodies, managing headers, and key edge cases.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
