@@ -130,3 +130,42 @@ export const getUserProfile = asyncErrorHandler(async (req, res, next) => {
     data: user,
   })
 });
+
+// now we write api for update user profile
+export const updateUserProfile = asyncErrorHandler(async (req, res, next) => {
+  const userId = req.user; // we get the user from the auth middleware.
+  const data = req.body;
+
+  // fetch user from the file using userId
+  const userDataContent =
+    JSON.parse(
+      await fs.readFile("../../public/data/users/users.json", "utf-8")
+    ) || [];
+
+  const user = userDataContent.find((user) => user._id === userId);
+
+  if (!user) {
+    return res.status(400).json({
+      success: false,
+      message: "User not found",
+    });
+  }
+
+  // update only that fields which are passed in the request body.
+  for (let key in data) {
+    if (user.hasOwnProperty(key) && key !== "_id" && key !== "password") {
+      user[key] = data[key];
+    }
+  }
+
+  await fs.writeFile(
+    "../../public/data/users/users.json",
+    JSON.stringify(userDataContent)
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "User profile updated successfully",
+    data: user,
+  })
+});
