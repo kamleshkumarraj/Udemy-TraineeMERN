@@ -1,0 +1,1 @@
+export const SECRET_KEY="ansds bfjnelkmsd cmds kjnbrnieu4934783yhjhfjdbehb"
