@@ -211,3 +211,35 @@ export const changePassword = asyncErrorHandler(async (req, res, next) => {
     message: "Password changed successfully",
   })
 });
+
+// now we write api for delete user profile
+export const deleteUserProfile = asyncErrorHandler(async (req, res, next) => {
+  const userId = req.user; // we get the user from the auth middleware.
+
+  // fetch user from the file using userId
+  const userDataContent =
+    JSON.parse(
+      await fs.readFile("../../public/data/users/users.json", "utf-8")
+    ) || [];
+
+  const user = userDataContent.find((user) => user._id === userId);
+
+  if (!user) {
+    return res.status(400).json({
+      success: false,
+      message: "User not found",
+    });
+  }
+
+  userDataContent.splice(userDataContent.indexOf(user), 1);
+
+  await fs.writeFile(
+    "../../public/data/users/users.json",
+    JSON.stringify(userDataContent)
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "User profile deleted successfully",
+  })
+});
