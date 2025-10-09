@@ -20,13 +20,13 @@ app.route("/").get((req, res) => {
 })
 
 //now we configure our routes for user authentication.
-app.route("/api/v1/auth", authRouter)
+app.use("/api/v1/auth", authRouter)
 
 // now we define routing for handling books by admin.
-app.route("/api/v1/admin/books", bookHandleByAdminRoute)
+app.use("/api/v1/admin/books", bookHandleByAdminRoute)
 
 // now we write routes fr handling book by users.
-app.route('/api/v1/users/books', bookHandleByUserRoute)
+app.use('/api/v1/users/books', bookHandleByUserRoute)
 
 
 // now we write code for unhandled rejections and uncaught exceptions

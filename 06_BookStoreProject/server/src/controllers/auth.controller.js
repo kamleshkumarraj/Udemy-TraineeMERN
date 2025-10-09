@@ -33,14 +33,14 @@ export const registerUser = asyncErrorHandler(async (req, res, next) => {
   // first we read the existing data from the file.
   const userDataContent =
     JSON.parse(
-      await fs.readFile("../../public/data/users/users.json", "utf-8")
+      await fs.readFile("./src/data/users/users.json", "utf-8")
     ) || [];
 
   userDataContent.push(userData);
 
   // now we write the data to the file.
   await fs.writeFile(
-    "../../public/data/users/users.json",
+    "./src/data/users/users.json",
     JSON.stringify(userDataContent)
   );
 
@@ -64,7 +64,7 @@ export const loginUser = asyncErrorHandler(async (req, res, next) => {
   // first we read the existing data from the file.
   const userDataContent =
     JSON.parse(
-      await fs.readFile("../../public/data/users/users.json", "utf-8")
+      await fs.readFile("./src/data/users/users.json", "utf-8")
     ) || [];
 
   const user = userDataContent.find((user) => user.email === email);
@@ -72,7 +72,7 @@ export const loginUser = asyncErrorHandler(async (req, res, next) => {
   if (!user) {
     return res.status(400).json({
       success: false,
-      message: "User not found",
+      message: "Invalid credentials",
     });
   }
 
@@ -81,7 +81,7 @@ export const loginUser = asyncErrorHandler(async (req, res, next) => {
   if (!isPasswordMatch) {
     return res.status(400).json({
       success: false,
-      message: "Invalid password",
+      message: "Invalid credentials",
     });
   }
 
@@ -114,7 +114,7 @@ export const logoutUser = asyncErrorHandler(async (req, res, next) => {
 
 // now we write code for get user profile
 export const getUserProfile = asyncErrorHandler(async (req, res, next) => {
-  const userId = req.user; // we get the user from the auth middleware.
+  const userId = req.user._id; // we get the user from the auth middleware.
 
   // fetch user from the file using userId
   const userDataContent =
