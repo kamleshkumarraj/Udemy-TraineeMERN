@@ -169,3 +169,45 @@ export const updateUserProfile = asyncErrorHandler(async (req, res, next) => {
     data: user,
   })
 });
+
+// now we write api for change password.
+export const changePassword = asyncErrorHandler(async (req, res, next) => {
+  const userId = req.user; // we get the user from the auth middleware.
+  const { oldPassword, newPassword } = req.body;
+
+  // fetch user from the file using userId
+  const userDataContent =
+    JSON.parse(
+      await fs.readFile("../../public/data/users/users.json", "utf-8")
+    ) || [];
+
+  const user = userDataContent.find((user) => user._id === userId);
+
+  if (!user) {
+    return res.status(400).json({
+      success: false,
+      message: "User not found",
+    });
+  }
+
+  const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
+
+  if (!isPasswordMatch) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid old password",
+    });
+  }
+
+  user.password = await bcrypt.hash(newPassword, 10);
+
+  await fs.writeFile(
+    "../../public/data/users/users.json",
+    JSON.stringify(userDataContent)
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "Password changed successfully",
+  })
+});
