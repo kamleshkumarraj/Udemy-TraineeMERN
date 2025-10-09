@@ -8,8 +8,12 @@ const server = http.createServer((req, res) => {
 
   // now we write code for book storing management.
   // res.writeHead(200, { 'Content-Type': 'application/json' })
+  const baseUrl = `http://${req.headers.host}`;
+  const parsedUrl = new URL(req.url, baseUrl);
+  
+  const endpoint = parsedUrl.pathname;
 
-  switch (req.url) {
+  switch (endpoint) {
     // endpoint for getting all books.
     case "/api/v1/get-books": {
       res.writeHead(200, { "Content-Type": "application/json" });
@@ -65,6 +69,7 @@ const server = http.createServer((req, res) => {
       break;
     }
 
+    // now we create endpoint for updating a book.
     case "/api/v1/update-book" : {
       if (req.method === "PUT") {
         let body = "";
@@ -74,8 +79,12 @@ const server = http.createServer((req, res) => {
         });
 
         // first we get id from query parameter.
-        const url = new URL(req.url, `http://${req.headers.host}`);
-        const bookId = url.searchParams.get("id");
+        const bookId = parsedUrl.searchParams.get("id");
+        if (!bookId) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ message: "Book id is required" }));
+          return;
+        }
 
         // when req body is fully received then we perform some operation.
         req.on("end", async () => {
@@ -87,7 +96,11 @@ const server = http.createServer((req, res) => {
             const bookIndex = bookDataObj.findIndex(
               (book) => book.id === Number(bookId)
             );
-            bookDataObj[bookIndex] = updatedBook;
+
+            // we update only those fields which are provided in req body.
+            for (let key in updatedBook) {
+              bookDataObj[bookIndex][key] = updatedBook[key];
+            }
 
             // now we store this data into the books.json file.
             await fs.writeFile("./books.json", JSON.stringify(bookDataObj));
@@ -111,7 +124,10 @@ const server = http.createServer((req, res) => {
       break;
     }
 
-
+    default : {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ message: "Route not found" }));
+    }
   }
 });
 
