@@ -5,4 +5,4 @@ import { isLoggedIn } from "../../middlewares/auth.middleware.js";
 export const bookHandleByUserRoute = Router();
 
 bookHandleByUserRoute.route('/issue-book').post(isLoggedIn, issueBook);
-bookHandleByUserRoute.route('/return-book').post(isLoggedIn, returnBook);
+bookHandleByUserRoute.route('/return-book').delete(isLoggedIn, returnBook);

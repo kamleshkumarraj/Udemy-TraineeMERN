@@ -1,0 +1,31 @@
+[
+  {
+    "id": "39c30ad1-8ff8-4daf-bc21-9cbdc1f46251",
+    "books": [
+      {
+        "id": "6875e629-c3c3-4fba-982c-1393473b15aa",
+        "title": "1984",
+        "author": "George Orwell",
+        "genre": "Dystopian",
+        "price": 545,
+        "year": 1949,
+        "qty": 12,
+        "createdAt": "2025-10-09T11:50:36.454Z",
+        "createdBy": "11b52b95-1c03-4e64-9c36-8dac38e76f46"
+      },
+      {
+        "id": "b0607f40-07c3-4130-8a55-9aefdd70c1f1",
+        "title": "To Kill a Mockingbird",
+        "author": "Kamlesh Raj Kushwaha",
+        "genre": "Classic",
+        "price": 784,
+        "year": 1989,
+        "qty": 4,
+        "createdAt": "2025-10-09T11:53:30.994Z",
+        "createdBy": "11b52b95-1c03-4e64-9c36-8dac38e76f46"
+      }
+    ],
+    "issuedBy": "11b52b95-1c03-4e64-9c36-8dac38e76f46",
+    "issueDate": "2025-10-10T07:52:26.721Z"
+  }
+]

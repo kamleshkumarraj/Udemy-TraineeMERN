@@ -1,6 +1,7 @@
 import { asyncErrorHandler } from "../../errors/asyncErrorHandler.js";
 import fs from 'fs/promises'
 import { ErrorHandler } from "../../errors/error.js";
+import {v4 as uuid} from 'uuid'
 
 // we write api for issue the book.
 export const issueBook = asyncErrorHandler(async (req, res, next) => {
@@ -43,7 +44,7 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
   const issuedBook = (
     JSON.parse(
       await fs.readFile(
-        "./src/data/issuedBooks/issuedBooks.json",
+        "./src/data/books/issuedBooks.json",
         "utf-8"
       )
     ) || []
@@ -57,7 +58,7 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
       }
     }
     await fs.writeFile(
-      "./src/data/issuedBooks/issuedBooks.json",
+      "./src/data/books/issuedBooks.json",
       JSON.stringify(issuedBook)
     );
     return res.status(200).json({
@@ -79,7 +80,7 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
   const issuedBookDataContent =
     JSON.parse(
       await fs.readFile(
-        "./src/data/issuedBooks/issuedBooks.json",
+        "./src/data/books/issuedBooks.json",
         "utf-8"
       )
     ) || [];
@@ -87,7 +88,7 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
   issuedBookDataContent.push(issuedBookDoc);
 
   await fs.writeFile(
-    "./src/data/issuedBooks/issuedBooks.json",
+    "./src/data/books/issuedBooks.json",
     JSON.stringify(issuedBookDataContent)
   );
 
@@ -111,7 +112,7 @@ export const returnBook = asyncErrorHandler(async (req, res, next) => {
   const bookDataContent =
     (
       JSON.parse(
-        await fs.readFile("./src/public/data/books/books.json", "utf-8")
+        await fs.readFile("./src/data/books/books.json", "utf-8")
       ) || []
     ).filter((book) => bookId.includes(book.id)) || [];
 
@@ -122,7 +123,7 @@ export const returnBook = asyncErrorHandler(async (req, res, next) => {
   // now we increase book quantity and also write in file again.
   const allBooks =
     JSON.parse(
-      await fs.readFile("./src/public/data/books/books.json", "utf-8")
+      await fs.readFile("./src/data/books/books.json", "utf-8")
     ) || [];
 
   for (const book of bookDataContent) {
@@ -132,7 +133,7 @@ export const returnBook = asyncErrorHandler(async (req, res, next) => {
     }
   }
   await fs.writeFile(
-    "./src/public/data/books/books.json",
+    "./src/data/books/books.json",
     JSON.stringify(allBooks)
   );
 
@@ -140,7 +141,7 @@ export const returnBook = asyncErrorHandler(async (req, res, next) => {
   const issuedBookDataContent =
     JSON.parse(
       await fs.readFile(
-        "./src/public/data/issuedBooks/issuedBooks.json",
+        "./src/data/books/issuedBooks.json",
         "utf-8"
       )
     ) || [];
@@ -161,7 +162,7 @@ export const returnBook = asyncErrorHandler(async (req, res, next) => {
     }
   }
   await fs.writeFile(
-    "./src/public/data/issuedBooks/issuedBooks.json",
+    "./src/data/books/issuedBooks.json",
     JSON.stringify(issuedBookDataContent)
   );
 
