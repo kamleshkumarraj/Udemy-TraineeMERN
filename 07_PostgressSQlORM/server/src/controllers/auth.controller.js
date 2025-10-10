@@ -1,15 +1,14 @@
 // first we write code for register the user on our website.
 
 import bcrypt from "bcrypt";
-import fs from "fs/promises";
+import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
 import { SECRET_KEY } from "../constant.js";
+import { db } from "../db/index.js";
 import { asyncErrorHandler } from "../errors/asyncErrorHandler.js";
 import { ErrorHandler } from "../errors/error.js";
-import { db } from "../db/index.js";
 import { usersTable } from "../schema/users.schema.js";
-import { eq } from "drizzle-orm";
 
 // now we write code for register the user.
 export const registerUser = asyncErrorHandler(async (req, res, next) => {
