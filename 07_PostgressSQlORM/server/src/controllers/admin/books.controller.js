@@ -2,19 +2,14 @@ import { asyncErrorHandler } from "../../errors/asyncErrorHandler.js";
 import { ErrorHandler } from "../../errors/error.js";
 import {v4 as uuid} from 'uuid'
 import fs from "fs/promises";
+import { booksTable } from "../../schema/books.schema.js";
 
 // now we write code for creating a book.
 export const createBook = asyncErrorHandler(async (req, res, next) => {
-  const { title, author, genre, price, year, qty} = req.body;
-  if (!title || !author || !genre || !price || !year || !qty) {
+  const { title, author, genre, price, year, qty, description} = req.body;
+  if (!title || !author || !genre || !price || !year || !qty || !description) {
     return next(new ErrorHandler("All fields are required", 400));
   }
-
-  // first we read the existing data from the file.
-  const bookDataContent =
-    JSON.parse(
-      await fs.readFile("./src/data/books/books.json", "utf-8")
-    ) || [];
 
   const newBook = {
     id: uuid(),
@@ -25,16 +20,12 @@ export const createBook = asyncErrorHandler(async (req, res, next) => {
     year,
     createdAt : new Date().toISOString(),
     createdBy : req?.user?._id,
-    qty
+    qty,
+    description
   };
 
-  bookDataContent.push(newBook);
-
-  // now we write the data to the file.
-  await fs.writeFile(
-    "./src/data/books/books.json",
-    JSON.stringify(bookDataContent)
-  );
+  // we write query for inserting a book.
+  await db.insert(booksTable).values(newBook);
 
   res.status(200).json({
     success: true,
@@ -47,25 +38,8 @@ export const createBook = asyncErrorHandler(async (req, res, next) => {
 export const deleteBook = asyncErrorHandler(async (req, res, next) => {
   const { id } = req.params;
 
-  // first we read the existing data from the file.
-  const bookDataContent =
-    JSON.parse(
-      await fs.readFile("./src/data/books/books.json", "utf-8")
-    ) || [];
-
-  const book = bookDataContent.find((book) => book.id === id);
-
-  if (!book) {
-    return next(new ErrorHandler("Book not found", 404));
-  }
-
-  bookDataContent.splice(bookDataContent.indexOf(book), 1);
-
-  // now we write the data to the file.
-  await fs.writeFile(
-    "./src/data/books/books.json",
-    JSON.stringify(bookDataContent)
-  );
+  // we write query for deleting a book.
+  await db.delete(booksTable).where(eq(booksTable.id, id));
 
   res.status(200).json({
     success: true,
@@ -76,31 +50,16 @@ export const deleteBook = asyncErrorHandler(async (req, res, next) => {
 // now we write api for updating a book.
 export const updateBook = asyncErrorHandler(async (req, res, next) => {
   const { id } = req.query;
+  const updatedContent = req.body;
+
+  if(updatedContent?.id) delete updatedContent.id;
 
   // first we read the existing data from the file.
-  const bookDataContent =
-    JSON.parse(
-      await fs.readFile("./src/data/books/books.json", "utf-8")
-    ) || [];
-
-  const book = bookDataContent.find((book) => book.id === id);
-
-  if (!book) {
-    return next(new ErrorHandler("Book not found", 404));
-  }
-
-  // update only that fields which are passed in the request body.
-  for (let key in req.body) {
-    if (book.hasOwnProperty(key) && key !== "id") {
-      book[key] = req.body[key];
-    }
-  }
-
-  // now we write the data to the file.
-  await fs.writeFile(
-    "./src/data/books/books.json",
-    JSON.stringify(bookDataContent)
-  );
+  const book = await db
+    .update(booksTable)
+    .set(updatedContent)
+    .where(eq(booksTable.id, id))
+    .returning();
 
   res.status(200).json({
     success: true,
@@ -111,10 +70,7 @@ export const updateBook = asyncErrorHandler(async (req, res, next) => {
 // now we write api for getting all books.
 export const getAllBooks = asyncErrorHandler(async (req, res, next) => {
   // first we read the existing data from the file.
-  const bookDataContent =
-    JSON.parse(
-      await fs.readFile("./src/data/books/books.json", "utf-8")
-    ) || [];
+  const bookDataContent = await db.select().from(booksTable);
 
   res.status(200).json({
     success: true,
