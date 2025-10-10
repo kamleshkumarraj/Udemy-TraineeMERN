@@ -14,7 +14,7 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
   const bookDataContent =
     (
       JSON.parse(
-        await fs.readFile("../../public/data/books/books.json", "utf-8")
+        await fs.readFile("./src/data/books/books.json", "utf-8")
       ) || []
     ).filter((book) => bookId.includes(book.id) && book?.qty > 0) || [];
 
@@ -25,7 +25,7 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
   // now we decrease book quantity and also write in file again.
   const allBooks =
     JSON.parse(
-      await fs.readFile("../../public/data/books/books.json", "utf-8")
+      await fs.readFile("./src/data/books/books.json", "utf-8")
     ) || [];
 
   for (const book of bookDataContent) {
@@ -35,7 +35,7 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
     }
   }
   await fs.writeFile(
-    "../../public/data/books/books.json",
+    "./src/data/books/books.json",
     JSON.stringify(allBooks)
   );
 
@@ -43,7 +43,7 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
   const issuedBook = (
     JSON.parse(
       await fs.readFile(
-        "../../public/data/issuedBooks/issuedBooks.json",
+        "./src/data/issuedBooks/issuedBooks.json",
         "utf-8"
       )
     ) || []
@@ -57,7 +57,7 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
       }
     }
     await fs.writeFile(
-      "../../public/data/issuedBooks/issuedBooks.json",
+      "./src/data/issuedBooks/issuedBooks.json",
       JSON.stringify(issuedBook)
     );
     return res.status(200).json({
@@ -79,7 +79,7 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
   const issuedBookDataContent =
     JSON.parse(
       await fs.readFile(
-        "../../public/data/issuedBooks/issuedBooks.json",
+        "./src/data/issuedBooks/issuedBooks.json",
         "utf-8"
       )
     ) || [];
@@ -87,7 +87,7 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
   issuedBookDataContent.push(issuedBookDoc);
 
   await fs.writeFile(
-    "../../public/data/issuedBooks/issuedBooks.json",
+    "./src/data/issuedBooks/issuedBooks.json",
     JSON.stringify(issuedBookDataContent)
   );
 
@@ -111,7 +111,7 @@ export const returnBook = asyncErrorHandler(async (req, res, next) => {
   const bookDataContent =
     (
       JSON.parse(
-        await fs.readFile("../../public/data/books/books.json", "utf-8")
+        await fs.readFile("./src/public/data/books/books.json", "utf-8")
       ) || []
     ).filter((book) => bookId.includes(book.id)) || [];
 
@@ -122,7 +122,7 @@ export const returnBook = asyncErrorHandler(async (req, res, next) => {
   // now we increase book quantity and also write in file again.
   const allBooks =
     JSON.parse(
-      await fs.readFile("../../public/data/books/books.json", "utf-8")
+      await fs.readFile("./src/public/data/books/books.json", "utf-8")
     ) || [];
 
   for (const book of bookDataContent) {
@@ -132,7 +132,7 @@ export const returnBook = asyncErrorHandler(async (req, res, next) => {
     }
   }
   await fs.writeFile(
-    "../../public/data/books/books.json",
+    "./src/public/data/books/books.json",
     JSON.stringify(allBooks)
   );
 
@@ -140,7 +140,7 @@ export const returnBook = asyncErrorHandler(async (req, res, next) => {
   const issuedBookDataContent =
     JSON.parse(
       await fs.readFile(
-        "../../public/data/issuedBooks/issuedBooks.json",
+        "./src/public/data/issuedBooks/issuedBooks.json",
         "utf-8"
       )
     ) || [];
@@ -161,7 +161,7 @@ export const returnBook = asyncErrorHandler(async (req, res, next) => {
     }
   }
   await fs.writeFile(
-    "../../public/data/issuedBooks/issuedBooks.json",
+    "./src/public/data/issuedBooks/issuedBooks.json",
     JSON.stringify(issuedBookDataContent)
   );
 
