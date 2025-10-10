@@ -47,6 +47,7 @@ process.on("uncaughtException", (err) => {
 
 // global error handling middleware
 app.use((err, req, res, next) => {
+  console.log(err.stack)
   const error = err?.message || "Something went wrong!";
   const statusCode = err?.statusCode || 500;
   res.status(statusCode).json({

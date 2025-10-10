@@ -7,6 +7,10 @@ import { v4 as uuid } from "uuid";
 import { SECRET_KEY } from "../constant.js";
 import { asyncErrorHandler } from "../errors/asyncErrorHandler.js";
 import { ErrorHandler } from "../errors/error.js";
+import { db } from "../db/index.js";
+import { usersTable } from "../schema/users.schema.js";
+import { eq } from "drizzle-orm";
+
 
 // now we write code for register the user.
 export const registerUser = asyncErrorHandler(async (req, res, next) => {
@@ -22,7 +26,7 @@ export const registerUser = asyncErrorHandler(async (req, res, next) => {
   // now we hash the password before saving to the file.
   const hashedPassword = await bcrypt.hash(password, 10);
   const userData = {
-    _id,
+    id : _id,
     firstName,
     lastName,
     email,
@@ -31,19 +35,8 @@ export const registerUser = asyncErrorHandler(async (req, res, next) => {
     role
   };
 
-  // first we read the existing data from the file.
-  const userDataContent =
-    JSON.parse(
-      await fs.readFile("./src/data/users/users.json", "utf-8")
-    ) || [];
-
-  userDataContent.push(userData);
-
-  // now we write the data to the file.
-  await fs.writeFile(
-    "./src/data/users/users.json",
-    JSON.stringify(userDataContent)
-  );
+  // we write code for save in database.
+  await db.insert(usersTable).values(userData);
 
   res.status(200).json({
     success: true,
@@ -63,13 +56,10 @@ export const loginUser = asyncErrorHandler(async (req, res, next) => {
   }
 
   // first we read the existing data from the file.
-  const userDataContent =
-    JSON.parse(
-      await fs.readFile("./src/data/users/users.json", "utf-8")
-    ) || [];
+  const user = await db.select().from(usersTable).where(eq(email, usersTable.email));
 
-  const user = userDataContent.find((user) => user.email === email);
-
+  console.log(user)
+  
   if (!user) {
     return res.status(400).json({
       success: false,
