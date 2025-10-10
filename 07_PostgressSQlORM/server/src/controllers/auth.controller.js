@@ -11,10 +11,9 @@ import { db } from "../db/index.js";
 import { usersTable } from "../schema/users.schema.js";
 import { eq } from "drizzle-orm";
 
-
 // now we write code for register the user.
 export const registerUser = asyncErrorHandler(async (req, res, next) => {
-  const { firstName, lastName, email, password, address,role } = req.body;
+  const { firstName, lastName, email, password, address, role } = req.body;
 
   if (!firstName || !lastName || !email || !password || !address || !role) {
     return res.status(400).json({
@@ -26,13 +25,13 @@ export const registerUser = asyncErrorHandler(async (req, res, next) => {
   // now we hash the password before saving to the file.
   const hashedPassword = await bcrypt.hash(password, 10);
   const userData = {
-    id : _id,
+    id: _id,
     firstName,
     lastName,
     email,
     password: hashedPassword,
     address,
-    role
+    role,
   };
 
   // we write code for save in database.
@@ -56,10 +55,13 @@ export const loginUser = asyncErrorHandler(async (req, res, next) => {
   }
 
   // first we read the existing data from the file.
-  const user = await db.select().from(usersTable).where(eq(email, usersTable.email));
+  const [user] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(email, usersTable.email));
 
-  console.log(user)
-  
+  console.log(user);
+
   if (!user) {
     return res.status(400).json({
       success: false,
@@ -106,16 +108,14 @@ export const logoutUser = asyncErrorHandler(async (req, res, next) => {
 // now we write code for get user profile
 export const getUserProfile = asyncErrorHandler(async (req, res, next) => {
   const userId = req.user._id; // we get the user from the auth middleware.
-  console.log(userId)
+  console.log(userId);
   // fetch user from the file using userId
-  const userDataContent =
-    JSON.parse(
-      await fs.readFile("./src/data/users/users.json", "utf-8")
-    ) || [];
-    console.log(userDataContent)
-  const user = userDataContent.find((user) => user._id === userId);
+  const [user] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.id, userId));
 
-  if(!user) return next(new ErrorHandler("User not found", 400));
+  if (!user) return next(new ErrorHandler("User not found", 400));
 
   res.status(200).json({
     success: true,
@@ -128,33 +128,9 @@ export const getUserProfile = asyncErrorHandler(async (req, res, next) => {
 export const updateUserProfile = asyncErrorHandler(async (req, res, next) => {
   const userId = req.user._id; // we get the user from the auth middleware.
   const data = req.body;
-
-  // fetch user from the file using userId
-  const userDataContent =
-    JSON.parse(
-      await fs.readFile("./src/data/users/users.json", "utf-8")
-    ) || [];
-
-  const user = userDataContent.find((user) => user._id === userId);
-
-  if (!user) {
-    return res.status(400).json({
-      success: false,
-      message: "User not found",
-    });
-  }
-
-  // update only that fields which are passed in the request body.
-  for (let key in data) {
-    if (user.hasOwnProperty(key) && key !== "_id" && key !== "password") {
-      user[key] = data[key];
-    }
-  }
-
-  await fs.writeFile(
-    "./src/data/users/users.json",
-    JSON.stringify(userDataContent)
-  );
+  if (data.password) delete data.password;
+  // we write query for update user profile.
+  await db.update(usersTable).set(data).where(eq(usersTable.id, userId));
 
   res.status(200).json({
     success: true,
@@ -168,13 +144,9 @@ export const changePassword = asyncErrorHandler(async (req, res, next) => {
   const userId = req.user._id; // we get the user from the auth middleware.
   const { oldPassword, newPassword } = req.body;
 
-  // fetch user from the file using userId
-  const userDataContent =
-    JSON.parse(
-      await fs.readFile("./src/data/users/users.json", "utf-8")
-    ) || [];
+  // fetch user from the db using userId
 
-  const user = userDataContent.find((user) => user._id === userId);
+  const user = db.select().from(usersTable).where(eq(usersTable.id, userId));
 
   if (!user) {
     return res.status(400).json({
@@ -192,12 +164,11 @@ export const changePassword = asyncErrorHandler(async (req, res, next) => {
     });
   }
 
-  user.password = await bcrypt.hash(newPassword, 10);
-
-  await fs.writeFile(
-    "./src/data/users/users.json",
-    JSON.stringify(userDataContent)
-  );
+  // now we write query for update password.
+  await db
+    .update(usersTable)
+    .set({ password: await bcrypt.hash(newPassword, 10) })
+    .where(eq(usersTable.id, userId));
 
   res.status(200).json({
     success: true,
@@ -209,13 +180,8 @@ export const changePassword = asyncErrorHandler(async (req, res, next) => {
 export const deleteUserProfile = asyncErrorHandler(async (req, res, next) => {
   const userId = req.user; // we get the user from the auth middleware.
 
-  // fetch user from the file using userId
-  const userDataContent =
-    JSON.parse(
-      await fs.readFile("./src/data/users/users.json", "utf-8")
-    ) || [];
-
-  const user = userDataContent.find((user) => user._id === userId);
+  // fetch user from the db using userId
+  const user = db.select().from(usersTable).where(eq(usersTable.id, userId));
 
   if (!user) {
     return res.status(400).json({
@@ -224,12 +190,8 @@ export const deleteUserProfile = asyncErrorHandler(async (req, res, next) => {
     });
   }
 
-  userDataContent.splice(userDataContent.indexOf(user), 1);
-
-  await fs.writeFile(
-    "./src/data/users/users.json",
-    JSON.stringify(userDataContent)
-  );
+  // now we write query for deleting the user.
+  await db.delete(usersTable).where(eq(usersTable.id, userId));
 
   res.status(200).json({
     success: true,
