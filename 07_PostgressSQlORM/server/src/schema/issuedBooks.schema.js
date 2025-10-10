@@ -1,12 +1,11 @@
-// we write schema for issued books.
-import { pgTable, uuid, integer, timestamp } from "drizzle-orm/pg-core";
-import { usersTable } from "./users.schema.js";
 
-export const issuedDetails = pgTable("issuedDetails", {
+import {pgTable, uuid} from 'drizzle-orm/pg-core'
+import { booksTable } from './books.schema.js'
+import { issuedDetails } from './issuedDetailschema.js'
+
+export const issuedBookTable = pgTable('issuedBooks', {
   id: uuid().primaryKey(),
-  issuedBy: uuid().references(() => usersTable.id).notNull(),
-  issueDate: timestamp("issue_date").notNull(),
-  // we add a books columns as an array and each elem is id of a book.
-  returnData : timestamp("return_date").notNull(),
+  books : uuid().references(() => booksTable.id).notNull(),
+  issueDetails : uuid().references(() => issuedDetails.id).notNull()
+})
 
-});
