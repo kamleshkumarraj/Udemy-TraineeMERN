@@ -1,7 +1,6 @@
+import { v4 as uuid } from 'uuid';
 import { asyncErrorHandler } from "../../errors/asyncErrorHandler.js";
 import { ErrorHandler } from "../../errors/error.js";
-import {v4 as uuid} from 'uuid'
-import fs from "fs/promises";
 import { booksTable } from "../../schema/books.schema.js";
 
 // now we write code for creating a book.
