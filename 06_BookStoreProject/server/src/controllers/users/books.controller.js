@@ -1,7 +1,7 @@
 import { asyncErrorHandler } from "../../errors/asyncErrorHandler.js";
-import fs from 'fs/promises'
+import fs from "fs/promises";
 import { ErrorHandler } from "../../errors/error.js";
-import {v4 as uuid} from 'uuid'
+import { v4 as uuid } from "uuid";
 
 // we write api for issue the book.
 export const issueBook = asyncErrorHandler(async (req, res, next) => {
@@ -14,9 +14,8 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
   // fetch all books from the file that user want to issue.
   const bookDataContent =
     (
-      JSON.parse(
-        await fs.readFile("./src/data/books/books.json", "utf-8")
-      ) || []
+      JSON.parse(await fs.readFile("./src/data/books/books.json", "utf-8")) ||
+      []
     ).filter((book) => bookId.includes(book.id) && book?.qty > 0) || [];
 
   if (bookDataContent.length === 0) {
@@ -25,9 +24,7 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
 
   // now we decrease book quantity and also write in file again.
   const allBooks =
-    JSON.parse(
-      await fs.readFile("./src/data/books/books.json", "utf-8")
-    ) || [];
+    JSON.parse(await fs.readFile("./src/data/books/books.json", "utf-8")) || [];
 
   for (const book of bookDataContent) {
     const bookIndex = allBooks.findIndex((b) => b.id === book.id);
@@ -35,18 +32,12 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
       allBooks[bookIndex].qty -= 1;
     }
   }
-  await fs.writeFile(
-    "./src/data/books/books.json",
-    JSON.stringify(allBooks)
-  );
+  await fs.writeFile("./src/data/books/books.json", JSON.stringify(allBooks));
 
   // first we check that user already exist in issued book then only we push the book in book array.
   const issuedBook = (
     JSON.parse(
-      await fs.readFile(
-        "./src/data/books/issuedBooks.json",
-        "utf-8"
-      )
+      await fs.readFile("./src/data/books/issuedBooks.json", "utf-8")
     ) || []
   )?.find((issuedBook) => issuedBook.issuedBy === userId);
 
@@ -79,10 +70,7 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
   // now we write the issued book doc to the file.
   const issuedBookDataContent =
     JSON.parse(
-      await fs.readFile(
-        "./src/data/books/issuedBooks.json",
-        "utf-8"
-      )
+      await fs.readFile("./src/data/books/issuedBooks.json", "utf-8")
     ) || [];
 
   issuedBookDataContent.push(issuedBookDoc);
@@ -99,7 +87,6 @@ export const issueBook = asyncErrorHandler(async (req, res, next) => {
   });
 });
 
-
 // now we write api for returning a book
 export const returnBook = asyncErrorHandler(async (req, res, next) => {
   const userId = req.user._id;
@@ -111,9 +98,8 @@ export const returnBook = asyncErrorHandler(async (req, res, next) => {
   // fetch all books from the file that user want to return.
   const bookDataContent =
     (
-      JSON.parse(
-        await fs.readFile("./src/data/books/books.json", "utf-8")
-      ) || []
+      JSON.parse(await fs.readFile("./src/data/books/books.json", "utf-8")) ||
+      []
     ).filter((book) => bookId.includes(book.id)) || [];
 
   if (bookDataContent.length === 0) {
@@ -122,9 +108,7 @@ export const returnBook = asyncErrorHandler(async (req, res, next) => {
 
   // now we increase book quantity and also write in file again.
   const allBooks =
-    JSON.parse(
-      await fs.readFile("./src/data/books/books.json", "utf-8")
-    ) || [];
+    JSON.parse(await fs.readFile("./src/data/books/books.json", "utf-8")) || [];
 
   for (const book of bookDataContent) {
     const bookIndex = allBooks.findIndex((b) => b.id === book.id);
@@ -132,18 +116,12 @@ export const returnBook = asyncErrorHandler(async (req, res, next) => {
       allBooks[bookIndex].qty += 1;
     }
   }
-  await fs.writeFile(
-    "./src/data/books/books.json",
-    JSON.stringify(allBooks)
-  );
+  await fs.writeFile("./src/data/books/books.json", JSON.stringify(allBooks));
 
   // now we remove also book from issued book.
   const issuedBookDataContent =
     JSON.parse(
-      await fs.readFile(
-        "./src/data/books/issuedBooks.json",
-        "utf-8"
-      )
+      await fs.readFile("./src/data/books/issuedBooks.json", "utf-8")
     ) || [];
 
   const issuedBook = issuedBookDataContent.find(
@@ -171,4 +149,26 @@ export const returnBook = asyncErrorHandler(async (req, res, next) => {
     message: "Book returned successfully",
   });
 });
-  
+
+// now we write endpoint for getting all my issued books.
+export const getAllIssuedBooks = asyncErrorHandler(async (req, res, next) => {
+  const userId = req.user._id;
+  const issuedBookDataContent =
+    JSON.parse(
+      await fs.readFile("./src/data/books/issuedBooks.json", "utf-8")
+    ) || [];
+
+  const issuedBook = issuedBookDataContent.find(
+    (issuedBook) => issuedBook.issuedBy === userId
+  );
+
+  if (!issuedBook) {
+    return next(new ErrorHandler("No issued book found", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Issued books fetched successfully",
+    data: issuedBook,
+  });
+});
