@@ -12,7 +12,7 @@
       margin: 0;
       font-family: "Poppins", sans-serif;
       color: #fff;
-      overflow-x: hidden;
+      overflow: hidden;
       height: 100vh;
       position: relative;
     }
@@ -129,8 +129,7 @@
     }
   </style>
   <body>
-    <% const profile = localStorage.getItem("userData"); const user =
-    JSON.parse(profile); %>
+  
     <!-- Background Image with Overlay -->
     <div class="background-image"></div>
 
@@ -154,15 +153,23 @@
         </div>
 
         <!-- User Info -->
-        <h2><%= user.firstName %> <%= user.lastName %></h2>
-        <p class="username">@<%= user.username %></p>
-        <p class="email"><%= user.email %></p>
+        <h2 id="firstName"></h2>
+        <p id="username" class="username"></p>
+        <p id="email" class="email"></p>
 
         <!-- Button -->
-        <button onclick="location.href='/urls'" class="btn">
+        <button onclick="location.href='/user/my-url'" class="btn">
           View My URLs
         </button>
       </div>
     </div>
   </body>
+  <script>
+    const user = JSON.parse(localStorage.getItem("userData"));
+    console.log(user);
+    document.getElementById("firstName").innerHTML = user.firstName + " " + user.lastName;
+    document.getElementById("username").innerHTML = user.username; 
+    document.getElementById("email").innerHTML = user.email;
+
+  </script>
 </html>

@@ -48,6 +48,14 @@ app.get('/auth/register', function(req, res) {
   res.render("auth/register.ejs")
 })
 
+app.get('/user/profile', function(req, res){
+  res.render("profile/profile.ejs")
+})
+
+app.get('/user/my-url', function(req, res){
+  res.render("url/url")
+})
+
 // now we handle redirect-url from short url to long url.
 app.get("/:urlCode", asyncErrorHandler(async function(req, res){
   const {urlCode} = req.params;
