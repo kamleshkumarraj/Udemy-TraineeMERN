@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser'
 import ejs from 'ejs'
 import path from 'path'
 import { fileURLToPath } from 'url';
+import { Urls } from './models/url.model.js';
 
 export const app = express();
 
