@@ -20,6 +20,8 @@
     /* ⚡ Layout */
     .login-container {
       display: flex;
+      /**change the adjustment of the form*/
+      flex-direction: row-reverse;
       height: 100vh;
     }
 
@@ -134,20 +136,26 @@
 
     .overlay-text {
       position: absolute;
-      bottom: 60px;
-      left: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       z-index: 2;
       max-width: 400px;
     }
 
     .overlay-text h1 {
-      font-size: 2.2rem;
+      font-size: 3rem;
       margin-bottom: 10px;
       color: #ffffff;
     }
 
     .overlay-text p {
       color: #cfd8e3;
+      font-size: 1.2rem;
     }
 
     /* 📱 Responsive Design */
