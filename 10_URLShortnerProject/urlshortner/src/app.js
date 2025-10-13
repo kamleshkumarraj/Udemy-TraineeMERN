@@ -28,6 +28,9 @@ app.set("views", path.join(__dirname, 'views'))
 app.get("/", function(req, res){
   res.render("index.ejs");
 })
+app.get('/auth/login', function(req, res) {
+  res.render("auth/login.ejs")
+})
 
 // here we configure routes.
 

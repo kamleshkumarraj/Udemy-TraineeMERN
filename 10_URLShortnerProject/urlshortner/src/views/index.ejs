@@ -1,369 +1,481 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Linkify — Smart URL Shortener</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-</head>
-<style>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linkify — Smart URL Shortener</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    /* 🌈 Base Styles */
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(rgba(10, 20, 40, 0.8), rgba(10, 20, 40, 0.8)),
+        url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80")
+          no-repeat center center / cover;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
 
-  /* 🌈 Base Styles */
-body {
-  margin: 0;
-  font-family: "Poppins", sans-serif;
+    /* ✨ Header */
+    header {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      padding: 20px 70px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 10;
+    }
 
-  /* ✨ New darker background image with gradient overlay */
-  background: 
-    linear-gradient(rgba(10, 20, 40, 0.5), rgba(10, 20, 40, 0.5)),
-    url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80")
-    no-repeat center center / cover;
+    .logo {
+      font-weight: 700;
+      font-size: 1.7rem;
+    }
 
-  color: #ffffff;
-  overflow-x: hidden;
-}
+    nav a {
+      margin: 0 18px;
+      color: #e6f0ff;
+      text-decoration: none;
+      font-weight: 400;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #00d4ff;
+    }
 
-/* ✨ Header */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 70px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 10;
-}
+    .btn {
+      background: linear-gradient(135deg, #00d4ff, #0078ff);
+      border: none;
+      padding: 10px 25px;
+      border-radius: 25px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+    }
 
-.logo {
-  font-weight: 700;
-  font-size: 1.7rem;
-}
+    /* 💎 Hero Section */
+    .hero {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding-top: 100px;
+      background: transparent;
+    }
 
-nav a {
-  margin: 0 18px;
-  color: #e6f0ff;
-  text-decoration: none;
-  font-weight: 400;
-  transition: color 0.3s;
-}
-nav a:hover {
-  color: #00d4ff;
-}
+    .glass-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px);
+      border-radius: 25px;
+      padding: 60px 80px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
 
-.btn {
-  background: linear-gradient(135deg, #00d4ff, #0078ff);
-  border: none;
-  padding: 10px 25px;
-  border-radius: 25px;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.btn:hover {
-  transform: scale(1.05);
-}
+    .glass-card h1 {
+      font-size: 2.7rem;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
 
-/* 💎 Hero Section */
-.hero {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding-top: 100px;
-  background: transparent;
-}
+    .glass-card p {
+      font-size: 1.1rem;
+      color: #cfd8e3;
+      margin-bottom: 30px;
+    }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(18px);
-  border-radius: 25px;
-  padding: 60px 80px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-}
+    .hero-btn {
+      background: linear-gradient(135deg, #00d4ff, #0078ff);
+      padding: 12px 35px;
+      border: none;
+      border-radius: 30px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .hero-btn:hover {
+      transform: scale(1.05);
+    }
 
-.glass-card h1 {
-  font-size: 2.7rem;
-  color: #ffffff;
-  margin-bottom: 20px;
-}
+    /* 🔗 URL Generator */
+    .url-generator {
+      display: flex;
+      justify-content: center;
+      padding: 80px 20px;
+    }
+    .glass-box {
+      max-width: 700px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      border-radius: 25px;
+      text-align: center;
+      padding: 50px 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    .url-input {
+      display: flex;
+      margin-top: 25px;
+      gap: 10px;
+    }
+    .url-input input {
+      flex: 1;
+      padding: 12px 15px;
+      border: none;
+      border-radius: 30px;
+      outline: none;
+      font-size: 1rem;
+      color: #333;
+    }
+    .shorten-btn {
+      background: linear-gradient(135deg, #00d4ff, #0078ff);
+      border: none;
+      padding: 12px 25px;
+      border-radius: 30px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .shorten-btn:hover {
+      transform: scale(1.05);
+    }
 
-.glass-card p {
-  font-size: 1.1rem;
-  color: #cfd8e3;
-  margin-bottom: 30px;
-}
+    /* 🚀 Why Choose Us */
+    .why-us {
+      padding: 100px 60px;
+      text-align: center;
+      background: rgba(15, 20, 30, 0.3);
+    }
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 50px;
+    }
+    .feature {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(14px);
+      border-radius: 20px;
+      width: 280px;
+      padding: 40px 25px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .feature img {
+      width: 60px;
+      margin-bottom: 20px;
+    }
+    .feature h3 {
+      color: #00d4ff;
+    }
+    .feature p {
+      color: #cfd8e3;
+    }
 
-.hero-btn {
-  background: linear-gradient(135deg, #00d4ff, #0078ff);
-  padding: 12px 35px;
-  border: none;
-  border-radius: 30px;
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.hero-btn:hover {
-  transform: scale(1.05);
-}
+    /* ⚙️ Workflow */
+    .workflow {
+      padding: 100px 50px;
+      text-align: center;
+      background: rgba(10, 15, 25, 0.4);
+    }
+    .steps {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 50px;
+      margin-top: 40px;
+    }
+    .step {
+      width: 260px;
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(12px);
+      padding: 30px;
+      border-radius: 20px;
+    }
+    .step span {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 10px;
+      color: #00d4ff;
+    }
 
-/* 🔗 URL Generator */
-.url-generator {
-  display: flex;
-  justify-content: center;
-  padding: 80px 20px;
-}
-.glass-box {
-  max-width: 700px;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(16px);
-  border-radius: 25px;
-  text-align: center;
-  padding: 50px 40px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-}
-.url-input {
-  display: flex;
-  margin-top: 25px;
-  gap: 10px;
-}
-.url-input input {
-  flex: 1;
-  padding: 12px 15px;
-  border: none;
-  border-radius: 30px;
-  outline: none;
-  font-size: 1rem;
-  color: #333;
-}
-.shorten-btn {
-  background: linear-gradient(135deg, #00d4ff, #0078ff);
-  border: none;
-  padding: 12px 25px;
-  border-radius: 30px;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-}
-.shorten-btn:hover {
-  transform: scale(1.05);
-}
+    /* 💬 Testimonials */
+    .testimonials {
+      text-align: center;
+      padding: 100px 60px;
+    }
+    .testimonial-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 40px;
+    }
+    .testimonial {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 30px 40px;
+      max-width: 350px;
+      font-style: italic;
+      color: #dce4f0;
+    }
 
-/* 🚀 Why Choose Us */
-.why-us {
-  padding: 100px 60px;
-  text-align: center;
-  background: rgba(15, 20, 30, 0.3);
-}
-.features {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 50px;
-}
-.feature {
-  background: rgba(255, 255, 255, 0.07);
-  backdrop-filter: blur(14px);
-  border-radius: 20px;
-  width: 280px;
-  padding: 40px 25px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-.feature img {
-  width: 60px;
-  margin-bottom: 20px;
-}
-.feature h3 {
-  color: #00d4ff;
-}
-.feature p {
-  color: #cfd8e3;
-}
+    /* 🦶 Footer */
+    footer {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cfd8e3;
+    }
+    .socials a {
+      margin: 0 10px;
+      color: #00d4ff;
+      text-decoration: none;
+    }
+    .socials a:hover {
+      text-decoration: underline;
+    }
 
-/* ⚙️ Workflow */
-.workflow {
-  padding: 100px 50px;
-  text-align: center;
-  background: rgba(10, 15, 25, 0.4);
-}
-.steps {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 50px;
-  margin-top: 40px;
-}
-.step {
-  width: 260px;
-  background: rgba(255, 255, 255, 0.07);
-  backdrop-filter: blur(12px);
-  padding: 30px;
-  border-radius: 20px;
-}
-.step span {
-  font-size: 2rem;
-  display: block;
-  margin-bottom: 10px;
-  color: #00d4ff;
-}
+    /* 📱 Responsive Design */
 
-/* 💬 Testimonials */
-.testimonials {
-  text-align: center;
-  padding: 100px 60px;
-}
-.testimonial-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 40px;
-}
-.testimonial {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  padding: 30px 40px;
-  max-width: 350px;
-  font-style: italic;
-  color: #dce4f0;
-}
+    /* Small laptops / Tablets */
+    @media (max-width: 1024px) {
+      header {
+        padding: 15px 40px;
+      }
+      .glass-card {
+        padding: 40px 50px;
+      }
+      .glass-card h1 {
+        font-size: 2.3rem;
+      }
+      .url-generator {
+        padding: 60px 20px;
+      }
+      .why-us,
+      .workflow,
+      .testimonials {
+        padding: 80px 40px;
+      }
+    }
 
-/* 🦶 Footer */
-footer {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  text-align: center;
-  padding: 30px;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  color: #cfd8e3;
-}
-.socials a {
-  margin: 0 10px;
-  color: #00d4ff;
-  text-decoration: none;
-}
-.socials a:hover {
-  text-decoration: underline;
-}
+    /* Tablets and large phones */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 10px;
+      }
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      nav a {
+        margin: 8px;
+      }
+      .hero {
+        padding: 120px 20px;
+      }
+      .glass-card {
+        padding: 40px 25px;
+      }
+      .glass-card h1 {
+        font-size: 2rem;
+      }
+      .url-input {
+        flex-direction: column;
+      }
+      .shorten-btn {
+        width: 100%;
+      }
+      .features,
+      .steps,
+      .testimonial-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .feature,
+      .step,
+      .testimonial {
+        width: 90%;
+      }
+    }
 
-</style>
-<body>
+    /* Mobile Devices */
+    @media (max-width: 480px) {
+      header {
+        padding: 10px 20px;
+      }
+      .logo {
+        font-size: 1.4rem;
+      }
+      .glass-card {
+        padding: 30px 20px;
+      }
+      .glass-card h1 {
+        font-size: 1.6rem;
+      }
+      .glass-card p {
+        font-size: 0.95rem;
+      }
+      .hero-btn {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+      }
+      .why-us,
+      .workflow,
+      .testimonials {
+        padding: 60px 20px;
+      }
+      footer {
+        font-size: 0.9rem;
+        padding: 20px;
+      }
+    }
+  </style>
+  <body>
+    <!-- 🌈 HEADER -->
+    <header>
+      <div class="logo">🔗 Linkify</div>
+      <nav>
+        <a href="#">Home</a>
+        <a href="#">Features</a>
+        <a href="#">How it Works</a>
+        <a href="#">Contact</a>
+      </nav>
+      <a style="text-decoration: none;" href="/auth/login"  class="btn">Login</a>
+    </header>
 
-  <!-- 🌈 HEADER -->
-  <header>
-    <div class="logo">🔗 Linkify</div>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#">Features</a>
-      <a href="#">How it Works</a>
-      <a href="#">Contact</a>
-    </nav>
-    <button class="btn">Login</button>
-  </header>
-
-  <!-- 💎 HERO SECTION -->
-  <section class="hero">
-    <div class="glass-card">
-      <h1>Shorten Your URLs Instantly</h1>
-      <p>Turn long, messy links into short, smart, and shareable URLs — beautifully.</p>
-      <button class="hero-btn">Get Started</button>
-    </div>
-  </section>
-
-  <!-- 🔗 URL GENERATOR SECTION -->
-  <section class="url-generator">
-    <div class="glass-box">
-      <h2>Generate Your Short URL</h2>
-      <p>Paste your link below and get your short URL in seconds.</p>
-      <div class="url-input">
-        <input type="text" placeholder="Enter your long URL..." />
-        <button class="shorten-btn">Shorten Now</button>
+    <!-- 💎 HERO SECTION -->
+    <section class="hero">
+      <div class="glass-card">
+        <h1>Shorten Your URLs Instantly</h1>
+        <p>
+          Turn long, messy links into short, smart, and shareable URLs —
+          beautifully.
+        </p>
+        <a style="text-decoration: none" href="#generate-url" class="hero-btn"
+          >Get Started</a
+        >
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 🚀 WHY CHOOSE US -->
-  <section class="why-us">
-    <h2>Why Choose Linkify?</h2>
-    <div class="features">
-      <div class="feature">
-        <img src="https://cdn-icons-png.flaticon.com/512/2972/2972256.png" alt="Custom">
-        <h3>Custom Short Links</h3>
-        <p>Create branded URLs that represent your identity.</p>
+    <!-- 🔗 URL GENERATOR SECTION -->
+    <section id="generate-url" class="url-generator">
+      <div class="glass-box">
+        <h2>Generate Your Short URL</h2>
+        <p>Paste your link below and get your short URL in seconds.</p>
+        <div class="url-input">
+          <input type="text" placeholder="Enter your long URL..." />
+          <button class="shorten-btn">Shorten Now</button>
+        </div>
       </div>
-      <div class="feature">
-        <img src="https://cdn-icons-png.flaticon.com/512/3281/3281304.png" alt="Analytics">
-        <h3>Advanced Analytics</h3>
-        <p>Track every click, view, and location data in real-time.</p>
-      </div>
-      <div class="feature">
-        <img src="https://cdn-icons-png.flaticon.com/512/4021/4021708.png" alt="Secure">
-        <h3>Secure & Reliable</h3>
-        <p>Your links are encrypted and protected with top-level security.</p>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ⚙️ WORKING FLOW -->
-  <section class="workflow">
-    <h2>How It Works</h2>
-    <div class="steps">
-      <div class="step">
-        <span>1️⃣</span>
-        <h4>Paste Long URL</h4>
-        <p>Enter your long and complex link into the input box.</p>
+    <!-- 🚀 WHY CHOOSE US -->
+    <section class="why-us">
+      <h2>Why Choose Linkify?</h2>
+      <div class="features">
+        <div class="feature">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/2972/2972256.png"
+            alt="Custom"
+          />
+          <h3>Custom Short Links</h3>
+          <p>Create branded URLs that represent your identity.</p>
+        </div>
+        <div class="feature">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/3281/3281304.png"
+            alt="Analytics"
+          />
+          <h3>Advanced Analytics</h3>
+          <p>Track every click, view, and location data in real-time.</p>
+        </div>
+        <div class="feature">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/4021/4021708.png"
+            alt="Secure"
+          />
+          <h3>Secure & Reliable</h3>
+          <p>Your links are encrypted and protected with top-level security.</p>
+        </div>
       </div>
-      <div class="step">
-        <span>2️⃣</span>
-        <h4>Click Shorten</h4>
-        <p>Our system instantly generates your short URL.</p>
-      </div>
-      <div class="step">
-        <span>3️⃣</span>
-        <h4>Share & Track</h4>
-        <p>Share your link and monitor engagement easily.</p>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 💬 CLIENT SATISFACTION -->
-  <section class="testimonials">
-    <h2>What Our Users Say</h2>
-    <div class="testimonial-container">
-      <div class="testimonial">
-        <p>"Linkify made link management effortless for our team — we love the clean UI!"</p>
-        <h4>— Aisha Sharma, Marketing Lead</h4>
+    <!-- ⚙️ WORKING FLOW -->
+    <section class="workflow">
+      <h2>How It Works</h2>
+      <div class="steps">
+        <div class="step">
+          <span>1️⃣</span>
+          <h4>Paste Long URL</h4>
+          <p>Enter your long and complex link into the input box.</p>
+        </div>
+        <div class="step">
+          <span>2️⃣</span>
+          <h4>Click Shorten</h4>
+          <p>Our system instantly generates your short URL.</p>
+        </div>
+        <div class="step">
+          <span>3️⃣</span>
+          <h4>Share & Track</h4>
+          <p>Share your link and monitor engagement easily.</p>
+        </div>
       </div>
-      <div class="testimonial">
-        <p>"The analytics dashboard gives deep insights. Definitely a game changer."</p>
-        <h4>— Rohit Verma, SEO Expert</h4>
-      </div>
-      <div class="testimonial">
-        <p>"Super fast and secure. The glassy UI feels so premium!"</p>
-        <h4>— Sneha Patel, Freelancer</h4>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 🦶 FOOTER -->
-  <footer>
-    <p>© 2025 Linkify. All rights reserved.</p>
-    <div class="socials">
-      <a href="#">Twitter</a>
-      <a href="#">LinkedIn</a>
-      <a href="#">GitHub</a>
-    </div>
-  </footer>
+    <!-- 💬 CLIENT SATISFACTION -->
+    <section class="testimonials">
+      <h2>What Our Users Say</h2>
+      <div class="testimonial-container">
+        <div class="testimonial">
+          <p>
+            "Linkify made link management effortless for our team — we love the
+            clean UI!"
+          </p>
+          <h4>— Aisha Sharma, Marketing Lead</h4>
+        </div>
+        <div class="testimonial">
+          <p>
+            "The analytics dashboard gives deep insights. Definitely a game
+            changer."
+          </p>
+          <h4>— Rohit Verma, SEO Expert</h4>
+        </div>
+        <div class="testimonial">
+          <p>"Super fast and secure. The glassy UI feels so premium!"</p>
+          <h4>— Sneha Patel, Freelancer</h4>
+        </div>
+      </div>
+    </section>
 
-</body>
+    <!-- 🦶 FOOTER -->
+    <footer>
+      <p>© 2025 Linkify. All rights reserved.</p>
+      <div class="socials">
+        <a href="#">Twitter</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">GitHub</a>
+      </div>
+    </footer>
+  </body>
 </html>
