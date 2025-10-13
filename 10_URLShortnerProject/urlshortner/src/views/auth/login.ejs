@@ -241,9 +241,12 @@
         body: JSON.stringify(data),
       })
         .then((res) => res.json())
-        .then(({ data }) => {
-          console.log(data);
-          localStorage.setItem("isLogin", true);
+        .then((data) => {
+          if(data?.success){
+            alert(data?.message);
+            localStorage.setItem("isLogin", true);
+            window.location.href = "/";
+          }
         })
         .catch((err) => {
           console.log(err);
