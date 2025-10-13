@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  deleteUrl,
   getMyCreatedUrls,
   minimizeURL,
 } from "../controllers/users/urlHandler.controller.js";
@@ -9,3 +10,4 @@ export const urlHandlerRouter = Router();
 
 urlHandlerRouter.route("/short-url").post(isLoggedIn, minimizeURL);
 urlHandlerRouter.route("/my-created-url").get(isLoggedIn, getMyCreatedUrls);
+urlHandlerRouter.route("/delete-route/:id").delete(isLoggedIn, deleteUrl)

@@ -7,6 +7,7 @@ import { Urls } from './models/url.model.js';
 import { asyncErrorHandler } from './errors/asyncErrorHanlder.error.js';
 import { urlHandlerRouter } from './routes/urls.routes.js';
 import { authRouter } from './routes/auth.routes.js';
+import { isLoggedIn } from './middlewares/auth.middleware.js';
 
 export const app = express();
 
@@ -57,7 +58,7 @@ app.get('/user/my-url', function(req, res){
 })
 
 // now we handle redirect-url from short url to long url.
-app.get("/:urlCode", asyncErrorHandler(async function(req, res){
+app.get("/:urlCode", isLoggedIn, asyncErrorHandler(async function(req, res){
   const {urlCode} = req.params;
   console.log(urlCode)
 
@@ -68,10 +69,10 @@ app.get("/:urlCode", asyncErrorHandler(async function(req, res){
     message : "URL not found !"
   })
 
-  // const userId = req.user._id;
+  const userId = req.user._id;
 
-  // urlData.visited.push({visitedBy : userId});
-  // await urlData.save();
+  urlData.visited.push({visitedBy : userId});
+  await urlData.save();
 
   res.redirect(urlData.longUrl);
 }))

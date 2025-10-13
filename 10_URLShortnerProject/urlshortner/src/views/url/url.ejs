@@ -68,7 +68,6 @@
       font-size: 2.2rem;
       margin-bottom: 30px;
       background: linear-gradient(135deg, #00d4ff, #0078ff);
-      -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
@@ -157,7 +156,7 @@
 
     <!-- 🌟 Main Container -->
     <main class="container">
-      <h1>✨ My Shortened URLs</h1>
+      <h1 style="color: white;" >✨ My Shortened URLs</h1>
 
       <div id="urls-container" class="urls-list">
         <!-- URLs will be dynamically inserted here -->
@@ -173,17 +172,24 @@
       // 🧠 Fetch URLs for the logged-in user
       document.addEventListener("DOMContentLoaded", async () => {
         try {
-          fetch("/api/v1/user/my-created-url", {
+          fetch("/api/v1/my-created-url", {
             headers: {
               "Content-Type": "application/json",
             },
-            method: "POST",
+            method: "GET",
           })
             .then((res) => res.json())
             .then((data) => {
               if (data?.success) {
+                if(data?.data?.length < 1){
+                  const urlsContainer = document.getElementById("urls-container");
+                  const emptyMessage = document.createElement("p");
+                  emptyMessage.textContent = "No URLs found.";
+                  urlsContainer.appendChild(emptyMessage);
+                }
+                // code for if at least one url is present.
                 const urlsContainer = document.getElementById("urls-container");
-                data.forEach((url) => {
+                data?.data?.forEach((url) => {
                   const urlCard = document.createElement("div");
                   urlCard.classList.add("url-card");
                   urlCard.innerHTML = `
@@ -197,7 +203,6 @@
                 });
                 }
             }
-            
             )
             
         } catch (err) {
@@ -209,7 +214,7 @@
       async function deleteUrl(id) {
         if (!confirm("Are you sure you want to delete this URL?")) return;
         try {
-          const res = await fetch(`/api/delete-url/${id}`, {
+          const res = await fetch(`/api/v1/delete-url/${id}`, {
             method: "DELETE",
           });
           const data = await res.json();
