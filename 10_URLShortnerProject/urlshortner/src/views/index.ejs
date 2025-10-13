@@ -351,6 +351,7 @@
       }
     }
   </style>
+
   <body>
     <!-- 🌈 HEADER -->
     <header>
@@ -361,7 +362,7 @@
         <a href="#">How it Works</a>
         <a href="#">Contact</a>
       </nav>
-      <a style="text-decoration: none;" href="/auth/login"  class="btn">Login</a>
+      <a style="text-decoration: none" href="/auth/login" class="btn">Login</a>
     </header>
 
     <!-- 💎 HERO SECTION -->
@@ -384,8 +385,15 @@
         <h2>Generate Your Short URL</h2>
         <p>Paste your link below and get your short URL in seconds.</p>
         <div class="url-input">
-          <input type="text" placeholder="Enter your long URL..." />
-          <button class="shorten-btn">Shorten Now</button>
+          <input
+            id="long-url"
+            type="text"
+            placeholder="Enter your long URL..."
+          />
+          <button onclick="generateShortURL()" class="shorten-btn">Shorten Now</button>
+        </div>
+        <div>
+          <p id="short-url"></p>
         </div>
       </div>
     </section>
@@ -478,4 +486,25 @@
       </div>
     </footer>
   </body>
+  <script>
+    const longUrl = document.querySelector("#long-url");
+    const shortURL = document.querySelector("#short-url");
+    const generateShortURL = () => {
+      const longUrlValue = longUrl.value;
+      fetch("http://localhost:2000/api/v1/short-url", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          longUrl: longUrlValue,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          shortURL.textContent = data?.data;
+        });
+    };
+  </script>
 </html>
