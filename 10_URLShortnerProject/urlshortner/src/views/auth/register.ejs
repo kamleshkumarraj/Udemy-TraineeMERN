@@ -187,25 +187,45 @@
         <h2>Create Your Account</h2>
         <p class="subtitle">Join us and start shortening URLs</p>
 
-        <form id="registerForm">
+        <form method="post" id="registerForm">
           <div class="input-group">
             <label>First Name</label>
-            <input name="firstName" type="text" placeholder="Enter your first name" required />
+            <input
+              name="firstName"
+              type="text"
+              placeholder="Enter your first name"
+              required
+            />
           </div>
 
           <div class="input-group">
             <label>Last Name</label>
-            <input name="lastName" type="text" placeholder="Enter your last name" required />
+            <input
+              name="lastName"
+              type="text"
+              placeholder="Enter your last name"
+              required
+            />
           </div>
 
           <div class="input-group">
             <label>Email</label>
-            <input name="email" type="email" placeholder="Enter your email" required />
+            <input
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              required
+            />
           </div>
 
           <div class="input-group">
             <label>Username</label>
-            <input name="username" type="text" placeholder="Choose a username" required />
+            <input
+              name="username"
+              type="text"
+              placeholder="Choose a username"
+              required
+            />
           </div>
 
           <div class="input-group password-group">
@@ -225,7 +245,7 @@
           <div class="input-group password-group">
             <label>Confirm Password</label>
             <input
-            name="cnfPassword"
+              name="cnfPassword"
               type="password"
               id="confirmPassword"
               placeholder="Confirm password"
@@ -262,55 +282,38 @@
         else input.type = "password";
       }
 
-      // Avatar preview
-      const avatarInput = document.getElementById("avatarUpload");
-      const avatarPreview = document.getElementById("avatarPreview");
-
-      avatarInput.addEventListener("change", function () {
-        const file = this.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            avatarPreview.setAttribute("src", e.target.result);
-            avatarPreview.style.display = "block";
-          };
-          reader.readAsDataURL(file);
-        }
-      });
-    
-    // now we write code for getting all inout values from the form.
-    const registerForm = document.getElementById("registerForm");
-    registerForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const formData = new FormData(registerForm);
-      const data = {};
-      formData.forEach((value, key) => {
-        data[key] = value;
-      });
-      
-
-      // now we create request for resgitering user.
-      fetch("http://localhost:2000/auth/register", {
-        method: "POST",
-        headers: {
-          //header for send data with file.
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            alert(data.message);
-            window.location.href = "/";
-          } else {
-            alert(data.message);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
+      // now we write code for getting all inout values from the form.
+      const registerForm = document.getElementById("registerForm");
+      registerForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = new FormData(registerForm);
+        const data = {};
+        formData.forEach((value, key) => {
+          data[key] = value;
         });
-    });
+
+        // now we create request for resgitering user.
+        fetch("http://localhost:2000/api/v1/auth/register", {
+          method: "POST",
+          headers: {
+            //header for send data with file.
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((res) => res.json())
+          .then(({data}) => {
+            if (data.success) {
+              alert(data.message);
+              window.location.href = "/auth/login";
+            } else {
+              alert(data.message);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
     </script>
   </body>
 </html>
