@@ -1,0 +1,246 @@
+/* 🌈 Base Styles */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+
+  /* ✨ New darker background image with gradient overlay */
+  background: 
+    linear-gradient(rgba(10, 20, 40, 0.8), rgba(10, 20, 40, 0.8)),
+    url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80")
+    no-repeat center center / cover;
+
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* ✨ Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 70px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.7rem;
+}
+
+nav a {
+  margin: 0 18px;
+  color: #e6f0ff;
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.3s;
+}
+nav a:hover {
+  color: #00d4ff;
+}
+
+.btn {
+  background: linear-gradient(135deg, #00d4ff, #0078ff);
+  border: none;
+  padding: 10px 25px;
+  border-radius: 25px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn:hover {
+  transform: scale(1.05);
+}
+
+/* 💎 Hero Section */
+.hero {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-top: 100px;
+  background: transparent;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  border-radius: 25px;
+  padding: 60px 80px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.glass-card h1 {
+  font-size: 2.7rem;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.glass-card p {
+  font-size: 1.1rem;
+  color: #cfd8e3;
+  margin-bottom: 30px;
+}
+
+.hero-btn {
+  background: linear-gradient(135deg, #00d4ff, #0078ff);
+  padding: 12px 35px;
+  border: none;
+  border-radius: 30px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.hero-btn:hover {
+  transform: scale(1.05);
+}
+
+/* 🔗 URL Generator */
+.url-generator {
+  display: flex;
+  justify-content: center;
+  padding: 80px 20px;
+}
+.glass-box {
+  max-width: 700px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  border-radius: 25px;
+  text-align: center;
+  padding: 50px 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+.url-input {
+  display: flex;
+  margin-top: 25px;
+  gap: 10px;
+}
+.url-input input {
+  flex: 1;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 30px;
+  outline: none;
+  font-size: 1rem;
+  color: #333;
+}
+.shorten-btn {
+  background: linear-gradient(135deg, #00d4ff, #0078ff);
+  border: none;
+  padding: 12px 25px;
+  border-radius: 30px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+.shorten-btn:hover {
+  transform: scale(1.05);
+}
+
+/* 🚀 Why Choose Us */
+.why-us {
+  padding: 100px 60px;
+  text-align: center;
+  background: rgba(15, 20, 30, 0.3);
+}
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 50px;
+}
+.feature {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(14px);
+  border-radius: 20px;
+  width: 280px;
+  padding: 40px 25px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.feature img {
+  width: 60px;
+  margin-bottom: 20px;
+}
+.feature h3 {
+  color: #00d4ff;
+}
+.feature p {
+  color: #cfd8e3;
+}
+
+/* ⚙️ Workflow */
+.workflow {
+  padding: 100px 50px;
+  text-align: center;
+  background: rgba(10, 15, 25, 0.4);
+}
+.steps {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 50px;
+  margin-top: 40px;
+}
+.step {
+  width: 260px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  padding: 30px;
+  border-radius: 20px;
+}
+.step span {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 10px;
+  color: #00d4ff;
+}
+
+/* 💬 Testimonials */
+.testimonials {
+  text-align: center;
+  padding: 100px 60px;
+}
+.testimonial-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 40px;
+}
+.testimonial {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 30px 40px;
+  max-width: 350px;
+  font-style: italic;
+  color: #dce4f0;
+}
+
+/* 🦶 Footer */
+footer {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  text-align: center;
+  padding: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cfd8e3;
+}
+.socials a {
+  margin: 0 10px;
+  color: #00d4ff;
+  text-decoration: none;
+}
+.socials a:hover {
+  text-decoration: underline;
+}
