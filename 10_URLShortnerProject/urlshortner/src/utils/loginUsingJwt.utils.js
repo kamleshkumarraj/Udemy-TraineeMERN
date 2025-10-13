@@ -1,7 +1,7 @@
 import { asyncErrorHandler } from "../errors/asyncErrorHanlder.error.js";
 
 export const loginWithJWT = asyncErrorHandler(async (user, res) => {
-    const token = user.getJWTToken();
+    const token = user.getJwtToken();
 
     const option = {
         expires : new Date(Date.now() + 4 * 60 * 60 * 1000),

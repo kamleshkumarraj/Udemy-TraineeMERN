@@ -35,7 +35,7 @@ export const register = asyncErrorHandler(async (req, res, next) => {
 
 // now we write controller for login student.
 export const login = asyncErrorHandler(async (req, res, next) => {
-  const { username, email, password, role } = req.body;
+  const { username, email, password, role="user" } = req.body;
   // first we check student is registered or not.
   const user = await Users.findOne({
     $or: [{ email: email }, { username: username }],

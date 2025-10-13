@@ -10,42 +10,6 @@ import { authRouter } from './routes/auth.routes.js';
 // now we handle route for backend.
 
 //route for url handler.
-app.use('/api/v1/', urlHandlerRouter)
-
-// we handle auth routes.
-app.use('/api/v1/auth', authRouter)
-
-//route for handling ejs pages.
-app.get("/", function(req, res){
-  res.render("index.ejs");
-})
-app.get('/auth/login', function(req, res) {
-  res.render("auth/login.ejs")
-})
-
-app.get('/auth/register', function(req, res) {
-  res.render("auth/register.ejs")
-})
-
-// now we handle redirect-url from short url to long url.
-app.get("/:urlCode", asyncErrorHandler(async function(req, res){
-  const {urlCode} = req.params;
-  console.log(urlCode)
-
-  const urlData = await Urls.findOne({urlCode})
-
-  if(!urlData) return res.status(404).json({
-    success : false,
-    message : "URL not found !"
-  })
-
-  // const userId = req.user._id;
-
-  // urlData.visited.push({visitedBy : userId});
-  // await urlData.save();
-
-  res.redirect(urlData.longUrl);
-}))
 
 
 connectDB()

@@ -362,7 +362,7 @@
         <a href="#">How it Works</a>
         <a href="#">Contact</a>
       </nav>
-      <a style="text-decoration: none" href="/auth/login" class="btn">Login</a>
+      <a id="login-icon" style="text-decoration: none" href="/auth/login" class="btn">Login</a>
     </header>
 
     <!-- 💎 HERO SECTION -->
@@ -489,6 +489,32 @@
   <script>
     const longUrl = document.querySelector("#long-url");
     const shortURL = document.querySelector("#short-url");
+    const loginIcons = document.querySelector("#login-icon");
+
+    // check user is login or not.
+    const isLogin = localStorage.getItem("isLogin");
+    if(login){
+      //then write code for get user profile.
+      fetch("http://localhost:2000/api/v1/auth/profile", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => res.json())
+      .then(({data}) => {
+        if(data?.success){
+          alert(data?.message);
+          loginIcons.textContent = data?.data?.firstName;
+          loginIcons.setAttribute("href", "/user/profile")
+        }
+        console.log(data);
+        localStorage.setItem("userData", JSON.stringify(data?.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
     const generateShortURL = () => {
       const longUrlValue = longUrl.value;
       console.log(longUrlValue);
@@ -510,4 +536,5 @@
         })
     };
   </script>
+
 </html>
