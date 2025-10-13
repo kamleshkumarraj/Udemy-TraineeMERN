@@ -1,4 +1,4 @@
-import { asyncErrorHandler } from "../errors/asynError.js";
+import { asyncErrorHandler } from "../errors/asyncErrorHanlder.error.js";
 
 export const loginWithJWT = asyncErrorHandler(async (user, res) => {
     const token = user.getJWTToken();

@@ -4,12 +4,16 @@ import { connectDB } from "./db/connection.js";
 import { urlHandlerRouter } from './routes/urls.routes.js';
 import { asyncErrorHandler } from './errors/asyncErrorHanlder.error.js';
 import { Urls } from './models/url.model.js';
+import { authRouter } from './routes/auth.routes.js';
 // import { Urls } from './models/url.model.js';
 
 // now we handle route for backend.
 
 //route for url handler.
 app.use('/api/v1/', urlHandlerRouter)
+
+// we handle auth routes.
+app.use('/api/v1/auth', authRouter)
 
 //route for handling ejs pages.
 app.get("/", function(req, res){
