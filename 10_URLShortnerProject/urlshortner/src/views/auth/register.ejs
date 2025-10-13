@@ -12,13 +12,13 @@
       font-family: "Poppins", sans-serif;
       background: linear-gradient(135deg, #0a1128, #001f54, #034078);
       color: #fff;
-      overflow: hidden;
-      height: 100vh;
+      min-height: 100vh;
     }
 
     .register-container {
       display: flex;
-      height: 100vh;
+      min-height: 100vh;
+      flex-direction: row-reverse;
     }
 
     /* Left Glass Form */
@@ -139,19 +139,21 @@
 
     .overlay-text {
       position: absolute;
-      bottom: 60px;
-      left: 60px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       z-index: 2;
       max-width: 400px;
     }
 
     .overlay-text h1 {
-      font-size: 2.2rem;
+      font-size: 3rem;
       margin-bottom: 10px;
       color: #ffffff;
     }
     .overlay-text p {
       color: #cfd8e3;
+      font-size: 1.2rem;
     }
 
     /* Responsive */
@@ -239,7 +241,7 @@
             <input type="file" id="avatarUpload" accept="image/*" />
             <img
               id="avatarPreview"
-              src=""
+              src="s"
               alt="Avatar Preview"
               style="display: none"
             />
@@ -248,7 +250,7 @@
           <button type="submit" class="btn">Register</button>
 
           <p class="login-text">
-            Already have an account? <a href="/login">Login here</a>
+            Already have an account? <a href="/auth/login">Login here</a>
           </p>
         </form>
       </div>

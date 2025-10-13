@@ -32,6 +32,10 @@ app.get('/auth/login', function(req, res) {
   res.render("auth/login.ejs")
 })
 
+app.get('/auth/register', function(req, res) {
+  res.render("auth/register.ejs")
+})
+
 // here we configure routes.
 
 // now we write code for handling unhandled rejection.
