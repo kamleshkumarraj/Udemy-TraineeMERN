@@ -29,3 +29,13 @@ export const minimizeURL = asyncErrorHandler(async (req, res, next) => {
     data : urlData
   })
 })
+
+// code for get all my-created url.
+export const getMyCreatedUrls = asyncErrorHandler(async (req, res, next) => {
+  const urls = await Urls.find({generatedBy : req?.user?._id});
+  res.status(200).json({
+    success : true,
+    message : "URLs fetched successfully !",
+    data : urls
+  })
+})
