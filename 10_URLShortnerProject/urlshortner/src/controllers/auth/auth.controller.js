@@ -1,10 +1,7 @@
-import mongoose from "mongoose";
 
 import { ErrorHandler } from "../../errors/apiError.error.js";
 import { asyncErrorHandler } from "../../errors/asyncErrorHanlder.error.js";
-import { removeFile, removeMultipleFileFromCloudinary, uploadMultipleFilesOnCloudinary } from "../../helper/helper.js";
 import { Users } from "../../models/users.model.js";
-import { Student } from "../models/student.model.js";
 import { loginWithJWT } from "../../utils/loginUsingJwt.utils.js";
 
 // controller for register student or faculty.
