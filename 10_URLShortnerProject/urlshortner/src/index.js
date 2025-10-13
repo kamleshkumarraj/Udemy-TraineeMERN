@@ -1,6 +1,6 @@
 import dotenv from 'dotenv/config'
 import { app } from "./app.js";
-import { connectDB } from "./src/db/connection.js";
+import { connectDB } from "./db/connection.js";
 
 // first we connect db.
 connectDB()
