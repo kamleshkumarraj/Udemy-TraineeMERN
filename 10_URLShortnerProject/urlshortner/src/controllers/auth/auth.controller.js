@@ -11,13 +11,13 @@ import { loginWithJWT } from "../../utils/loginUsingJwt.utils.js";
 export const register = asyncErrorHandler(async (req, res, next) => {
 
   const {firstName, lastName, email, username, password, role} = req.body;
-  const avatar = req.file;
+
 
   // first we check if user is already registered or not.
   const existingUser = await Users.findOne({$or: [{ email }, { username }] });
 
   if (existingUser) return next(new ErrorHandler("User already registered !", 400));
-  
+
    // now we create user.
   await Users.create({
     firstName,
@@ -25,7 +25,7 @@ export const register = asyncErrorHandler(async (req, res, next) => {
     email,
     username,
     password,
-    role : 'user'
+    role : role || "user"
 
   })
 
@@ -65,49 +65,6 @@ export const logout = asyncErrorHandler(async (req, res, next) => {
   res.clearCookie("token").status(200).json({
     success: true,
     message: "User logged out successfully.",
-  });
-});
-
-
-
-// now we write controller for update the student avatar.
-export const updateAvatar = asyncErrorHandler(async (req, res, next) => {
-  const id = req?.user;
-  const avatar = req.file;
-
-  if (!mongoose.isValidObjectId(id))
-    return next(new ErrorHandler("Invalid user id !", 400));
-
-  const user = await Users.findById(id);
-
-  if (!user) return next(new ErrorHandler("User not found !", 404));
-
-  // first we delete the existing avatar.
-  if (user?.avatar?.public_id) {
-    const { success, error } = await removeMultipleFileFromCloudinary([
-      user?.avatar?.public_id,
-    ]);
-
-    if (!success) return next(new ErrorHandler(error, 400));
-  }
-
-  // now we upload new avatar on cloudinary.
-  const { success, results } = await uploadMultipleFilesOnCloudinary([avatar]);
-
-  if (!success) return next(new ErrorHandler(error, 400));
-
-  const public_id = results[0].public_id;
-  const url = results[0].url;
-
-  await Student.findOneAndUpdate(
-    { _id: id },
-    { avatar: { public_id, url } },
-    { new: true }
-  );
-
-  res.status(200).json({
-    success: true,
-    message: "Avatar updated successfully !",
   });
 });
 
