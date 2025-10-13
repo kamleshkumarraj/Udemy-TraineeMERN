@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register | URL Shortener</title>
+    <link rel="stylesheet" href="register.css" />
+  </head>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #0a1128, #001f54, #034078);
+      color: #fff;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    .register-container {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Left Glass Form */
+    .register-form {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 50px 70px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px);
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .register-form h2 {
+      font-size: 2.3rem;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      color: #cfd8e3;
+      margin-bottom: 30px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      font-size: 0.9rem;
+      color: #dce4f0;
+      margin-bottom: 8px;
+    }
+
+    .input-group input[type="text"],
+    .input-group input[type="email"],
+    .input-group input[type="password"],
+    .input-group input[type="file"] {
+      padding: 12px 15px;
+      border-radius: 30px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .password-group {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #avatarPreview {
+      margin-top: 15px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #00d4ff;
+    }
+
+    /* Button */
+    .btn {
+      background: linear-gradient(135deg, #00d4ff, #0078ff);
+      border: none;
+      padding: 12px 30px;
+      border-radius: 30px;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+      width: 100%;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+    }
+
+    .login-text {
+      text-align: center;
+      margin-top: 20px;
+      color: #cfd8e3;
+    }
+    .login-text a {
+      color: #00d4ff;
+      text-decoration: none;
+    }
+    .login-text a:hover {
+      text-decoration: underline;
+    }
+
+    /* Right Image Side */
+    .register-image {
+      flex: 1.2;
+      background: url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1920&q=80")
+        no-repeat center center / cover;
+      position: relative;
+    }
+    .register-image::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 15, 35, 0.45);
+      backdrop-filter: blur(5px);
+    }
+
+    .overlay-text {
+      position: absolute;
+      bottom: 60px;
+      left: 60px;
+      z-index: 2;
+      max-width: 400px;
+    }
+
+    .overlay-text h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+    .overlay-text p {
+      color: #cfd8e3;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .register-container {
+        flex-direction: column;
+      }
+      .register-form,
+      .register-image {
+        flex: none;
+        width: 100%;
+        border: none;
+      }
+      .register-form {
+        padding: 40px 30px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      }
+      .overlay-text {
+        bottom: 30px;
+        left: 30px;
+      }
+      .overlay-text h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+  <body>
+    <div class="register-container">
+      <!-- Left Glass Form -->
+      <div class="register-form">
+        <h2>Create Your Account</h2>
+        <p class="subtitle">Join us and start shortening URLs</p>
+
+        <form id="registerForm">
+          <div class="input-group">
+            <label>First Name</label>
+            <input type="text" placeholder="Enter your first name" required />
+          </div>
+
+          <div class="input-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Enter your last name" required />
+          </div>
+
+          <div class="input-group">
+            <label>Email</label>
+            <input type="email" placeholder="Enter your email" required />
+          </div>
+
+          <div class="input-group">
+            <label>Username</label>
+            <input type="text" placeholder="Choose a username" required />
+          </div>
+
+          <div class="input-group password-group">
+            <label>Password</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter password"
+              required
+            />
+            <span class="toggle-password" onclick="togglePassword('password')"
+              >👁️</span
+            >
+          </div>
+
+          <div class="input-group password-group">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              placeholder="Confirm password"
+              required
+            />
+            <span
+              class="toggle-password"
+              onclick="togglePassword('confirmPassword')"
+              >👁️</span
+            >
+          </div>
+
+          <div class="input-group">
+            <label>Upload Avatar</label>
+            <input type="file" id="avatarUpload" accept="image/*" />
+            <img
+              id="avatarPreview"
+              src=""
+              alt="Avatar Preview"
+              style="display: none"
+            />
+          </div>
+
+          <button type="submit" class="btn">Register</button>
+
+          <p class="login-text">
+            Already have an account? <a href="/login">Login here</a>
+          </p>
+        </form>
+      </div>
+
+      <!-- Right Image Side -->
+      <div class="register-image">
+        <div class="overlay-text">
+          <h1>Join & Simplify URLs</h1>
+          <p>Shorten, share, and track your links easily with us.</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Toggle password visibility
+      function togglePassword(id) {
+        const input = document.getElementById(id);
+        if (input.type === "password") input.type = "text";
+        else input.type = "password";
+      }
+
+      // Avatar preview
+      const avatarInput = document.getElementById("avatarUpload");
+      const avatarPreview = document.getElementById("avatarPreview");
+
+      avatarInput.addEventListener("change", function () {
+        const file = this.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            avatarPreview.setAttribute("src", e.target.result);
+            avatarPreview.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    </script>
+  </body>
+</html>
