@@ -13,6 +13,18 @@ app.use(express.urlencoded({ extended: true }));
 
 // here we configure routes.
 
+// now we write code for handling unhandled rejection.
+process.on("unhandledRejection", (err) => {
+  console.log("Unhandled Rejection:", err);
+  // Application specific logging, throwing an error, or other logic here
+});
+
+// now we write code for handling uncaught exception.
+process.on("uncaughtException", (err) => {
+  console.log("Uncaught Exception:", err);
+  // Application specific logging, throwing an error, or other logic here
+});
+
 // global middleware for error handling.
 app.use((err, req, res, next) => {
   // console.log(err.stack)
