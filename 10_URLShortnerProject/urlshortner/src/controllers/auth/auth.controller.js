@@ -2,10 +2,10 @@ import mongoose from "mongoose";
 
 import { ErrorHandler } from "../../errors/apiError.error.js";
 import { asyncErrorHandler } from "../../errors/asyncErrorHanlder.error.js";
-import { removeFile, uploadMultipleFilesOnCloudinary } from "../../helper/helper.js";
+import { removeFile, removeMultipleFileFromCloudinary, uploadMultipleFilesOnCloudinary } from "../../helper/helper.js";
 import { Users } from "../../models/users.model.js";
 import { Student } from "../models/student.model.js";
-import { loginWithJWT } from "../utils/loginUsingJwt.utils.js";
+import { loginWithJWT } from "../../utils/loginUsingJwt.utils.js";
 
 // controller for register student or faculty.
 export const register = asyncErrorHandler(async (req, res, next) => {
@@ -56,7 +56,7 @@ export const register = asyncErrorHandler(async (req, res, next) => {
 export const login = asyncErrorHandler(async (req, res, next) => {
   const { username, email, password, role } = req.body;
   // first we check student is registered or not.
-  const user = await User.findOne({
+  const user = await Users.findOne({
     $or: [{ email: email }, { username: username }],
   }).select("+password");
 
@@ -94,7 +94,7 @@ export const updateAvatar = asyncErrorHandler(async (req, res, next) => {
   if (!mongoose.isValidObjectId(id))
     return next(new ErrorHandler("Invalid user id !", 400));
 
-  const user = await User.findById(id);
+  const user = await Users.findById(id);
 
   if (!user) return next(new ErrorHandler("User not found !", 404));
 
@@ -130,7 +130,7 @@ export const updateAvatar = asyncErrorHandler(async (req, res, next) => {
 // now we write controller for updating the profile.
 
 export const directLogin = asyncErrorHandler(async (req, res, next) => {
-  const user = await User.findById(req.user,{role : 1, _id : 0}).lean();
+  const user = await Users.findById(req.user,{role : 1, _id : 0}).lean();
   res.status(200).json({
     success: true,
     message: "User logged in successfully.",
