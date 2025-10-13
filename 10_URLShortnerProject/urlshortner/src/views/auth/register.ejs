@@ -237,18 +237,6 @@
               >👁️</span
             >
           </div>
-
-          <div class="input-group">
-            <label>Upload Avatar</label>
-            <input name="avatar" type="file" id="avatarUpload" accept="image/*" />
-            <img
-              id="avatarPreview"
-              src="s"
-              alt="Avatar Preview"
-              style="display: none"
-            />
-          </div>
-
           <button type="submit" class="btn">Register</button>
 
           <p class="login-text">
@@ -314,7 +302,7 @@
         .then((data) => {
           if (data.success) {
             alert(data.message);
-            window.location.href = "/auth/login";
+            window.location.href = "/";
           } else {
             alert(data.message);
           }
