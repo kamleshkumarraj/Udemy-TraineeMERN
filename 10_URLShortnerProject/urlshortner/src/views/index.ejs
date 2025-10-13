@@ -393,7 +393,7 @@
           <button onclick="generateShortURL()" class="shorten-btn">Shorten Now</button>
         </div>
         <div>
-          <p style="font-size: 15px; font-style: italic; color: #0078ff; margin-top: 10px" id="short-url"></p>
+          <p style="font-size: 15px; font-style: italic; color: white; margin-top: 10px" id="short-url"></p>
         </div>
       </div>
     </section>
@@ -503,9 +503,8 @@
         },
       })
       .then((res) => res.json())
-      .then(({data}) => {
+      .then((data) => {
         if(data?.success){
-          alert(data?.message);
           loginIcons.textContent = data?.data?.firstName;
           loginIcons.setAttribute("href", "/user/profile")
         }
@@ -530,7 +529,7 @@
       })
         .then((res) => res.json())
         .then(({data}) => {
-          shortURL.textContent = data?.shortUrl;
+          shortURL.textContent = `Short Url : ${data?.shortUrl}`;
         })
         .catch((err) => {
           console.log(err);
