@@ -42,8 +42,8 @@ export const getMyCreatedUrls = asyncErrorHandler(async (req, res, next) => {
 
 // now we write api for deleting url.
 export const deleteUrl = asyncErrorHandler(async (req, res, next) => {
-  const {urlId} = req.params;
-  await Urls.findByIdAndDelete(urlId);
+  const {id} = req.params;
+  await Urls.findByIdAndDelete(id);
   res.status(200).json({
     success : true,
     message : "URL deleted successfully !",

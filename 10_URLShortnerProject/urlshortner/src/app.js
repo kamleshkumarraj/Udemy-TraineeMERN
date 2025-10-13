@@ -32,10 +32,11 @@ app.set("views", path.join(__dirname, 'views'))
 
 
 // here we configure routes.
-app.use('/api/v1/', urlHandlerRouter)
 
 // we handle auth routes.
 app.use('/api/v1/auth', authRouter)
+
+app.use('/api/v1/', urlHandlerRouter)
 
 //route for handling ejs pages.
 app.get("/", function(req, res){

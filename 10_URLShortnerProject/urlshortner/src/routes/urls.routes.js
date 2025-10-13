@@ -10,4 +10,4 @@ export const urlHandlerRouter = Router();
 
 urlHandlerRouter.route("/short-url").post(isLoggedIn, minimizeURL);
 urlHandlerRouter.route("/my-created-url").get(isLoggedIn, getMyCreatedUrls);
-urlHandlerRouter.route("/delete-route/:id").delete(isLoggedIn, deleteUrl)
+urlHandlerRouter.route("/delete-url/:id").delete(isLoggedIn, deleteUrl)
