@@ -393,7 +393,7 @@
           <button onclick="generateShortURL()" class="shorten-btn">Shorten Now</button>
         </div>
         <div>
-          <p id="short-url"></p>
+          <p style="font-size: 15px; font-style: italic; color: #0078ff; margin-top: 10px" id="short-url"></p>
         </div>
       </div>
     </section>
@@ -491,20 +491,23 @@
     const shortURL = document.querySelector("#short-url");
     const generateShortURL = () => {
       const longUrlValue = longUrl.value;
+      console.log(longUrlValue);
       fetch("http://localhost:2000/api/v1/short-url", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          longUrl: longUrlValue,
+          url : longUrlValue,
         }),
       })
         .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          shortURL.textContent = data?.data;
-        });
+        .then(({data}) => {
+          shortURL.textContent = data?.shortUrl;
+        })
+        .catch((err) => {
+          console.log(err);
+        })
     };
   </script>
 </html>

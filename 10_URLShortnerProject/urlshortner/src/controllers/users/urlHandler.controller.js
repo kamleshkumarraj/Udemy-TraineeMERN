@@ -8,7 +8,7 @@ export const minimizeURL = asyncErrorHandler(async (req, res, next) => {
   if(!url) return next(new ErrorHandler("URL is required !", 400));
 
   // if url is present then we sort the url.
-  const shortId = shortID();
+  const shortId = shortID.generate();
   const protocol = req.protocol;
   const host = req.get('host');
   const shortUrl = `${protocol}://${host}/${shortId}`
