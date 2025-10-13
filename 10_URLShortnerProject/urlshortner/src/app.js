@@ -25,36 +25,7 @@ app.set("views", path.join(__dirname, 'views'))
 // console.log();
 
 
-// home route.
-app.get("/", function(req, res){
-  res.render("index.ejs");
-})
-app.get('/auth/login', function(req, res) {
-  res.render("auth/login.ejs")
-})
 
-app.get('/auth/register', function(req, res) {
-  res.render("auth/register.ejs")
-})
-
-// now we handle redirect-url from short url to long url.
-app.get("/:urlCode", async function(req, res){
-  const urlCode = req.params;
-
-  const urlData = await Urls.findOne({urlCode})
-
-  if(!urlData) return res.status(404).json({
-    success : false,
-    message : "URL not found !"
-  })
-
-  const userId = req.user._id;
-
-  urlData.visited.push({visitedBy : userId});
-  await urlData.save();
-
-  res.redirect(urlData.longUrl);
-})
 
 // here we configure routes.
 
