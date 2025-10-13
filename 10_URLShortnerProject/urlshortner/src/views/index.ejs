@@ -493,7 +493,8 @@
 
     // check user is login or not.
     const isLogin = localStorage.getItem("isLogin");
-    if(login){
+
+    if(isLogin){
       //then write code for get user profile.
       fetch("http://localhost:2000/api/v1/auth/profile", {
         method: "GET",
