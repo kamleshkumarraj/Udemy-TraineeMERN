@@ -75,3 +75,12 @@ export const directLogin = asyncErrorHandler(async (req, res, next) => {
     data: user,
   });
 })
+
+export const getProfile = asyncErrorHandler(async (req, res, next) => {
+  const user = await Users.findById(req.user._id);
+  res.status(200).json({
+    success: true,
+    message: "User profile fetched successfully.",
+    data: user,
+  });
+})

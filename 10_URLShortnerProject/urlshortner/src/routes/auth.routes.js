@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  getProfile,
   login,
   logout,
   register,
@@ -10,3 +11,4 @@ export const authRouter = Router();
 authRouter.route("/login").post(login);
 authRouter.route("/logout").post(logout);
 authRouter.route("/register").post(register);
+authRouter.route('/profile').get(getProfile)
