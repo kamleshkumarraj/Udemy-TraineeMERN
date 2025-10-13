@@ -17,19 +17,7 @@ export const register = asyncErrorHandler(async (req, res, next) => {
   const existingUser = await Users.findOne({$or: [{ email }, { username }] });
 
   if (existingUser) return next(new ErrorHandler("User already registered !", 400));
-
-  if (!avatar) return next(new ErrorHandler("Avatar is required !", 400));
-
-  //upload avatar on cloudinary.
-  const { success, results } = await uploadMultipleFilesOnCloudinary([avatar]);
   
-  if (!success) return next(new ErrorHandler(results, 400));
-
-  const public_id = results[0].public_id;
-  const url = results[0].url;
-
-  await removeFile([avatar]);
-
    // now we create user.
   await Users.create({
     firstName,
@@ -37,11 +25,7 @@ export const register = asyncErrorHandler(async (req, res, next) => {
     email,
     username,
     password,
-    role : 'user',
-    avatar : {
-      public_id,
-      url,
-    }
+    role : 'user'
 
   })
 
