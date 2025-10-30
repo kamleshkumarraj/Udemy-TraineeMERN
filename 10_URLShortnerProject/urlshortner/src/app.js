@@ -70,10 +70,12 @@ app.get("/:urlCode", isLoggedIn, asyncErrorHandler(async function(req, res){
     message : "URL not found !"
   })
 
-  const userId = req.user._id;
-
-  urlData.visited.push({visitedBy : userId});
-  await urlData.save();
+  const userId = req?.user?._id;
+  if(userId){
+    urlData.visited.push({visitedBy : userId});
+    await urlData.save();
+  }
+  
 
   res.redirect(urlData.longUrl);
 }))

@@ -246,9 +246,12 @@
             alert(data?.message);
             localStorage.setItem("isLogin", true);
             window.location.href = "/";
+          }else{
+            alert(data?.message);
           }
         })
         .catch((err) => {
+          window.alert(err.message)
           console.log(err);
         });
     });
