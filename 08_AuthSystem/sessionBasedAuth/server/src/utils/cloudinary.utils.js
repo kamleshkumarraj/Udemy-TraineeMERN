@@ -22,3 +22,15 @@ export const uploadFileOnCloudinary = async (files = []) => {
   }
 }
 
+export const removeFileFromCloudinary = async (files = []) => {
+  const promises = files.map(file => (
+    Promise.resolve(cloudinary.uploader.destroy(file))
+  ))
+
+  try {
+    const uploadedData = await Promise.all(promises)
+    return {success : true, data : uploadedData};
+  } catch (error) {
+     return {success : false, data : error}
+  }
+}
