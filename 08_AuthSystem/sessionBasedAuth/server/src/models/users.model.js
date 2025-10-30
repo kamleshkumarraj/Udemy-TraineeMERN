@@ -38,8 +38,8 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['user', 'admin'],
-      default: 'user',
+      enum: ['userProfile', 'admin'],
+      default: 'userProfile',
     },
     profile: {
       type: mongoose.Schema.Types.ObjectId,
@@ -59,18 +59,18 @@ const userSchema = new mongoose.Schema(
         required: true,
       },
     },
-    emailVerificationToken : {
-      type : String
+    emailVerificationToken: {
+      type: String,
     },
-    emailVerificationTokenExpiry : {
-      type : Date,
+    emailVerificationTokenExpiry: {
+      type: Date,
     },
-    passwordResetToken : {
-      type : String
+    passwordResetToken: {
+      type: String,
     },
-    passwordResetTokenExpiry : {
-      type : Date,
-    }
+    passwordResetTokenExpiry: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
@@ -88,18 +88,24 @@ userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-userSchema.method.generateEmailVerificationToken = function() {
+userSchema.method.generateEmailVerificationToken = function () {
   const emailToken = crypto.randomBytes(24).toString('hex');
-  this.emailVerificationToken = crypto.createHash('sha256').update(emailToken).digest('hex');
+  this.emailVerificationToken = crypto
+    .createHash('sha256')
+    .update(emailToken)
+    .digest('hex');
   this.emailVerificationTokenExpiry = Date.now() + 15 * 60 * 1000;
   return emailToken;
-}
+};
 
-userSchema.method.generatePasswordResetToken = function() {
+userSchema.method.generatePasswordResetToken = function () {
   const resetToken = crypto.randomBytes(24).toString('hex');
-  this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
   this.passwordResetTokenExpiry = Date.now() + 15 * 60 * 1000;
   return resetToken;
-}
+};
 
 export const Users = mongoose.model('User', userSchema);
