@@ -2,6 +2,7 @@
 
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 const userSchema = new mongoose.Schema(
   {
@@ -58,6 +59,18 @@ const userSchema = new mongoose.Schema(
         required: true,
       },
     },
+    emailVerificationToken : {
+      type : String
+    },
+    emailVerificationTokenExpiry : {
+      type : Date,
+    },
+    passwordResetToken : {
+      type : String
+    },
+    passwordResetTokenExpiry : {
+      type : Date,
+    }
   },
   {
     timestamps: true,
@@ -74,5 +87,19 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
+
+userSchema.method.generateEmailVerificationToken = function() {
+  const emailToken = crypto.randomBytes(24).toString('hex');
+  this.emailVerificationToken = crypto.createHash('sha256').update(emailToken).digest('hex');
+  this.emailVerificationTokenExpiry = Date.now() + 15 * 60 * 1000;
+  return emailToken;
+}
+
+userSchema.method.generatePasswordResetToken = function() {
+  const resetToken = crypto.randomBytes(24).toString('hex');
+  this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  this.passwordResetTokenExpiry = Date.now() + 15 * 60 * 1000;
+  return resetToken;
+}
 
 export const Users = mongoose.model('User', userSchema);
