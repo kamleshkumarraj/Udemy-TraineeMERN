@@ -19,6 +19,9 @@ function Header() {
           <Link href="#" className="hover:text-pink-300 transition">
             Contact
           </Link>
+          <Link to="/login" className="hover:text-pink-300 transition">
+            Login
+          </Link>
         </nav>
         <button className="md:hidden text-2xl">☰</button>
       </div>
