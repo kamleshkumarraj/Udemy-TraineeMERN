@@ -1,11 +1,29 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaUserAlt, FaEnvelope, FaLock, FaCamera } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { useMutation } from "../hooks/useMutation.hooks";
+import { useRegisterMutation } from "../api/auth.api";
 
 export default function RegisterPage() {
   const [avatar, setAvatar] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [userInfo, setUserInfo] = useState({
+    fullName : '',
+    email : '',
+    username : '',
+    password : '',
+    confirmPassword : ''
+  })
 
+  const [errorMessage , setErrorMessage] = useState({
+    fullName : '',
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    avatar: '',
+  })
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     setAvatar(file);
@@ -17,6 +35,91 @@ export default function RegisterPage() {
       setPreview(null);
     }
   };
+
+  const errorConf = {
+    fullName : [
+      {required : true , message : "Please enter your first name !"},
+      {minLength : 3 , message : "Firstname must be contain at least 3 characters"}
+    ],
+    username : [
+      {required : true , message : "Please enter your user name !"},
+      {minLength : 3 , message : "Username must be contain at least 3 characters"}
+    ],
+    
+    email : [
+      {required : true , message : "Please enter your email !"},
+      {pattern : /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/ , message : "Please enter valid email !"}
+      ],
+    password : [
+      {required : true , message : "Password must be required !"},
+      {minLength : 8 , message : "Password must be contain at least 8 character !"},
+      {includes : '@&#' , message : "In password must be includes @ # &"},
+      {pattern : /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/ , message : "Password must be complex alphanumeric and special character also !"}
+    ],
+    confirmPassword : [
+      {required : true , message : "Password must be required !"},
+      {minLength : 8 , message : "Password must be contain at least 8 character !"},
+      {includes : '@&#' , message : "In password must be includes @ # &"}
+    ]
+    
+  }
+
+  const validate = (formDataLocal) => {
+    const error = {};
+    Object.entries(formDataLocal).forEach(([key , value]) => {
+      errorConf[key]?.some((rule) => {
+        if(rule.required && !value){
+          error[key] = rule.message
+          return true
+        }
+        if(rule.pattern && !rule.pattern.test(value)){
+          error[key] = rule.message
+          return true
+        }
+        if(rule.minLength && value.length < rule.minLength ){
+          error[key] = rule.message
+          return true
+        }
+        if(rule.includes && !(value.includes(rule.includes[0]) || value.includes(rule.includes[1]) || value.includes(rule.includes[2]))){
+          error[key] = rule.message
+          return true
+        }
+      })
+    })
+    
+    setErrorMessage(error)
+    return error
+  }
+  const {executeMutate : register} = useMutation(useRegisterMutation);
+  const handleRegister = (e) => {
+    e.preventDefault();
+    if(!avatar){
+      toast.error("please upload profile image !");
+    }
+    const error = validate(userInfo)
+    if(Object.keys(error).length > 0) {
+      toast.error("All fields are required !");
+      return;
+    }
+    
+    const formData = new FormData();
+    // first we validate each filed.
+
+    formData.append('avatar', avatar);
+    Object.entries(userInfo).forEach(([key , value]) => {
+      formData[key] = value;
+    });
+    register(formData);
+
+  }
+
+  const handleUserInput = (e) => {
+    const {name, value} = e.target;
+    setUserInfo((prevState) => ({
+      ...prevState,
+      [name] : value
+    }))
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 via-pink-500 to-indigo-600">
@@ -91,6 +194,9 @@ export default function RegisterPage() {
                 type="text"
                 placeholder="Full Name"
                 className="bg-transparent outline-none text-white placeholder-white/70 w-full"
+                name="fullName"
+                value={userInfo.fullName}
+                onChange={handleUserInput}
               />
             </div>
 
@@ -101,6 +207,9 @@ export default function RegisterPage() {
                 type="email"
                 placeholder="Email Address"
                 className="bg-transparent outline-none text-white placeholder-white/70 w-full"
+                name="email"
+                value={userInfo.email}
+                onChange={handleUserInput}
               />
             </div>
 
@@ -111,6 +220,9 @@ export default function RegisterPage() {
                 type="text"
                 placeholder="Username"
                 className="bg-transparent outline-none text-white placeholder-white/70 w-full"
+                name="username"
+                value={userInfo.username}
+                onChange={handleUserInput}
               />
             </div>
 
@@ -121,6 +233,9 @@ export default function RegisterPage() {
                 type="password"
                 placeholder="Password"
                 className="bg-transparent outline-none text-white placeholder-white/70 w-full"
+                name="password"
+                value={userInfo.password}
+                onChange={handleUserInput}
               />
             </div>
 
@@ -131,11 +246,15 @@ export default function RegisterPage() {
                 type="password"
                 placeholder="Confirm Password"
                 className="bg-transparent outline-none text-white placeholder-white/70 w-full"
+                name="confirmPassword"
+                value={userInfo.confirmPassword}
+                onChange={handleUserInput}
               />
             </div>
 
             {/* Button */}
             <motion.button
+              onClick={handleRegister}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 rounded-2xl font-semibold shadow-lg hover:shadow-pink-500/50 transition-all"
