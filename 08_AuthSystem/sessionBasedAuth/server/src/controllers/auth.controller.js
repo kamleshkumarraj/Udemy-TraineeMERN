@@ -8,6 +8,7 @@ import { sendResponse } from '../utils/response.utility.js';
 import { deleteFile } from '../utils/file.utils.js';
 import { generateEmailVerification } from '../utils/generateEmailVerification.js';
 import crypto from 'node:crypto';
+import { sendMail } from '../utils/sendMail.utils.js';
 
 export const registerUser = asyncErrorHandler(async (req, res, next) => {
   const { email, username, password, role = 'userProfile', profile } = req.body;
@@ -53,7 +54,7 @@ export const registerUser = asyncErrorHandler(async (req, res, next) => {
     const message = generateEmailVerification(url);
 
     try {
-      await sendEmail(email, 'Verify your email', message);
+      await sendMail({message, subject : "Email verification", to : user.email});
       await user.save();
     } catch (error) {
       user.emailVerificationToken = null;
