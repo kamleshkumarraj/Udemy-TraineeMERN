@@ -11,7 +11,7 @@ import crypto from 'node:crypto';
 import { sendMail } from '../utils/sendMail.utils.js';
 
 export const registerUser = asyncErrorHandler(async (req, res, next) => {
-  const { email, username, password, role = 'userProfile', profile } = req.body;
+  const {fullName, email, username, password, role = 'user' } = req.body;
   const avatar = req.file;
 
   // first we check if user is already registered or not.
@@ -20,32 +20,25 @@ export const registerUser = asyncErrorHandler(async (req, res, next) => {
   if (existingUser) {
     return next(new ErrorHandler('User already exists', 400));
   }
-  let profileSchema;
-  if (role == 'userProfile') profileSchema = userProfile;
   // now we create transaction for if user is created then in this case profile create other wise created profile will rollback.
 
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  try {
-    const profile = await profileSchema.create(profile);
-
-    // now we upload image on cloudinary.
+  
     const { success, data } = await uploadFileOnCloudinary([avatar]);
-    if (!success) throw new Error(data);
+    if (!success) {
+      await deleteFile([avatar]);
+      return next(new ErrorHandler("get error during file upload", 400));
+    }
 
     const user = await Users.create({
+      fullName,
       email,
       username,
       password,
       role,
-      profile,
       avatar: data[0],
     });
 
     deleteFile(avatar);
-
-    await session.commitTransaction();
-    session.endSession();
 
     // now we send email verification mail.
     const token = user.generateEmailVerificationToken();
@@ -64,12 +57,7 @@ export const registerUser = asyncErrorHandler(async (req, res, next) => {
     // const port =
 
     sendResponse(res, 'User registered successfully !', user, 200);
-  } catch (error) {
-    deleteFile(avatar);
-    session.abortTransaction();
-    session.endSession();
-    return next(new ErrorHandler(error.message, 400));
-  }
+  
 });
 
 export const verifyEmail = asyncErrorHandler(async (req, res, next) => {

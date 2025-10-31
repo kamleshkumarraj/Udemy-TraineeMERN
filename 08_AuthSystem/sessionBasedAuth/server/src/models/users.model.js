@@ -6,6 +6,12 @@ import crypto from 'crypto';
 
 const userSchema = new mongoose.Schema(
   {
+    fullName: { 
+      type : String,
+      required : true,
+      min : [3, 'fullName at least 3 char long.'],
+      max : [75, 'fullName at most 75 char long.']
+    },
     email: {
       type: String,
       required: true,
