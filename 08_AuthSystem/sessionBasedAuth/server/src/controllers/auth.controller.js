@@ -1,13 +1,11 @@
-import mongoose from 'mongoose';
+import crypto from 'node:crypto';
 import { asyncErrorHandler } from '../errors/asyncErrorHandler.js';
 import { ErrorHandler } from '../errors/errorHandler.js';
-import { userProfile } from '../models/userProfile.model.js';
-import { uploadFileOnCloudinary } from '../utils/cloudinary.utils.js';
 import { Users } from '../models/users.model.js';
-import { sendResponse } from '../utils/response.utility.js';
+import { uploadFileOnCloudinary } from '../utils/cloudinary.utils.js';
 import { deleteFile } from '../utils/file.utils.js';
 import { generateEmailVerification } from '../utils/generateEmailVerification.js';
-import crypto from 'node:crypto';
+import { sendResponse } from '../utils/response.utility.js';
 import { sendMail } from '../utils/sendMail.utils.js';
 
 export const registerUser = asyncErrorHandler(async (req, res, next) => {

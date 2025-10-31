@@ -6,9 +6,8 @@ const transporter = createTransport({
     user : process.env.SENDER_EMAIL,
     pass : process.env.SENDER_PASSWORD
   },
-  host : "smtp.gmail.com",
-  port : 587,
-  secure : true
+  host : process.env.EMAIL_HOST,
+  port : process.env.EMAIL_PORT,
 })
 
 export const sendMail = async ({message, subject, to}) => {
