@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import { authRouter } from './routes/auth.routes.js';
 
 export const app = express();
 
@@ -37,6 +38,9 @@ app.get('/health-check', (req, res) => {
     message: 'Everything is perfect and server running successfully...',
   });
 });
+
+// now we configure routes for handling authentication.
+app.use('/api/v1/auth', authRouter);
 
 // now we write code for handling unhandled rejection.
 process.on('unhandledRejection', err => {
