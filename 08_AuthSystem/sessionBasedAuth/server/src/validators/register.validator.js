@@ -1,4 +1,6 @@
 import { body, validationResult } from 'express-validator';
+import { ErrorHandler } from '../errors/errorHandler.js';
+import { deleteFile } from '../utils/file.utils.js';
 
 export const registerValidator = [
   body('fullName')
@@ -35,10 +37,14 @@ export const registerValidator = [
 ];
 
 export const validateRegister = (req, res, next) => {
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = errors.array().map((error) => error.msg).join(",");
-    return res.status(400).json({ errors: error});
+    const avatar = req.file;
+    if(avatar) deleteFile([avatar]);
+    return next(new ErrorHandler(error, 400));
+    
   }
   next();
 };
