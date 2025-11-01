@@ -5,7 +5,6 @@ export const uploadFileOnCloudinary = async (files = []) => {
   const promises = files.map(file => (
     Promise.resolve(cloudinary.uploader.upload(file.path, {
       resource_type: 'auto',
-      folder: 'image/',
       public_id: uuidv4(),
     }))
   ))

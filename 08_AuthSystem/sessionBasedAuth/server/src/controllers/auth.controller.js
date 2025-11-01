@@ -11,6 +11,7 @@ import { sendMail } from '../utils/sendMail.utils.js';
 export const registerUser = asyncErrorHandler(async (req, res, next) => {
   const {fullName, email, username, password, role = 'user' } = req.body;
   const avatar = req.file;
+  // console.log(fullName, email, username, password, role, avatar);
 
   // first we check if user is already registered or not.
   const existingUser = await Users.findOne({ $or: [{ email }, { username }] });
@@ -22,6 +23,7 @@ export const registerUser = asyncErrorHandler(async (req, res, next) => {
 
   
     const { success, data } = await uploadFileOnCloudinary([avatar]);
+    console.log(data)
     if (!success) {
       await deleteFile([avatar]);
       return next(new ErrorHandler("get error during file upload", 400));
@@ -36,13 +38,13 @@ export const registerUser = asyncErrorHandler(async (req, res, next) => {
       avatar: data[0],
     });
 
-    deleteFile(avatar);
+    await deleteFile([avatar]);
 
     // now we send email verification mail.
     const token = user.generateEmailVerificationToken();
     const origin = req.headers.origin;
     const url = `${origin}/api/v1/verify-email/${token}`;
-    const message = generateEmailVerification(url);
+    const message = generateEmailVerification(url, user.fullName);
 
     try {
       await sendMail({message, subject : "Email verification", to : user.email});
@@ -71,4 +73,5 @@ export const verifyEmail = asyncErrorHandler(async (req, res, next) => {
   user.emailVerificationTokenExpiry = null;
   await user.save();
   sendResponse(res, 'Email verified successfully !', user, 200);
+  
 });

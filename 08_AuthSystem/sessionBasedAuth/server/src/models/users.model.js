@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['userProfile', 'admin'],
+      enum: ['user', 'admin'],
       default: 'userProfile',
     },
     profile: {
@@ -94,7 +94,7 @@ userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-userSchema.method.generateEmailVerificationToken = function () {
+userSchema.methods.generateEmailVerificationToken = function () {
   const emailToken = crypto.randomBytes(24).toString('hex');
   this.emailVerificationToken = crypto
     .createHash('sha256')
@@ -104,7 +104,7 @@ userSchema.method.generateEmailVerificationToken = function () {
   return emailToken;
 };
 
-userSchema.method.generatePasswordResetToken = function () {
+userSchema.methods.generatePasswordResetToken = function () {
   const resetToken = crypto.randomBytes(24).toString('hex');
   this.passwordResetToken = crypto
     .createHash('sha256')

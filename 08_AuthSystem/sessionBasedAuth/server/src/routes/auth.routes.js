@@ -4,15 +4,16 @@ import {
   registerValidator,
   validateRegister,
 } from '../validators/register.validator.js';
-import { registerUser } from '../controllers/auth.controller.js';
+import { registerUser, verifyEmail } from '../controllers/auth.controller.js';
 
 export const authRouter = Router();
 
-authRouter
-  .route('/register')
-  .post(
-    upload.single('avatar'),
-    registerValidator,
-    validateRegister,
-    registerUser,
-  );
+authRouter.route('/register').post(
+  upload.single('avatar'),
+  registerValidator,
+  validateRegister,
+
+  registerUser,
+);
+
+authRouter.route('/verify-email/:verifyToken').get(verifyEmail);

@@ -4,7 +4,8 @@ import { baseApi } from '../api/api'
 
 export const store = configureStore({
   reducer : {
-    auth : authReducer
+    auth : authReducer,
+    [baseApi.reducerPath] : baseApi.reducer
   },
   middleware : getDefaultMiddleware => getDefaultMiddleware().concat(baseApi.middleware)
 })
