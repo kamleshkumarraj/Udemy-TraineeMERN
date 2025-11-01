@@ -4,6 +4,7 @@ import App from './App'
 import HomePage from './pages/Home.pages'
 import NotFound from './pages/Error.pages'
 import RegisterPage from './pages/Register.pages'
+import EmailVerificationPage from './pages/MailVerification.pages'
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path : '/register',
     element : <RegisterPage />
+  },
+  {
+    path : '/api/v1/verify-email/:token',
+    element : <EmailVerificationPage />
   }
 ])
 
