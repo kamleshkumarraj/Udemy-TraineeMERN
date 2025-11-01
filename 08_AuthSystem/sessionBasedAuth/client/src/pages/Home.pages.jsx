@@ -66,49 +66,9 @@ export default function HomePage() {
       </section>
 
       {/* ===== PRODUCTS SECTION ===== */}
-      <section className="py-16 px-6 max-w-7xl mx-auto">
-        <h3 className="text-4xl font-semibold text-center mb-10">
-          Featured Products
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-          {products.map((product, index) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.2, duration: 0.6 }}
-              className="bg-white/10 backdrop-blur-2xl rounded-3xl shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300"
-            >
-              <div className="relative">
-                <img
-                  src={product.img}
-                  alt={product.title}
-                  className="w-full h-56 object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              </div>
-              <div className="p-5 text-center">
-                <h4 className="text-xl font-semibold mb-1">{product.title}</h4>
-                <p className="text-sm text-pink-300">{product.brand}</p>
-                <p className="text-sm text-white/70">{product.category}</p>
-                <p className="text-lg font-bold mt-3">{product.price}</p>
-
-                <div className="flex justify-center space-x-4 mt-5">
-                  <button className="bg-white/20 backdrop-blur-md rounded-full p-3 hover:bg-pink-500 transition">
-                    <FaShoppingCart />
-                  </button>
-                  <button className="bg-white/20 backdrop-blur-md rounded-full p-3 hover:bg-purple-500 transition">
-                    <FaEye />
-                  </button>
-                  <button className="bg-white/20 backdrop-blur-md rounded-full p-3 hover:bg-red-500 transition">
-                    <FaHeart />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+      <div  id="latest-products-body"  className="py-[45px] px-[20px] lg:px-[40px] w-[100%]">
+        <LatestProductsBody title={"Latest Products"} products={products} />
+      </div>
 
       
     </div>
