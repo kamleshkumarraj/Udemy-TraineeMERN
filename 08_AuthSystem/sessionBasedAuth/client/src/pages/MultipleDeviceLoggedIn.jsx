@@ -4,6 +4,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LogOut, AlertTriangle } from "lucide-react";
 import LogoutOtherDevicesAlert from "../components/auth/AlterLogoutOtherDevice";
+import { useMutation } from "../hooks/useMutation.hooks";
+import { useDeleteAllSessionMutation, useDeleteSingleSessionMutation } from "../api/session.api";
+import { useLoginMutation } from "../api/auth.api";
 
 export default function SessionConflict() {
   const navigate = useNavigate();
@@ -14,8 +17,18 @@ export default function SessionConflict() {
     alert: "",
   });
 
+  const {executeMutate : logoutSingle} = useMutation(useDeleteSingleSessionMutation);
+  const {executeMutate : logoutAll} = useMutation(useDeleteAllSessionMutation);
+  const {executeMutate : login} = useMutation(useLoginMutation);
+
   const handleLogout = () => {
-    if(ale)
+    if(alertLogout?.alert === 'single device'){
+      logoutSingle({toastMessage : 'logging out single...' , callback : () => {
+        login({args : payload, toastMessage : "logging in..."})
+      }});
+    }else if(alertLogout?.alert === 'multiple device'){
+      logoutAll({toastMessage : "logging out all..."})
+    }
   }
 
   return (
@@ -28,7 +41,7 @@ export default function SessionConflict() {
               : "Are you sure to logout from all other devices !"
           }
           open={alertLogout.open}
-          onConfirm={() => {}}
+          onConfirm={() => handleLogout}
           onCancel={() => {
             setAlertLogout({
               open: false,
@@ -82,12 +95,6 @@ export default function SessionConflict() {
             ) : (
               <>
                 <LogOut
-                  onClick={() => {
-                    setAlertLogout({
-                      open: true,
-                      alert: "single device",
-                    });
-                  }}
                   size={18}
                 />{" "}
                 Logout Other Devices
