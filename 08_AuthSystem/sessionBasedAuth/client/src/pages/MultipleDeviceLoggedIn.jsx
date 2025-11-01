@@ -1,16 +1,15 @@
-import React, { useState } from "react";
 import { motion } from "framer-motion";
-import axios from "axios";
+import { AlertTriangle, LogOut } from "lucide-react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { LogOut, AlertTriangle } from "lucide-react";
-import LogoutOtherDevicesAlert from "../components/auth/AlterLogoutOtherDevice";
-import { useMutation } from "../hooks/useMutation.hooks";
+import { useLoginMutation } from "../api/auth.api";
 import {
   useDeleteAllSessionMutation,
   useDeleteSingleSessionMutation,
 } from "../api/session.api";
-import { useLoginMutation } from "../api/auth.api";
-import { useDispatch, useSelector } from "react-redux";
+import LogoutOtherDevicesAlert from "../components/auth/AlterLogoutOtherDevice";
+import { useMutation } from "../hooks/useMutation.hooks";
 import {
   getCredentials,
   resetCredentials,
@@ -34,23 +33,39 @@ export default function SessionConflict() {
   const { executeMutate: login } = useMutation(useLoginMutation);
 
   const handleLogout = () => {
+    setLoading(true);
+    setMessage("logout user")
     if (alertLogout?.alert === "single device") {
       logoutSingle({
         toastMessage: "logging out single...",
+        args: payload,
         callback: () => {
-          login({ args: payload, toastMessage: "logging in..." });
+          login({
+            args: payload,
+            toastMessage: "logging in...",
+            callback: () => navigate("/"),
+          });
           dispatch(resetCredentials());
         },
       });
     } else if (alertLogout?.alert === "multiple device") {
       logoutAll({
         toastMessage: "logging out all...",
+        args: payload,
         callback: () => {
-          login({ args: payload, toastMessage: "logging in..." });
+          login({
+            args: payload,
+            toastMessage: "logging in...",
+            callback: () => {
+              navigate("/");
+            },
+          });
           dispatch(resetCredentials());
         },
       });
     }
+    setLoading(false)
+    setMessage("");
   };
 
   return (

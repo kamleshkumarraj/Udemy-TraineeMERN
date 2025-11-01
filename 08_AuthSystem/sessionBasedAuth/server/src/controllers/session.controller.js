@@ -1,5 +1,6 @@
 import { asyncErrorHandler } from '../errors/asyncErrorHandler.js';
 import { Session } from '../models/session.models.js';
+import { Users } from '../models/users.model.js';
 
 export const createSession = asyncErrorHandler(async (req, res, next) => {
   const { _sid } = req.signedCookies;
@@ -37,8 +38,9 @@ export const createSession = asyncErrorHandler(async (req, res, next) => {
 
 export const deleteLastSession = asyncErrorHandler(async (req, res, next) => {
   // now we write code for delete that session that is created first.
-  const {userId} = req.body;
-  const sessions = await Session.find({userId}).sort({ createdAt: -1 });
+  const {email} = req.body;
+  const user = await Users.findOne({email});
+  const sessions = await Session.find({userId : user._id});
   const session = sessions[0];
   await Session.findByIdAndDelete(session._id);
   res.status(200).json({
@@ -48,8 +50,9 @@ export const deleteLastSession = asyncErrorHandler(async (req, res, next) => {
 });
 
 export const deleteAllSessions = asyncErrorHandler(async (req, res, next) => {
-  const {userId} = req.body;
-  await Session.deleteMany({userId});
+  const {email} = req.body;
+  const user = await Users.findOne({email});
+  await Session.deleteMany({userId : user._id});
   res.status(200).json({
     success: true,
     message: 'All sessions deleted successfully',

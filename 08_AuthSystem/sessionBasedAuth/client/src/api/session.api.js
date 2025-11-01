@@ -11,18 +11,20 @@ const sessionApi = baseApi.injectEndpoints({
     }),
 
     deleteSingleSession: builder.mutation({
-      query: () => ({
+      query: (payload) => ({
         url: "/session/delete-single",
         method: "DELETE",
         credentials: "include",
+        body : payload
       }),
     }),
 
     deleteAllSession: builder.mutation({
-      query: () => ({
+      query: (payload) => ({
         url: "/session/delete-all",
         method: "DELETE",
         credentials: "include",
+        body : payload
       }),
     }),
   }),
