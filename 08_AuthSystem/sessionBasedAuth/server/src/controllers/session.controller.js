@@ -34,3 +34,24 @@ export const createSession = asyncErrorHandler(async (req, res, next) => {
     session,
   });
 });
+
+export const deleteLastSession = asyncErrorHandler(async (req, res, next) => {
+  // now we write code for delete that session that is created first.
+  const {userId} = req.body;
+  const sessions = await Session.find({userId}).sort({ createdAt: -1 });
+  const session = sessions[0];
+  await Session.findByIdAndDelete(session._id);
+  res.status(200).json({
+    success: true,
+    message: 'Session deleted successfully',
+  });
+});
+
+export const deleteAllSessions = asyncErrorHandler(async (req, res, next) => {
+  const {userId} = req.body;
+  await Session.deleteMany({userId});
+  res.status(200).json({
+    success: true,
+    message: 'All sessions deleted successfully',
+  });
+});
