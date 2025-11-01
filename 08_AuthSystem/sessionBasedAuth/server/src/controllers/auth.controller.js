@@ -10,7 +10,7 @@ import { sendMail } from '../utils/sendMail.utils.js';
 import { Session } from '../models/session.models.js';
 
 export const registerUser = asyncErrorHandler(async (req, res, next) => {
-  const {fullName, email, username, password, role = 'user' } = req.body;
+  const { fullName, email, username, password, role = 'user' } = req.body;
   const avatar = req.file;
   // console.log(fullName, email, username, password, role, avatar);
 
@@ -22,43 +22,41 @@ export const registerUser = asyncErrorHandler(async (req, res, next) => {
   }
   // now we create transaction for if user is created then in this case profile create other wise created profile will rollback.
 
-  
-    const { success, data } = await uploadFileOnCloudinary([avatar]);
-    console.log(data)
-    if (!success) {
-      await deleteFile([avatar]);
-      return next(new ErrorHandler("get error during file upload", 400));
-    }
-
-    const user = await Users.create({
-      fullName,
-      email,
-      username,
-      password,
-      role,
-      avatar: data[0],
-    });
-
+  const { success, data } = await uploadFileOnCloudinary([avatar]);
+  console.log(data);
+  if (!success) {
     await deleteFile([avatar]);
+    return next(new ErrorHandler('get error during file upload', 400));
+  }
 
-    // now we send email verification mail.
-    const token = user.generateEmailVerificationToken();
-    const origin = req.headers.origin;
-    const url = `${origin}/api/v1/verify-email/${token}`;
-    const message = generateEmailVerification(url, user.fullName);
+  const user = await Users.create({
+    fullName,
+    email,
+    username,
+    password,
+    role,
+    avatar: data[0],
+  });
 
-    try {
-      await sendMail({message, subject : "Email verification", to : user.email});
-      await user.save();
-    } catch (error) {
-      user.emailVerificationToken = null;
-      user.emailVerificationTokenExpiry = null;
-      await user.save();
-    }
-    // const port =
+  await deleteFile([avatar]);
 
-    sendResponse(res, 'User registered successfully !', user, 200);
-  
+  // now we send email verification mail.
+  const token = user.generateEmailVerificationToken();
+  const origin = req.headers.origin;
+  const url = `${origin}/api/v1/verify-email/${token}`;
+  const message = generateEmailVerification(url, user.fullName);
+
+  try {
+    await sendMail({ message, subject: 'Email verification', to: user.email });
+    await user.save();
+  } catch (error) {
+    user.emailVerificationToken = null;
+    user.emailVerificationTokenExpiry = null;
+    await user.save();
+  }
+  // const port =
+
+  sendResponse(res, 'User registered successfully !', user, 200);
 });
 
 export const verifyEmail = asyncErrorHandler(async (req, res, next) => {
@@ -74,15 +72,70 @@ export const verifyEmail = asyncErrorHandler(async (req, res, next) => {
   user.emailVerificationTokenExpiry = null;
   await user.save();
   sendResponse(res, 'Email verified successfully !', user, 200);
-  
 });
 
 export const login = asyncErrorHandler(async (req, res, next) => {
-  const {email, password} = req.body;
-  const sessionId = req.cookies.sessionId;
-  console.log(sessionId);
-  res.status(200).json({
-    success : true,
-    message : "User logged in successfully !",
-  })
-})
+  const { email, password } = req.body;
+  const { _sid } = req.signedCookies;
+
+  // first we validate email and password.
+  const user = await Users.findOne({ email }).select("+password");
+
+  if (!user) {
+    return next(new ErrorHandler('Invalid credentials !', 400));
+  }
+
+  // now we check password.
+  if (!(await user.comparePassword(password))) {
+    return next(new ErrorHandler('Invalid credentials !', 400));
+  }
+
+  const options = {
+    httpOnly: true,
+    sameSite: 'None',
+    secure: true,
+    maxAge: 1000 * 60 * 60 * 24 * 10,
+    signed: true,
+  };
+
+  const sessions = await Session.find({ userId: user._id });
+
+  if (sessions.length >= 3) {
+    return next(
+      new ErrorHandler('You have logged in from too many devices', 400),
+    );
+  }
+
+  // now we session is valid or not.
+  if (_sid) {
+    const session = await Session.findOne({ _id: _sid });
+
+    if (session) {
+      if (session.userId && session.userId.toString() === user._id.toString()) {
+        return sendResponse(res, 'User already logged in !', null, 200);
+      }
+      if (new Date(session.expiresAt).valueOf() > Date.now()) {
+        // we add the session in cookie with adding time.
+
+        session.expiresAt = Date.now() + 1000 * 60 * 60 * 24 * 10;
+        session.userId = user._id;
+        await session.save();
+        res.cookie('_sid', _sid, options);
+        return sendResponse(res, 'User logged in successfully !', null, 200);
+      } else {
+        await Session.findByIdAndDelete(_sid);
+      }
+
+      // now we check this user is logged in how many device.
+    }
+  }
+
+  // if session not present then create new fresh session.
+
+  const session = await Session.create({
+    userId: user.id,
+    expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 10,
+  });
+  res.cookie('_sid', session._id, options);
+  return sendResponse(res, 'User logged in successfully !', null, 200);
+});
