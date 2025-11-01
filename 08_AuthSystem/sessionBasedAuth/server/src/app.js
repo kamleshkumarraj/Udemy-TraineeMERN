@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { authRouter } from './routes/auth.routes.js';
 import { sessionRouter } from './routes/session.routes.js';
+import { userProfileRouter } from './routes/userProfile.routes.js';
 
 export const app = express();
 
@@ -45,6 +46,9 @@ app.use('/api/v1/auth', authRouter);
 
 // now we configure routes for handling session routes.
 app.use('/api/v1/session', sessionRouter);
+
+// now we configure routes for handling user profile routes.
+app.use('/api/v1/profile', userProfileRouter);
 
 // now we write code for handling unhandled rejection.
 process.on('unhandledRejection', err => {
