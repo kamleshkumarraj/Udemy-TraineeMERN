@@ -4,8 +4,10 @@ import { FaUserAlt, FaEnvelope, FaLock, FaCamera } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useMutation } from "../hooks/useMutation.hooks";
 import { useRegisterMutation } from "../api/auth.api";
+import { Link, useNavigate } from "react-router";
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
   const [avatar, setAvatar] = useState(null);
   const [preview, setPreview] = useState(null);
   const [userInfo, setUserInfo] = useState({
@@ -95,6 +97,7 @@ export default function RegisterPage() {
     e.preventDefault();
     if(!avatar){
       toast.error("please upload profile image !");
+      return;
     }
     const error = validate(userInfo)
     if(Object.keys(error).length > 0) {
@@ -107,9 +110,11 @@ export default function RegisterPage() {
 
     formData.append('avatar', avatar);
     Object.entries(userInfo).forEach(([key , value]) => {
-      formData[key] = value;
+      formData.append(key,value);
     });
-    register(formData);
+    register({args : formData, toastMessage : "User registration...", callback : () => {
+      navigate("/login");
+    }});
 
   }
 
@@ -257,7 +262,7 @@ export default function RegisterPage() {
               onClick={handleRegister}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 rounded-2xl font-semibold shadow-lg hover:shadow-pink-500/50 transition-all"
+              className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 rounded-2xl font-semibold shadow-lg hover:shadow-pink-500/50 transition-all hover:cursor-pointer"
             >
               Register
             </motion.button>
@@ -265,9 +270,9 @@ export default function RegisterPage() {
             <div className="text-center mt-4 text-white/80">
               <p className="text-sm">
                 Already have an account?{" "}
-                <a href="#" className="text-pink-300 hover:underline">
+                <Link to="/login" className="text-pink-300 hover:cursor-pointer hover:underline">
                   Login
-                </a>
+                </Link>
               </p>
             </div>
           </form>
