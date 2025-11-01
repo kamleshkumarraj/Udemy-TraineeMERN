@@ -5,31 +5,53 @@ import { useNavigate } from "react-router-dom";
 import { LogOut, AlertTriangle } from "lucide-react";
 import LogoutOtherDevicesAlert from "../components/auth/AlterLogoutOtherDevice";
 import { useMutation } from "../hooks/useMutation.hooks";
-import { useDeleteAllSessionMutation, useDeleteSingleSessionMutation } from "../api/session.api";
+import {
+  useDeleteAllSessionMutation,
+  useDeleteSingleSessionMutation,
+} from "../api/session.api";
 import { useLoginMutation } from "../api/auth.api";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getCredentials,
+  resetCredentials,
+} from "../store/slice/loginCredential.slice";
 
 export default function SessionConflict() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const payload = useSelector(getCredentials);
+  const dispatch = useDispatch();
   const [alertLogout, setAlertLogout] = useState({
     open: false,
     alert: "",
   });
 
-  const {executeMutate : logoutSingle} = useMutation(useDeleteSingleSessionMutation);
-  const {executeMutate : logoutAll} = useMutation(useDeleteAllSessionMutation);
-  const {executeMutate : login} = useMutation(useLoginMutation);
+  const { executeMutate: logoutSingle } = useMutation(
+    useDeleteSingleSessionMutation
+  );
+  const { executeMutate: logoutAll } = useMutation(useDeleteAllSessionMutation);
+  const { executeMutate: login } = useMutation(useLoginMutation);
 
   const handleLogout = () => {
-    if(alertLogout?.alert === 'single device'){
-      logoutSingle({toastMessage : 'logging out single...' , callback : () => {
-        login({args : payload, toastMessage : "logging in..."})
-      }});
-    }else if(alertLogout?.alert === 'multiple device'){
-      logoutAll({toastMessage : "logging out all..."})
+    if (alertLogout?.alert === "single device") {
+      logoutSingle({
+        toastMessage: "logging out single...",
+        callback: () => {
+          login({ args: payload, toastMessage: "logging in..." });
+          dispatch(resetCredentials());
+        },
+      });
+    } else if (alertLogout?.alert === "multiple device") {
+      logoutAll({
+        toastMessage: "logging out all...",
+        callback: () => {
+          login({ args: payload, toastMessage: "logging in..." });
+          dispatch(resetCredentials());
+        },
+      });
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4">
@@ -41,7 +63,9 @@ export default function SessionConflict() {
               : "Are you sure to logout from all other devices !"
           }
           open={alertLogout.open}
-          onConfirm={() => handleLogout}
+          onConfirm={() => {
+            handleLogout();
+          }}
           onCancel={() => {
             setAlertLogout({
               open: false,
@@ -94,10 +118,7 @@ export default function SessionConflict() {
               <span className="animate-pulse">Processing...</span>
             ) : (
               <>
-                <LogOut
-                  size={18}
-                />{" "}
-                Logout Other Devices
+                <LogOut size={18} /> Logout Other Devices
               </>
             )}
           </button>

@@ -34,7 +34,7 @@ export const useMutation = (mutationFn) => {
             'We get error during creating a new request',
           type: 'error',
         })
-        errCallback(error);
+        if(errCallback) errCallback(error);
       }
     } catch (error) {
       setError(error)

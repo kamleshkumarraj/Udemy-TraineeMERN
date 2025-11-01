@@ -1,14 +1,13 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CheckCircle, Loader2 } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useVerifyEmailQuery } from "../api/auth.api";
 
 export default function EmailVerificationPage() {
   const navigate = useNavigate();
   const params = useParams();
   const {isLoading, isSuccess, error, data, isError} = useVerifyEmailQuery(params.token);
-  console.log(data)
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-6">

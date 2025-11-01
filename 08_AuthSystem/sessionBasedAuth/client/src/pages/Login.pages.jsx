@@ -8,58 +8,77 @@ import { useLoginMutation } from "../api/auth.api";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../store/slice/auth.slice";
+import { setCredentials } from "../store/slice/loginCredential.slice";
 
 export default function LoginPage() {
-  const {executeMutate : login, data : loginData, error : loginErr} = useMutation(useLoginMutation);
+  const { executeMutate: login } = useMutation(useLoginMutation);
   const [userData, setUserData] = useState({
-    email : "",
-    password : ""
+    email: "",
+    password: "",
   });
 
   const [error, setError] = useState({
-    email : "",
-    password : ""
-  })
+    email: "",
+    password: "",
+  });
 
   const errorConf = {
-    email : [
-      {required : true , message : "Please enter your email !"},
-      {pattern : /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/ , message : "Please enter valid email !"}
-      ],
-    password : [
-      {required : true , message : "Password must be required !"},
-      {minLength : 8 , message : "Password must be contain at least 8 character !"},
-      {includes : '@&#' , message : "In password must be includes @ # &"},
-      {pattern : /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/ , message : "Password must be complex alphanumeric and special character also !"}
+    email: [
+      { required: true, message: "Please enter your email !" },
+      {
+        pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+        message: "Please enter valid email !",
+      },
+    ],
+    password: [
+      { required: true, message: "Password must be required !" },
+      {
+        minLength: 8,
+        message: "Password must be contain at least 8 character !",
+      },
+      { includes: "@&#", message: "In password must be includes @ # &" },
+      {
+        pattern:
+          /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+        message:
+          "Password must be complex alphanumeric and special character also !",
+      },
     ],
   };
 
   const validate = (formDataLocal) => {
     const error = {};
-    Object.entries(formDataLocal).forEach(([key , value]) => {
+    Object.entries(formDataLocal).forEach(([key, value]) => {
       errorConf[key]?.some((rule) => {
-        if(rule.required && !value){
-          error[key] = rule.message
-          return true
+        if (rule.required && !value) {
+          error[key] = rule.message;
+          return true;
         }
-        if(rule.pattern && !rule.pattern.test(value)){
-          error[key] = rule.message
-          return true
+        if (rule.pattern && !rule.pattern.test(value)) {
+          error[key] = rule.message;
+          return true;
         }
-        if(rule.minLength && value.length < rule.minLength ){
-          error[key] = rule.message
-          return true
+        if (rule.minLength && value.length < rule.minLength) {
+          error[key] = rule.message;
+          return true;
         }
-        if(rule.includes && !(value.includes(rule.includes[0]) || value.includes(rule.includes[1]) || value.includes(rule.includes[2]))){
-          error[key] = rule.message
-          return true
+        if (
+          rule.includes &&
+          !(
+            value.includes(rule.includes[0]) ||
+            value.includes(rule.includes[1]) ||
+            value.includes(rule.includes[2])
+          )
+        ) {
+          error[key] = rule.message;
+          return true;
         }
-      })
-    })
-    
-    setError(error)
-    return error
-  }
+      });
+    });
+
+    setError(error);
+    return error;
+  };
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -67,30 +86,48 @@ export default function LoginPage() {
   const loginHandler = async (e) => {
     e.preventDefault();
     const error = validate(userData);
-    if(Object.keys(error).length > 0) {
-      toast.error("All fields are required !")
+    if (Object.keys(error).length > 0) {
+      toast.error("All fields are required !");
       return;
     }
-    login({args : userData, toastMessage : "User login...", callback : () => {
-      navigate("/");
-      dispatch(setLogin({
-        isAuthenticated : true,
-        role : null
-      }))
-    }, errCallback : (err) => {
-      if(err?.data?.statusCode === 400 && err?.data?.message === 'You have logged in from too many devices'){
-        navigate('/many-device-handle');
-      }
-    }});
-  }
+    login({
+      args: userData,
+      toastMessage: "User login...",
+      callback: () => {
+        navigate("/");
+        dispatch(
+          setLogin({
+            isAuthenticated: true,
+            role: null,
+          })
+        );
+      },
+      errCallback: (err) => {
+        if (
+          err?.data?.statusCode === 400 &&
+          err?.data?.message === "You have logged in from too many devices"
+        ) {
+          dispatch(
+            setCredentials({
+              email: userData?.email,
+              password: userData?.password,
+            })
+          );
+          navigate("/many-device-handle");
+        }
+      },
+    });
+  };
 
   const inputHandler = (e) => {
-    setUserData((prevData) => ({...prevData , [e.target.name] : e.target.value}));
-  }
+    setUserData((prevData) => ({
+      ...prevData,
+      [e.target.name]: e.target.value,
+    }));
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500">
       <div className="w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
-        
         {/* Left Side - Image */}
         <div
           className="hidden md:flex md:w-1/2 items-center justify-center bg-cover bg-center relative"
@@ -180,10 +217,7 @@ export default function LoginPage() {
             <div className="text-center mt-4 text-white/80">
               <p className="text-sm">
                 Don’t have an account?{" "}
-                <Link
-                  to="/register"
-                  className="text-pink-300 hover:underline"
-                >
+                <Link to="/register" className="text-pink-300 hover:underline">
                   Sign Up
                 </Link>
               </p>
