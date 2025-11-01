@@ -8,7 +8,8 @@ const userProfileApi = baseApi.injectEndpoints({
         url : '/profile/my-profile',
         method : "GET",
         credentials : "include"
-      })
+      }),
+      transformResponse : (res) => res?.data
     })
   })
 })

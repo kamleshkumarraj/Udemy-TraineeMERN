@@ -20,13 +20,16 @@ function App() {
 
   const { data, error } = useGetProfileQuery();
   useEffect(() => {
-    dispatch(
+    if(data){
+      console.log("Hello world")
+      dispatch(
       setLogin({
         isAuthenticated: true,
         role: "user",
       })
     );
-  }, [data]);
+    }
+  }, [data, error]);
   console.log(error)
   return (
     <>

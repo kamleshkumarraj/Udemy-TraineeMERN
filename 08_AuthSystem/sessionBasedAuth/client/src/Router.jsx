@@ -5,6 +5,7 @@ import HomePage from './pages/Home.pages'
 import NotFound from './pages/Error.pages'
 import RegisterPage from './pages/Register.pages'
 import EmailVerificationPage from './pages/MailVerification.pages'
+import SessionConflict from './pages/MultipleDeviceLoggedIn'
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path : '/api/v1/verify-email/:token',
     element : <EmailVerificationPage />
+  },
+  {
+    path : '/many-device-handle',
+    element : <SessionConflict />
   }
 ])
 

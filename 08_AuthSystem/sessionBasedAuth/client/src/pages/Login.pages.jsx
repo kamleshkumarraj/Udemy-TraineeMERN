@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { setLogin } from "../store/slice/auth.slice";
 
 export default function LoginPage() {
-  const {executeMutate : login} = useMutation(useLoginMutation);
+  const {executeMutate : login, data : loginData, error : loginErr} = useMutation(useLoginMutation);
   const [userData, setUserData] = useState({
     email : "",
     password : ""
@@ -77,6 +77,10 @@ export default function LoginPage() {
         isAuthenticated : true,
         role : null
       }))
+    }, errCallback : (err) => {
+      if(err?.data?.statusCode === 400 && err?.data?.message === 'You have logged in from too many devices'){
+        navigate('/many-device-handle');
+      }
     }});
   }
 

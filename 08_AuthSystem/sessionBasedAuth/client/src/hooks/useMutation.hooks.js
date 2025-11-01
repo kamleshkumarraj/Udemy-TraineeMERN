@@ -9,7 +9,7 @@ export const useMutation = (mutationFn) => {
   const [error, setError] = useState(null)
   const [isSuccess, setIsSuccess] = useState(false)
 
-  const executeMutate = async ({ toastMessage, args, callback }) => {
+  const executeMutate = async ({ toastMessage, args, callback, errCallback }) => {
     const toastId = toast.loading(toastMessage)
     setIsLoading(true)
 
@@ -25,6 +25,7 @@ export const useMutation = (mutationFn) => {
         setIsSuccess(true);
         if(callback) callback();
       } else {
+        console.log('get error')
         setError(error)
         toastUpdate({
           toastId,
@@ -33,9 +34,9 @@ export const useMutation = (mutationFn) => {
             'We get error during creating a new request',
           type: 'error',
         })
+        errCallback(error);
       }
     } catch (error) {
-      console.log(error)
       setError(error)
       toastUpdate({
         toastId,
