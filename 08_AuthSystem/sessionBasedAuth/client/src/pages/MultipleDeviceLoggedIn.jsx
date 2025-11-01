@@ -37,7 +37,7 @@ export default function SessionConflict() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white shadow-2xl rounded-2xl max-w-md w-full p-8 text-center"
+        className="bg-white shadow-2xl rounded-2xl max-w-xl w-full p-8 text-center"
       >
         <div className="flex justify-center mb-4">
           <AlertTriangle className="text-red-500 w-16 h-16" />
@@ -77,11 +77,25 @@ export default function SessionConflict() {
             )}
           </button>
           <button
+            onClick={handleForceLogout}
+            disabled={loading}
+            className="bg-red-600 text-white px-6 py-2 rounded-xl flex items-center justify-center gap-2 hover:bg-red-700 transition-all"
+          >
+            {loading ? (
+              <span className="animate-pulse">Processing...</span>
+            ) : (
+              <>
+                <LogOut size={18} /> Logout From All Devices
+              </>
+            )}
+          </button>
+          <button
             onClick={() => navigate("/login")}
             className="bg-gray-200 text-gray-800 px-6 py-2 rounded-xl hover:bg-gray-300 transition-all"
           >
             Cancel
           </button>
+
         </div>
       </motion.div>
     </div>
