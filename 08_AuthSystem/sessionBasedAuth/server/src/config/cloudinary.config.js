@@ -6,6 +6,7 @@ import {
 } from '../constant.js';
 
 export const configCloudinary = async () => {
+  console.log(CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET)
   cloudinary.config({
     cloud_name: CLOUDINARY_CLOUD_NAME,
     api_key: CLOUDINARY_API_KEY,

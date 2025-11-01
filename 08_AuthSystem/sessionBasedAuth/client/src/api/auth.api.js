@@ -7,10 +7,21 @@ const authApi = baseApi.injectEndpoints({
         url : '/auth/register',
         method : 'POST',
         body : payload,
+        credentials : 'include',
+        headers : {
+          'Content-Type' : 'multipart/form-data'
+        }
+      })
+    }),
+
+    verifyEmail : builder.query({
+      query : (token) => ({
+        url : `/auth/verify-email/${token}`,
+        method : 'GET',
         credentials : 'include'
       })
     })
   }),
 })
 
-export const {useRegisterMutation} = authApi;
+export const {useRegisterMutation, useVerifyEmailQuery} = authApi;

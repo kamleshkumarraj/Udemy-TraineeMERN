@@ -3,6 +3,10 @@ import dotenv from 'dotenv/config';
 import { app } from './app.js';
 import { PORT } from './constant.js';
 import { connectDB } from './db/connect.db.js';
+import { configCloudinary } from './config/cloudinary.config.js';
+
+await configCloudinary();
+
 connectDB()
   .then(() => {
     app.listen(PORT, () => {
