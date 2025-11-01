@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom"; // ✅ Correct import for 
 import { useMutation } from "../hooks/useMutation.hooks";
 import { useLoginMutation } from "../api/auth.api";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../store/slice/auth.slice";
 
 export default function LoginPage() {
   const {executeMutate : login} = useMutation(useLoginMutation);
@@ -60,6 +62,7 @@ export default function LoginPage() {
   }
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const loginHandler = async (e) => {
     e.preventDefault();
@@ -70,6 +73,10 @@ export default function LoginPage() {
     }
     login({args : userData, toastMessage : "User login...", callback : () => {
       navigate("/");
+      dispatch(setLogin({
+        isAuthenticated : true,
+        role : null
+      }))
     }});
   }
 
