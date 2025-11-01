@@ -10,6 +10,8 @@ import { setLogin } from "./store/slice/auth.slice";
 function App() {
   const [createSession] = useCreateSessionMutation();
   const dispatch = useDispatch();
+  const { data, error } = useGetProfileQuery();
+  
   useEffect(() => {
     (async () => {
       const { data, error } = await createSession();
@@ -18,7 +20,6 @@ function App() {
     })();
   }, []);
 
-  const { data, error } = useGetProfileQuery();
   useEffect(() => {
     if(data){
       console.log("Hello world")
@@ -30,7 +31,7 @@ function App() {
     );
     }
   }, [data, error]);
-  console.log(error)
+
   return (
     <>
       <Header />

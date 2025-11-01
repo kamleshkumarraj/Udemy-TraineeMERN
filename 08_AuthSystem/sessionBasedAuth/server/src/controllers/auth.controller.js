@@ -100,7 +100,7 @@ export const login = asyncErrorHandler(async (req, res, next) => {
 
   const sessions = await Session.find({ userId: user._id });
 
-  if (sessions.length >= 3) {
+  if (sessions.length >= process.env.MAX_DEVICE_LOGIN) {
     return next(
       new ErrorHandler('You have logged in from too many devices', 400),
     );

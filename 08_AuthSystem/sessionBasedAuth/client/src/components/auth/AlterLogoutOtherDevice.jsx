@@ -13,7 +13,7 @@ export default function LogoutOtherDevicesAlert({ open, onConfirm, onCancel, mes
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="bg-white rounded-2xl shadow-2xl p-6 w-[90%] max-w-sm text-center"
+            className="bg-white rounded-2xl shadow-2xl p-6 w-[90%] max-w-lg text-center"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}

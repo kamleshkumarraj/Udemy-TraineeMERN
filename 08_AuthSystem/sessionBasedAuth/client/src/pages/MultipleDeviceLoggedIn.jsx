@@ -3,36 +3,35 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LogOut, AlertTriangle } from "lucide-react";
+import LogoutOtherDevicesAlert from "../components/auth/AlterLogoutOtherDevice";
 
 export default function SessionConflict() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [alertLogout, setAlertLogout] = useState({
+    open : false,
+    alert : ""
+  });
 
-  const handleForceLogout = async () => {
-    try {
-      setLoading(true);
-      setMessage("");
-      // API call to force logout from all other devices
-      const res = await axios.post(
-        "/api/auth/logout-others",
-        {},
-        { withCredentials: true }
-      );
-      setMessage(res.data.message || "Logged out from all other devices.");
-      setTimeout(() => navigate("/login"), 2000);
-    } catch (err) {
-      setMessage(
-        err.response?.data?.message ||
-          "Something went wrong. Please try again."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4">
+      {
+        alertLogout.open && <LogoutOtherDevicesAlert
+          message={alertLogout.alert == "single device" ? "Are you sure to logout from other device !" : "Are you sure to logout from all other devices !"}
+          open={alertLogout.open}
+          onConfirm={() => {}}
+          onCancel={() => {
+            setAlertLogout({
+              open : false,
+              alert : ""
+            })
+          }}
+        />
+      }
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -64,7 +63,12 @@ export default function SessionConflict() {
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
-            onClick={handleForceLogout}
+            onClick={() =>{
+              setAlertLogout({
+                open : true,
+                alert : "single device"
+              })
+            }}
             disabled={loading}
             className="bg-red-600 text-white px-6 py-2 rounded-xl flex items-center justify-center gap-2 hover:bg-red-700 transition-all"
           >
@@ -72,13 +76,22 @@ export default function SessionConflict() {
               <span className="animate-pulse">Processing...</span>
             ) : (
               <>
-                <LogOut size={18} /> Logout Other Devices
+                <LogOut onClick={() => {
+                  setAlertLogout({
+                    open : true,
+                    alert : "single device"
+                  })
+                }} size={18} /> Logout Other Devices
               </>
             )}
           </button>
           <button
-            onClick={handleForceLogout}
-            disabled={loading}
+            onClick={() =>{
+              setAlertLogout({
+                open : true,
+                alert : "multiple device"
+              })
+            }}
             className="bg-red-600 text-white px-6 py-2 rounded-xl flex items-center justify-center gap-2 hover:bg-red-700 transition-all"
           >
             {loading ? (
