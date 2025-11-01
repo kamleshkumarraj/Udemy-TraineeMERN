@@ -76,3 +76,13 @@ export const verifyEmail = asyncErrorHandler(async (req, res, next) => {
   sendResponse(res, 'Email verified successfully !', user, 200);
   
 });
+
+export const login = asyncErrorHandler(async (req, res, next) => {
+  const {email, password} = req.body;
+  const sessionId = req.cookies.sessionId;
+  console.log(sessionId);
+  res.status(200).json({
+    success : true,
+    message : "User logged in successfully !",
+  })
+})

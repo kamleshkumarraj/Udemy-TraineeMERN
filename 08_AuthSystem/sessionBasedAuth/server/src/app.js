@@ -19,7 +19,7 @@ app.use(
   }),
 );
 
-app.use(cookieParser());
+app.use(cookieParser(process.env.SECRET_KEY));
 
 // app.use(express.urlencoded({ extended: true }));
 

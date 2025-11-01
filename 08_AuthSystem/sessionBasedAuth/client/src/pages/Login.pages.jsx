@@ -1,10 +1,81 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc"; // Google Icon
-import { Link } from "react-router-dom"; // ✅ Correct import for React Router
+import { Link, useNavigate } from "react-router-dom"; // ✅ Correct import for React Router
+import { useMutation } from "../hooks/useMutation.hooks";
+import { useLoginMutation } from "../api/auth.api";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
+  const {executeMutate : login} = useMutation(useLoginMutation);
+  const [userData, setUserData] = useState({
+    email : "",
+    password : ""
+  });
+
+  const [error, setError] = useState({
+    email : "",
+    password : ""
+  })
+
+  const errorConf = {
+    email : [
+      {required : true , message : "Please enter your email !"},
+      {pattern : /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/ , message : "Please enter valid email !"}
+      ],
+    password : [
+      {required : true , message : "Password must be required !"},
+      {minLength : 8 , message : "Password must be contain at least 8 character !"},
+      {includes : '@&#' , message : "In password must be includes @ # &"},
+      {pattern : /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/ , message : "Password must be complex alphanumeric and special character also !"}
+    ],
+  };
+
+  const validate = (formDataLocal) => {
+    const error = {};
+    Object.entries(formDataLocal).forEach(([key , value]) => {
+      errorConf[key]?.some((rule) => {
+        if(rule.required && !value){
+          error[key] = rule.message
+          return true
+        }
+        if(rule.pattern && !rule.pattern.test(value)){
+          error[key] = rule.message
+          return true
+        }
+        if(rule.minLength && value.length < rule.minLength ){
+          error[key] = rule.message
+          return true
+        }
+        if(rule.includes && !(value.includes(rule.includes[0]) || value.includes(rule.includes[1]) || value.includes(rule.includes[2]))){
+          error[key] = rule.message
+          return true
+        }
+      })
+    })
+    
+    setError(error)
+    return error
+  }
+
+  const navigate = useNavigate();
+
+  const loginHandler = async (e) => {
+    e.preventDefault();
+    const error = validate(userData);
+    if(Object.keys(error).length > 0) {
+      toast.error("All fields are required !")
+      return;
+    }
+    login({args : userData, toastMessage : "User login...", callback : () => {
+      navigate("/");
+    }});
+  }
+
+  const inputHandler = (e) => {
+    setUserData((prevData) => ({...prevData , [e.target.name] : e.target.value}));
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500">
       <div className="w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
@@ -45,7 +116,10 @@ export default function LoginPage() {
               <FaUserAlt className="text-white/70 mr-3" />
               <input
                 type="text"
-                placeholder="Username"
+                placeholder="Email"
+                name="email"
+                value={userData?.email}
+                onChange={inputHandler}
                 className="bg-transparent outline-none text-white placeholder-white/70 w-full"
               />
             </div>
@@ -56,6 +130,9 @@ export default function LoginPage() {
               <input
                 type="password"
                 placeholder="Password"
+                name="password"
+                value={userData?.password}
+                onChange={inputHandler}
                 className="bg-transparent outline-none text-white placeholder-white/70 w-full"
               />
             </div>
@@ -64,6 +141,7 @@ export default function LoginPage() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={loginHandler}
               className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-2xl font-semibold shadow-lg hover:shadow-pink-500/50 transition-all"
             >
               Login

@@ -4,7 +4,7 @@ import {
   registerValidator,
   validateRegister,
 } from '../validators/register.validator.js';
-import { registerUser, verifyEmail } from '../controllers/auth.controller.js';
+import { login, registerUser, verifyEmail } from '../controllers/auth.controller.js';
 
 export const authRouter = Router();
 
@@ -17,3 +17,5 @@ authRouter.route('/register').post(
 );
 
 authRouter.route('/verify-email/:verifyToken').get(verifyEmail);
+
+authRouter.route('/login').post(login);
