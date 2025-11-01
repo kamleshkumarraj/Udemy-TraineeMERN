@@ -10,28 +10,33 @@ export default function SessionConflict() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [alertLogout, setAlertLogout] = useState({
-    open : false,
-    alert : ""
+    open: false,
+    alert: "",
   });
 
-  
-  
+  const handleLogout = () => {
+    if(ale)
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4">
-      {
-        alertLogout.open && <LogoutOtherDevicesAlert
-          message={alertLogout.alert == "single device" ? "Are you sure to logout from other device !" : "Are you sure to logout from all other devices !"}
+      {alertLogout.open && (
+        <LogoutOtherDevicesAlert
+          message={
+            alertLogout.alert == "single device"
+              ? "Are you sure to logout from other device !"
+              : "Are you sure to logout from all other devices !"
+          }
           open={alertLogout.open}
           onConfirm={() => {}}
           onCancel={() => {
             setAlertLogout({
-              open : false,
-              alert : ""
-            })
+              open: false,
+              alert: "",
+            });
           }}
         />
-      }
+      )}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -63,11 +68,11 @@ export default function SessionConflict() {
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
-            onClick={() =>{
+            onClick={() => {
               setAlertLogout({
-                open : true,
-                alert : "single device"
-              })
+                open: true,
+                alert: "single device",
+              });
             }}
             disabled={loading}
             className="bg-red-600 text-white px-6 py-2 rounded-xl flex items-center justify-center gap-2 hover:bg-red-700 transition-all"
@@ -76,21 +81,25 @@ export default function SessionConflict() {
               <span className="animate-pulse">Processing...</span>
             ) : (
               <>
-                <LogOut onClick={() => {
-                  setAlertLogout({
-                    open : true,
-                    alert : "single device"
-                  })
-                }} size={18} /> Logout Other Devices
+                <LogOut
+                  onClick={() => {
+                    setAlertLogout({
+                      open: true,
+                      alert: "single device",
+                    });
+                  }}
+                  size={18}
+                />{" "}
+                Logout Other Devices
               </>
             )}
           </button>
           <button
-            onClick={() =>{
+            onClick={() => {
               setAlertLogout({
-                open : true,
-                alert : "multiple device"
-              })
+                open: true,
+                alert: "multiple device",
+              });
             }}
             className="bg-red-600 text-white px-6 py-2 rounded-xl flex items-center justify-center gap-2 hover:bg-red-700 transition-all"
           >
@@ -108,7 +117,6 @@ export default function SessionConflict() {
           >
             Cancel
           </button>
-
         </div>
       </motion.div>
     </div>
