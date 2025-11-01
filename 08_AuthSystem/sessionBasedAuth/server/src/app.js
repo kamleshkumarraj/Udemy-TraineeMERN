@@ -2,6 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { authRouter } from './routes/auth.routes.js';
+import { sessionRouter } from './routes/session.routes.js';
 
 export const app = express();
 
@@ -41,6 +42,9 @@ app.get('/health-check', (req, res) => {
 
 // now we configure routes for handling authentication.
 app.use('/api/v1/auth', authRouter);
+
+// now we configure routes for handling session routes.
+app.use('/api/v1/session', sessionRouter);
 
 // now we write code for handling unhandled rejection.
 process.on('unhandledRejection', err => {

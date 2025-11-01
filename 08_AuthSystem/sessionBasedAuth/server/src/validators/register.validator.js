@@ -36,7 +36,26 @@ export const registerValidator = [
     .withMessage('Password must be at least 6 characters long'),
 ];
 
-export const validateRegister = (req, res, next) => {
+
+export const loginValidator = [
+  body('email')
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Email is invalid'),
+
+  body('password')
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage('Password is required')
+    .isLength({ min: 8, max: 50 })
+    .withMessage('Password must be at least 6 characters long'),
+
+]
+export const validator = (req, res, next) => {
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
