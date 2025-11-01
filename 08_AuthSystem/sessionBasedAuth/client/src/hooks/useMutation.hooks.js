@@ -14,8 +14,7 @@ export const useMutation = (mutationFn) => {
     setIsLoading(true)
 
     try {
-      const { data } = await mutate(args)
-
+      const { data, error } = await mutate(args)
       if (data?.success) {
         setData(data?.data)
         toastUpdate({
@@ -26,16 +25,17 @@ export const useMutation = (mutationFn) => {
         setIsSuccess(true);
         if(callback) callback();
       } else {
-        setError(data?.message)
+        setError(error)
         toastUpdate({
           toastId,
           message:
-            data?.message ||
+            error?.data?.message ||
             'We get error during creating a new request',
           type: 'error',
         })
       }
     } catch (error) {
+      console.log(error)
       setError(error)
       toastUpdate({
         toastId,
