@@ -12,7 +12,9 @@ const transporter = createTransport({
 
 export const sendMail = async ({message, subject, to}) => {
   const mailOptions = {
-    from : process.env.SENDER_EMAIL,
+    // we provide send mail with name.
+
+    from : `Auth System <${process.env.SENDER_EMAIL}>`,
     to,
     subject,
     html : message

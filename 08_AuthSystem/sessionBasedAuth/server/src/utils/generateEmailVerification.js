@@ -1,4 +1,4 @@
-export const generateEmailVerification = (verificationURL) => {
+export const generateEmailVerification = (verificationURL, username) => {
   const mailTemplate = `
 <!doctype html>
 <html lang="en">
@@ -17,7 +17,7 @@ export const generateEmailVerification = (verificationURL) => {
   </head>
   <body style="margin:0; padding:0; background-color:#f4f6f8; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; color:#111;">
     <span style="display:none; font-size:1px; color:#f4f6f8; max-height:0; max-width:0; opacity:0; overflow:hidden;">
-      Confirm your email to activate your {{company_name}} account.
+      Confirm your email to activate your Auth server account.
     </span>
 
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f6f8;">
@@ -27,7 +27,7 @@ export const generateEmailVerification = (verificationURL) => {
             
             <tr>
               <td style="padding:24px; text-align:left; background:linear-gradient(90deg,#0ea5a4, #06b6d4);">
-                <img src="{{logo_url}}" alt="{{company_name}} logo" width="120" style="display:block; border:0; outline:none; text-decoration:none;" />
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDhd_OLQ2ZlHSBj6kD1EoAYaXFMkHNJg49NQ&s" alt="Auth server logo" width="120" style="display:block; border:0; outline:none; text-decoration:none;" />
               </td>
             </tr>
 
@@ -37,8 +37,8 @@ export const generateEmailVerification = (verificationURL) => {
                   Verify your email address
                 </h1>
                 <p style="margin:0 0 20px; font-size:16px; line-height:24px; color:#334155;">
-                  Hi {{username}},<br />
-                  Thanks for creating an account with <strong>{{Auth Server}}</strong>. Please verify your email so you can start using your account.
+                  Hi ${username},<br />
+                  Thanks for creating an account with <strong>Auth Server</strong>. Please verify your email so you can start using your account.
                 </p>
 
                 <table role="presentation" cellspacing="0" cellpadding="0" style="margin:22px 0;">
@@ -64,7 +64,7 @@ export const generateEmailVerification = (verificationURL) => {
 
                 <p style="margin:0; font-size:13px; color:#64748b;">
                   This verification link will expire in <strong>24 hours</strong>. If you didn't create an account, you can ignore this email or contact us at
-                  <a href="mailto:{{kamleshkumar.dev86034@gmail.com}}" style="color:#06b6d4; text-decoration:none;">{{kamleshkumar.dev86034@gmail.com}}</a>.
+                  <a href="mailto:kamleshkumar.dev86034@gmail.com" style="color:#06b6d4; text-decoration:none;">kamleshkumar.dev86034@gmail.com</a>.
                 </p>
               </td>
             </tr>
@@ -73,14 +73,14 @@ export const generateEmailVerification = (verificationURL) => {
               <td style="padding:18px 28px 28px; background-color:#fbfbfc; text-align:left;">
                 <p style="margin:0 0 6px; font-size:13px; color:#94a3b8;">
                   Regards,<br />
-                  <strong>{{Auth Server}} Team</strong>
+                  <strong>Auth Server Team</strong>
                 </p>
                 <p style="margin:10px 0 0; font-size:12px; color:#94a3b8;">
-                  © 2025 {{Auth Server}}. All rights reserved.
+                  © 2025 Auth Server. All rights reserved.
                 </p>
                 <p style="margin:12px 0 0; font-size:12px; color:#94a3b8;">
                   <a href="{{company_website}}" style="color:#06b6d4; text-decoration:none;">Visit our website</a> •
-                  <a href="mailto:{{kamleshkumar.dev86034@gmail.com}}" style="color:#06b6d4; text-decoration:none;">Support</a>
+                  <a href="mailto:kamleshkumar.dev86034@gmail.com" style="color:#06b6d4; text-decoration:none;">Support</a>
                 </p>
               </td>
             </tr>
@@ -89,7 +89,7 @@ export const generateEmailVerification = (verificationURL) => {
           <table role="presentation" width="600" style="max-width:600px; margin-top:10px;">
             <tr>
               <td style="padding:12px; text-align:center; font-size:12px; color:#99a3b1;">
-                You received this email because you created an account at {{Auth Server}}. If this wasn't you, you can safely ignore it.
+                You received this email because you created an account at Auth Server. If this wasn't you, you can safely ignore it.
               </td>
             </tr>
           </table>
@@ -99,4 +99,5 @@ export const generateEmailVerification = (verificationURL) => {
   </body>
 </html>
 `;
+  return mailTemplate;
 };
