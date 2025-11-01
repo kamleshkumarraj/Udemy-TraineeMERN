@@ -17,6 +17,8 @@ const sessionSchema = new mongoose.Schema({
       ref : "products",
     }
   ],
-  
+
 
 }, {timestamps : true})
+
+export const Session = mongoose.model("sessions", sessionSchema);

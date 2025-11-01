@@ -7,6 +7,7 @@ import { deleteFile } from '../utils/file.utils.js';
 import { generateEmailVerification } from '../utils/generateEmailVerification.js';
 import { sendResponse } from '../utils/response.utility.js';
 import { sendMail } from '../utils/sendMail.utils.js';
+import { Session } from '../models/session.models.js';
 
 export const registerUser = asyncErrorHandler(async (req, res, next) => {
   const {fullName, email, username, password, role = 'user' } = req.body;
