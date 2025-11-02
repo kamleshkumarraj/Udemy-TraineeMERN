@@ -18,7 +18,7 @@ export const addCartItem = asyncErrorHandler(async (req, res, next) => {
   });
 });
 
-export const decreaseCartQty = asyncHandler(async (req, res, next) => {
+export const decreaseCartQty = asyncErrorHandler(async (req, res, next) => {
   const { cartItemId } = req.params;
   const cartItem = await cart.findById(cartItemId);
 
@@ -38,7 +38,7 @@ export const decreaseCartQty = asyncHandler(async (req, res, next) => {
   });
 });
 
-export const getAllCartItems = asyncHandler(async (req, res, next) => {
+export const getAllCartItems = asyncErrorHandler(async (req, res, next) => {
   const userId = req.user.id;
   if (mongoose.isValidObjectId(userId) == false)
     return ErrorHandler('Please send valid user id !');
@@ -72,7 +72,7 @@ export const getAllCartItems = asyncHandler(async (req, res, next) => {
   });
 });
 
-export const increaseCartQty = asyncHandler(async (req, res, next) => {
+export const increaseCartQty = asyncErrorHandler(async (req, res, next) => {
   const { cartItemId } = req.params;
   const cartItem = await cart.findById(cartItemId);
 
@@ -88,7 +88,7 @@ export const increaseCartQty = asyncHandler(async (req, res, next) => {
   });
 });
 
-export const removeCartItems = asyncHandler(async (req, res, next) => {
+export const removeCartItems = asyncErrorHandler(async (req, res, next) => {
   const { cartItemId } = req.params;
 
   const cartItem = await cart.findById(cartItemId);
@@ -103,7 +103,7 @@ export const removeCartItems = asyncHandler(async (req, res, next) => {
   });
 });
 
-export const removeMultipleCartItems = asyncHandler(async (req, res, next) => {
+export const removeMultipleCartItems = asyncErrorHandler(async (req, res, next) => {
   const deletableItems = req.body || [];
   console.log(deletableItems);
   if (deletableItems.length < 1)
