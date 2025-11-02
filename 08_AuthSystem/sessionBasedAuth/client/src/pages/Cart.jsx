@@ -16,6 +16,9 @@ const Cart = () => {
     total : 45
   }
   
+  const {}
+
+
   if (cartItems.length == 0)
     return (
       <CartLoader
