@@ -41,7 +41,7 @@ function FeaturedCard({ item }) {
           <span className="text-gray-800">${item?.price}</span>
           <del className="text-gray-400">$500</del>
         </div>
-        <Pair_3 cartToProductMap={cartToProductMap} item={item} bgColor={'bg-gray-200'} />
+        <Pair_3 item={item} bgColor={'bg-gray-200'} />
       </div>
     </div>
   );

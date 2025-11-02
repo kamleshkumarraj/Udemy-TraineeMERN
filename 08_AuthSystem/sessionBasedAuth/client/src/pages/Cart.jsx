@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 import { BsCartX } from "react-icons/bs";
 import { FiMinus, FiPlus } from "react-icons/fi";
+import { useGetAllCartQuery } from "../api/cart.api";
 import CartLoader from "../components/cart/CartLoader";
 import FetchingLoading from "../components/cart/FetchingLoading";
-import { useGetAllCartQuery } from "../api/cart.api";
 
 const Cart = () => {
   const cartTotal = {
@@ -14,9 +14,10 @@ const Cart = () => {
     total : 45
 
   }
+
   
   const {data : cartItems, isLoading : apiStatus} = useGetAllCartQuery();
-
+  
 
   if (cartItems?.length == 0)
     return (

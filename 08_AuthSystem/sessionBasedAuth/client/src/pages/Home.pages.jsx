@@ -3,6 +3,10 @@ import { FaEye, FaHeart, FaShoppingCart } from "react-icons/fa";
 import LatestProductsBody from "../components/home/LatestProductsBody";
 import { useGetProductsQuery } from "../api/products.api";
 import FeaturedCardShimmer from "../components/card/FeatureCardShimmer";
+import { useMemo } from "react";
+import { useGetAllCartQuery } from "../api/cart.api";
+import { useDispatch } from "react-redux";
+import { setProductToCartMap } from "../store/slice/misc.slice";
 
 export default function HomePage() {
   const {
@@ -10,6 +14,21 @@ export default function HomePage() {
     error: productsError,
     isLoading,
   } = useGetProductsQuery();
+
+  const {data : cartItems} = useGetAllCartQuery();
+  const dispatch = useDispatch();
+
+  useMemo(() => {
+    console.log("cart", cartItems)
+    const map = new Map();
+    cartItems?.forEach((item) => {
+      map.set(item?.productId, item?._id);
+    });
+    dispatch(setProductToCartMap(map));
+
+  },[cartItems])
+
+
   if(productsError) return <h1>We get error during fetching product data</h1> 
   return (
     <div className="min-h-screen  text-white">

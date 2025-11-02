@@ -4,19 +4,14 @@ import { createSlice } from "@reduxjs/toolkit";
 const miscSlice = createSlice({
   name : 'misc',
   initialState : {
-    productToCartMap : new Map(),
+    productToCartMap : undefined,
   },
   reducers : {
     setProductToCartMap : (state, action) => {
-      action.payload?.cartList.map((cart) => state.productToCartMap.set(cart.productId, cart?._id));
+      state.productToCartMap = action.payload;
     },
     removeProductToCartMap : (state, action) => {
-      state.productToCartMap.delete(action.payload?.productId);
-    },
-    removeCartWithCartId : (state, action) => {
-      state.productToCartMap.values().forEach((cartId) => {
-        if(cartId == action.payload?.cartId) state.productToCartMap.delete(action.payload?.productId);
-      })
+      state.productToCartMap = undefined
     }
   }
 })
