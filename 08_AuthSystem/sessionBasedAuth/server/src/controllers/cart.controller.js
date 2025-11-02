@@ -4,7 +4,7 @@ import { cart } from '../models/cart.model.js';
 import { productsModel } from '../models/products.models.js';
 import { ErrorHandler } from '../errors/errorHandler.js';
 import { Session } from '../models/session.models.js';
-import { addCartItemToCart, addCartItemToSession } from '../service/cart.service.js';
+import { addCartItemToCart, addCartItemToSession, getCartFromCartModel, getCartFromSession } from '../service/cart.service.js';
 
 export const addCartItem = asyncErrorHandler(async (req, res, next) => {
   const {_sid} = req.signedCookies;
@@ -17,7 +17,7 @@ export const addCartItem = asyncErrorHandler(async (req, res, next) => {
     if(!session.userId){
       transformResponse = await addCartItemToSession(req, res, next,session);
     }else if(session.userId.toString() == userId.toString()){
-      transformResponse = await addCartItemToCart(req, res, next);
+      transformResponse = await addCartItemToCart(req, res, next,session);
     }
   }else{
     if(session) await session.deleteOne();
@@ -66,12 +66,13 @@ export const getAllCartItems = asyncErrorHandler(async (req, res, next) => {
   let transformResponse;
   // now we check user is logged in or not.
   const session = await Session.findOne({ _id: _sid });
+  console.log(session)
   if(session && new Date(session.expiresAt).valueOf() > Date.now()){
     // now we check session is expired or not and user is not logged in.
-    if(!session.userId){
-      transformResponse = await addCartItemToSession(req, res, next,session);
-    }else if(session.userId.toString() == userId.toString()){
-      transformResponse = await addCartItemToCart(req, res, next);
+    if(!session?.userId){
+      transformResponse = await getCartFromSession(req, res, next, session._id);
+    }else if(session?.userId?.toString()){
+      transformResponse = await getCartFromCartModel(req, res, next, session);
     }
   }else{
     if(session) await session.deleteOne();
@@ -87,10 +88,11 @@ export const getAllCartItems = asyncErrorHandler(async (req, res, next) => {
     });
     
   }
-  res.status(201).json({
+  console.log(transformResponse)
+  res.status(200).json({
     success: true,
-    message: 'Product added in cart list successfully',
-    data: transformResponse,
+    message: 'We get all cart data successfully.',
+    data: transformResponse || [],
   });
 });
 

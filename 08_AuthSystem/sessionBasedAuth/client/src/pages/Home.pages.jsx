@@ -14,7 +14,7 @@ export default function HomePage() {
     error: productsError,
     isLoading,
   } = useGetProductsQuery();
-
+  
   const {data : cartItems} = useGetAllCartQuery();
   const dispatch = useDispatch();
 
