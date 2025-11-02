@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { FaEye, FaHeart, FaShoppingCart } from "react-icons/fa";
+import LatestProductsBody from "../components/home/LatestProductsBody";
 
 export default function HomePage() {
   const products = [
