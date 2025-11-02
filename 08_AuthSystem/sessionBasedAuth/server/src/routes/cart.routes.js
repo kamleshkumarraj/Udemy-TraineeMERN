@@ -10,7 +10,7 @@ import {
 
 export const cartRouter = Router();
 
-cartRouter.route('/get').get(getAllCartItems);
+cartRouter.route('/get-all').get(getAllCartItems);
 cartRouter.route('/add/:productId').post(addCartItem);
 cartRouter.route('/remove/:cartItemId').delete(removeCartItems);
 cartRouter.route('/increase/:cartItemId').patch(increaseCartQty);
