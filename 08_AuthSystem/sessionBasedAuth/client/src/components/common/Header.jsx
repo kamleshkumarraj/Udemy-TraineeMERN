@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { getAuth } from "../../store/slice/auth.slice";
 import { useGetProfileQuery } from "../../api/userProfile.api";
 import {
@@ -11,6 +11,7 @@ import {
 function Header() {
   const authDetails = useSelector(getAuth);
   const {data : user} = useGetProfileQuery();
+  const navigate = useNavigate();
   const wishlistCount = 2;
   const cartProductCount = 5;
   return (
@@ -31,15 +32,8 @@ function Header() {
             Contact
           </Link>
           <div className="flex items-center gap-[1.4rem] mt-[1.4rem] md:mt-0">
-          <div onClick={() => {}} className="relative cursor-pointer">
-            <AiFillHeart className="text-[24px] text-red-500" />
-            {wishlistCount > 0 && (
-              <span className="absolute -top-[10px] -right-[10px] bg-green-500 text-white text-[12px] rounded-full px-[6px]">
-                {wishlistCount}
-              </span>
-            )}
-          </div>
-          <div onClick={() => {}} className="relative cursor-pointer">
+          <div onClick={() => {navigate('/cart')}} className="relative flex gap-[2px] cursor-pointer">
+            <p className="hover:text-pink-300 text-[16px] font-normal">Cart</p>
             <AiFillShopping className="text-[24px] text-orange-500" />
             {cartProductCount > 0 && (
               <span className="absolute -top-[10px] -right-[10px] bg-green-500 text-white text-[12px] rounded-full px-[6px]">

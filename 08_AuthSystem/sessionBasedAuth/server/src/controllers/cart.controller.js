@@ -1,6 +1,8 @@
+import mongoose from 'mongoose';
 import { asyncErrorHandler } from '../errors/asyncErrorHandler.js';
 import { cart } from '../models/cart.model.js';
 import { productsModel } from '../models/products.models.js';
+import { ErrorHandler } from '../errors/errorHandler.js';
 
 export const addCartItem = asyncErrorHandler(async (req, res, next) => {
   const { productId } = req.params;
@@ -39,7 +41,8 @@ export const decreaseCartQty = asyncErrorHandler(async (req, res, next) => {
 });
 
 export const getAllCartItems = asyncErrorHandler(async (req, res, next) => {
-  const userId = req.user.id;
+  const userId = req.user;
+  console.log(userId.toString())
   if (mongoose.isValidObjectId(userId) == false)
     return ErrorHandler('Please send valid user id !');
   const cartItems = await cart

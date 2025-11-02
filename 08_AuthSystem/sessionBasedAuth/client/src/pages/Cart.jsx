@@ -5,21 +5,20 @@ import { BsCartX } from "react-icons/bs";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import CartLoader from "../components/cart/CartLoader";
 import FetchingLoading from "../components/cart/FetchingLoading";
+import { useGetAllCartQuery } from "../api/cart.api";
 
 const Cart = () => {
-  const loading = false;
-  const cartItems = [];
-  const apiStatus = false;
   const cartTotal = {
     subtotal : 23,
     fix : 34,
     total : 45
+
   }
   
-  const {}
+  const {data : cartItems, isLoading : apiStatus} = useGetAllCartQuery();
 
 
-  if (cartItems.length == 0)
+  if (cartItems?.length == 0)
     return (
       <CartLoader
         icon={<BsCartX size={250} color="#E8E8E8" />}
@@ -138,7 +137,7 @@ const Cart = () => {
           <h2 className="mb-4 text-[1.8rem] font-semibold">Order Summary</h2>
           <div className="flex justify-between mb-2">
             <p className="text-gray-600">Subtotal</p>
-            <p className="text-gray-800">${cartTotal.subtotal.toFixed(2)}</p>
+            <p className="text-gray-800">${cartTotal?.subtotal?.toFixed(2)}</p>
           </div>
           <div className="flex justify-between mb-2">
             <p className="text-gray-600">Shipping</p>
@@ -146,21 +145,15 @@ const Cart = () => {
           </div>
           <div className="flex justify-between mb-4">
             <p className="text-gray-600">Tax</p>
-            <p className="text-gray-800">${cartTotal.tax.toFixed(2)}</p>
+            <p className="text-gray-800">${cartTotal?.tax?.toFixed(2)}</p>
           </div>
           <div className="flex justify-between mb-6 text-[1.8rem] font-bold">
             <p>Total</p>
-            <p>${cartTotal.total.toFixed(2)}</p>
+            <p>${cartTotal?.total?.toFixed(2)}</p>
           </div>
 
           <Link
-            to={"/checkout"}
-            state={{
-              cartTotal,
-              orderedProducts: cartItems.filter(
-                (product) => product.availabilityStatus == "available"
-              ),
-            }}
+            
           >
             <button className="w-full py-3 bg-black text-white font-semibold mb-4 rounded-[8px]">
               Checkout

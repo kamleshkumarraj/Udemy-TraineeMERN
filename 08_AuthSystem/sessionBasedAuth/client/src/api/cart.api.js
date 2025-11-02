@@ -8,7 +8,8 @@ const cartApi = baseApi.injectEndpoints({
         url : '/cart/get-all',
         method : "GET",
         credentials : "include"
-      })
+      }),
+      transformResponse : (res) => res?.data
     })
   })
 })
