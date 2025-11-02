@@ -4,7 +4,7 @@ import { cart } from '../models/cart.model.js';
 import { productsModel } from '../models/products.models.js';
 import { ErrorHandler } from '../errors/errorHandler.js';
 import { Session } from '../models/session.models.js';
-import { addCartItemToCart, addCartItemToSession, getCartFromCartModel, getCartFromSession } from '../service/cart.service.js';
+import { addCartItemToCart, addCartItemToSession, getCartFromCartModel, getCartFromSession, removeCartFromSession, removeFromCartModel } from '../service/cart.service.js';
 
 export const addCartItem = asyncErrorHandler(async (req, res, next) => {
   const {_sid} = req.signedCookies;
@@ -88,7 +88,6 @@ export const getAllCartItems = asyncErrorHandler(async (req, res, next) => {
     });
     
   }
-  console.log(transformResponse)
   res.status(200).json({
     success: true,
     message: 'We get all cart data successfully.',
@@ -113,17 +112,36 @@ export const increaseCartQty = asyncErrorHandler(async (req, res, next) => {
 });
 
 export const removeCartItems = asyncErrorHandler(async (req, res, next) => {
-  const { cartItemId } = req.params;
-
-  const cartItem = await cart.findById(cartItemId);
-  if (!cartItem)
-    return next(new ErrorHandler('Cart item not available !', 404));
-
-  await cart.findByIdAndDelete(cartItemId);
-
+  const {_sid} = req.signedCookies;
+  let transformResponse;
+  // now we check user is logged in or not.
+  const session = await Session.findOne({ _id: _sid });
+ 
+  if(session && new Date(session.expiresAt).valueOf() > Date.now()){
+    // now we check session is expired or not and user is not logged in.
+    if(!session?.userId){
+      transformResponse = await removeCartFromSession(req, res, next, session);
+    }else if(session?.userId?.toString()){
+      transformResponse = await removeFromCartModel(req, res, next, session);
+    }
+  }else{
+    if(session) await session.deleteOne();
+    const newSession = await Session.create({
+      expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 10,  
+    })
+    res.cookie('_sid', newSession._id, {
+      httpOnly: true,
+      sameSite: 'None',
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 10,
+      signed: true,
+    });
+    
+  }
   res.status(200).json({
     success: true,
-    message: 'Cart item deleted successfully',
+    message: 'We get all cart data successfully.',
+    data: transformResponse || [],
   });
 });
 

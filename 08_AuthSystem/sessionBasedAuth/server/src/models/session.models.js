@@ -12,8 +12,18 @@ const sessionSchema = new mongoose.Schema({
   },
   cartList : [
     {
-      type : mongoose.Schema.Types.ObjectId,
-      ref : "products",
+      productId : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "product"
+      },
+      quantity : {
+        type : Number,
+        default : 1
+      },
+      availabilityStatus : {
+        type : String,
+        default : true
+      }
     }
   ],
 

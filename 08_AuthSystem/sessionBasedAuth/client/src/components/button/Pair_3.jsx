@@ -21,22 +21,19 @@ function Pair_3({ item, bgColor }) {
   const cartToProductMap = useSelector(getProductToCartMap);
 
   const addToCart = (payload) => {
-    if (authData?.isAuthenticated) {
       addToCartFn({
         args: payload,
         toastMessage: "Adding to cart...",
       });
-    }
+    
   };
 
   const removeToCart = (payload) => {
     console.log("remove to cart running...", payload);
-    if (authData?.isAuthenticated) {
       removeToCartFn({
         args: payload,
         toastMessage: "Removing from cart...",
       });
-    }
   };
   return (
     <div

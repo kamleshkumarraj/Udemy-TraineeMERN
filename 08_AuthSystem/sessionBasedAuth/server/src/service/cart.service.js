@@ -48,7 +48,7 @@ export const addCartItemToSession = async (req, res, next, session) => {
   session.cartList.push(cart);
   await session.save();
 
-  const cartItem = await Session.findOne({ _id: _sid }).populate(
+  const cartItem = await Session.findOne({ _id: session._id }).populate(
     'cartList.productId',
     'title thumbnail category price quantity availabilityStatus rating _id quantity',
   );
@@ -119,3 +119,22 @@ export const getCartFromSession = async (req, res, next, _sid) => {
     productId: productId?._id,
   }));
 };
+
+export const removeFromCartModel = async (req, res, next) => {
+  const { cartItemId } = req.params;
+
+  const cartItem = await cart.findById(cartItemId);
+  if (!cartItem)
+    return next(new ErrorHandler('Cart item not available !', 404));
+
+  await cart.findByIdAndDelete(cartItemId);
+};
+
+export const removeCartFromSession = async (req, res, next, session) => {
+  const { cartItemId } = req.params;
+  console.log(session)
+  const idx = session.cartList.findIndex((cart) => cart._id == cartItemId);
+  session.cartList.splice(idx,1);
+  await session.save();
+
+}

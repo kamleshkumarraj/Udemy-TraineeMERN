@@ -8,12 +8,7 @@ import CartLoader from "../components/cart/CartLoader";
 import FetchingLoading from "../components/cart/FetchingLoading";
 
 const Cart = () => {
-  const cartTotal = {
-    subtotal : 23,
-    fix : 34,
-    total : 45
-
-  }
+  
 
   
   const {data : cartItems, isLoading : apiStatus} = useGetAllCartQuery();
@@ -49,9 +44,6 @@ const Cart = () => {
           <h2 className="mb-4 text-[1.8rem] font-semibold">Your cart</h2>
           <div className="flex justify-between w-full">
             <h1 className="w-[200px]">Products</h1>
-            <h1>Price</h1>
-            <h1>Quantity</h1>
-            <h1>Remove</h1>
           </div>
 
           {apiStatus ? (
@@ -64,7 +56,6 @@ const Cart = () => {
                 _id,
                 thumbnail,
                 price,
-                quantity,
                 title,
                 availabilityStatus,
               }) => (
@@ -93,81 +84,16 @@ const Cart = () => {
                         : "Out of Stock"}
                     </p>
                   </div>
-                  <p className="text-[1.8rem] font-bold lg:pr-[100px]">
-                    ${(price * quantity)?.toFixed(2)}
-                  </p>
 
-                  <div
-                    id="quantity"
-                    className="flex gap-[1rem] justify-center pr-[1rem] items-center"
-                  >
-                    <div
-                      id="decreaseBtn"
-                      className="font-[600] text-[28px] p-[5px] grid place-content-center py-[-2rem] border-[1px] rounded-[.5rem] hover:cursor-pointer"
-                      onClick={() => {
-                      }}
-                    >
-                      {" "}
-                      <FiMinus size={"20px"} />{" "}
-                    </div>
-                    <p className="text-[18px] font-[600]">{quantity}</p>
-                    <div
-                      id="increaseBtn"
-                      className="font-[600] text-[28px] p-[5px] grid place-content-center py-[-2px] border-[1px] rounded-[.5rem] hover:cursor-pointer"
-                      onClick={() => {
-                      }}
-                    >
-                      <FiPlus size={"20px"} />
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                    }}
-                    className=" w-[30px] h-[30px] mx-[20px] rounded-[50%] bg-red-500 text-white hover:underline"
-                  >
-                    X
-                  </button>
+                  
+                 
                 </div>
               )
             )
           )}
         </div>
 
-        {/* Order Summary Section */}
-        <div className="w-full p-6 mt-8 border lg:w-1/4 lg:mt-0">
-          <h2 className="mb-4 text-[1.8rem] font-semibold">Order Summary</h2>
-          <div className="flex justify-between mb-2">
-            <p className="text-gray-600">Subtotal</p>
-            <p className="text-gray-800">${cartTotal?.subtotal?.toFixed(2)}</p>
-          </div>
-          <div className="flex justify-between mb-2">
-            <p className="text-gray-600">Shipping</p>
-            <p className="text-gray-800">Free</p>
-          </div>
-          <div className="flex justify-between mb-4">
-            <p className="text-gray-600">Tax</p>
-            <p className="text-gray-800">${cartTotal?.tax?.toFixed(2)}</p>
-          </div>
-          <div className="flex justify-between mb-6 text-[1.8rem] font-bold">
-            <p>Total</p>
-            <p>${cartTotal?.total?.toFixed(2)}</p>
-          </div>
-
-          <Link
-            
-          >
-            <button className="w-full py-3 bg-black text-white font-semibold mb-4 rounded-[8px]">
-              Checkout
-            </button>
-          </Link>
-
-          <Link
-            to="/business-browse"
-            className="flex justify-center text-center text-blue-500 hover:underline"
-          >
-            Continue Shopping
-          </Link>
-        </div>
+        
       </div>
     </div>
   );
