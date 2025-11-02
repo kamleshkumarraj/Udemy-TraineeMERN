@@ -22,11 +22,11 @@ function App() {
 
   useEffect(() => {
     if(data){
-      console.log("Hello world")
       dispatch(
       setLogin({
         isAuthenticated: true,
         role: "user",
+        userId : data?._id
       })
     );
     }

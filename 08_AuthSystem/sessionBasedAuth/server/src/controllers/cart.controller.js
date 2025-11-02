@@ -12,11 +12,31 @@ export const addCartItem = asyncErrorHandler(async (req, res, next) => {
   if (products.availabilityStatus != 'available' && products.quantity >= 1)
     return next(new ErrorHandler('Products out of stock !', 404));
 
-  await cart.create({ userId: req.user.id, productId });
+  const cartData = await cart.create({ userId: req.user, productId });
+  const cartItems = await cart
+    .findOne({ _id : cartData._id })
+    .populate(
+      'productId',
+      'title thumbnail category price quantity availabilityStatus rating _id quantity',
+    );
+
+    const transformResponse = {
+      _id : cartItems._id,
+      title: cartItems?.productId?.title,
+      thumbnail: cartItems?.productId?.thumbnail?.url || productId?.thumbnail,
+      category: cartItems?.productId?.category,
+      price: cartItems?.productId?.price,
+      quantity,
+      availabilityStatus:
+        cartItems?.productId?.quantity >= quantity ? 'available' : 'unavailable',
+      rating: cartItems?.productId?.rating,
+      productId: cartItems?.productId?._id,
+    }
 
   res.status(201).json({
     success: true,
     message: 'Product added in cart list successfully',
+    data: transformResponse,
   });
 });
 
@@ -42,7 +62,6 @@ export const decreaseCartQty = asyncErrorHandler(async (req, res, next) => {
 
 export const getAllCartItems = asyncErrorHandler(async (req, res, next) => {
   const userId = req.user;
-  console.log(userId.toString())
   if (mongoose.isValidObjectId(userId) == false)
     return ErrorHandler('Please send valid user id !');
   const cartItems = await cart
@@ -106,17 +125,22 @@ export const removeCartItems = asyncErrorHandler(async (req, res, next) => {
   });
 });
 
-export const removeMultipleCartItems = asyncErrorHandler(async (req, res, next) => {
-  const deletableItems = req.body || [];
-  console.log(deletableItems);
-  if (deletableItems.length < 1)
-    return next(
-      new ErrorHandler('Please provide item for deleting the products !', 404),
-    );
+export const removeMultipleCartItems = asyncErrorHandler(
+  async (req, res, next) => {
+    const deletableItems = req.body || [];
+    console.log(deletableItems);
+    if (deletableItems.length < 1)
+      return next(
+        new ErrorHandler(
+          'Please provide item for deleting the products !',
+          404,
+        ),
+      );
 
-  await cart.deleteMany({ _id: { $in: deletableItems } });
-  res.status(200).json({
-    success: true,
-    message: 'Items deleted successfully !',
-  });
-});
+    await cart.deleteMany({ _id: { $in: deletableItems } });
+    res.status(200).json({
+      success: true,
+      message: 'Items deleted successfully !',
+    });
+  },
+);

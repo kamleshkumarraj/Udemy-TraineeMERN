@@ -5,9 +5,9 @@ import { useGetAllCartQuery } from "../../api/cart.api";
 import { useCallback } from "react";
 function FeaturedCard({ item }) {
   const {data : cartItem} = useGetAllCartQuery();
-  const cartSet = new Set();
+  const cartToProductMap = new Map();
   useCallback(() => {
-    cartItem?.forEach((item) => cartSet.add(item.productId));
+    cartItem?.forEach((item) => cartToProductMap.set(item?.productId, item?._id));
   },[cartItem])
   return (
     <div
@@ -47,7 +47,7 @@ function FeaturedCard({ item }) {
           <span className="text-gray-800">${item?.price}</span>
           <del className="text-gray-400">$500</del>
         </div>
-        <Pair_3 cartSet={cartSet} item={item} bgColor={'bg-gray-200'} />
+        <Pair_3 cartToProductMap={cartToProductMap} item={item} bgColor={'bg-gray-200'} />
       </div>
     </div>
   );

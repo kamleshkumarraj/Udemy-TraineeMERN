@@ -1,3 +1,4 @@
+import { data } from "react-router";
 import { baseApi } from "./api";
 import { nanoid } from "@reduxjs/toolkit";
 
@@ -17,6 +18,7 @@ const cartApi = baseApi.injectEndpoints({
         method: "POST",
         credentials: "include",
       }),
+      transformResponse : ({data}) => data,
       async onQueryStarted(payload, { queryFulfilled, dispatch }) {
         // first we update store.
         const productData = {
@@ -36,12 +38,14 @@ const cartApi = baseApi.injectEndpoints({
         try {
           const { data: cartItems } = await queryFulfilled;
           // now we update data with origin data.
-
+          console.log(cartItems)
           dispatch(
             cartApi.util.updateQueryData("getAllCart", undefined, (draft) => {
               const index = draft.findIndex(
-                (item) => item?.productId?.toString() === cartItems.productId.toString()
+                (item) =>
+                  item?.productId?.toString() === cartItems?.productId?.toString()
               );
+              console.log(index);
               if (index !== -1) {
                 draft[index] = cartItems;
               }
@@ -52,14 +56,93 @@ const cartApi = baseApi.injectEndpoints({
         }
       },
     }),
+
+    removeCartItem: builder.mutation({
+      query: (payload) => ({
+        url: `/cart/remove/${payload?.cartId}`,
+        method: "DELETE",
+        credentials: "include",
+      }),
+
+      async onQueryStarted(payload, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          cartApi.util.updateQueryData("getAllCart", undefined, (draft) => {
+            const index = draft.findIndex(
+              (item) => item._id === payload.cartId
+            );
+            if (index !== -1) {
+              draft.splice(index, 1);
+            }
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
+
+    increaseCartQty: builder.mutation({
+      query: (payload) => ({
+        url: `/cart/increase/${payload.cartId}`,
+        method: "PATCH",
+        credentials: "include",
+      }),
+
+      async onQueryStarted(payload, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          cartApi.util.updateQueryData("getAllCart", undefined, (draft) => {
+            const index = draft.findIndex(
+              (item) => item._id === payload.cartId
+            );
+            if (index !== -1) {
+              draft[index].quantity += 1;
+            }
+          })
+        );
+
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
+
+    decreaseCartQty: builder.mutation({
+      query: (payload) => ({
+        url: `/cart/decrease/${payload.cartId}`,
+        method: "PATCH",
+        credentials: "include",
+      }),
+
+      async onQueryStarted(payload, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          cartApi.util.updateQueryData("getAllCart", undefined, (draft) => {
+            const index = draft.findIndex(
+              (item) => item._id === payload.cartId
+            );
+            if (index !== -1) {
+              draft[index].quantity -= 1;
+            }
+          })
+        );
+
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
   }),
 });
 
-// cartRouter.route('/get-all').get(getAllCartItems);
-// cartRouter.route('/add/:productId').post(addCartItem);
-// cartRouter.route('/remove/:cartItemId').delete(removeCartItems);
-// cartRouter.route('/increase/:cartItemId').patch(increaseCartQty);
-// cartRouter.route('/decrease/:cartItemId').patch(decreaseCartQty);
-// cartRouter.route('/remove-multiple').delete(removeMultipleCartItems);
-
-export const { useGetAllCartQuery } = cartApi;
+export const {
+  useGetAllCartQuery,
+  useAddCartItemMutation,
+  useRemoveCartItemMutation,
+  useIncreaseCartQtyMutation,
+  useDecreaseCartQtyMutation,
+} = cartApi;

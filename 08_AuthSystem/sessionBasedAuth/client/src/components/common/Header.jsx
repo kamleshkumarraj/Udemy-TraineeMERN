@@ -7,19 +7,19 @@ import {
   AiFillHeart,
   AiFillShopping,
 } from "react-icons/ai";
+import { useGetAllCartQuery } from "../../api/cart.api";
 
 function Header() {
   const authDetails = useSelector(getAuth);
   const {data : user} = useGetProfileQuery();
   const navigate = useNavigate();
-  const wishlistCount = 2;
-  const cartProductCount = 5;
+  const {data : cartItem} = useGetAllCartQuery();
   return (
     <header className="backdrop-blur-2xl bg-black/60 sticky top-0 z-50 shadow-md">
       <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
         <h1 className="text-3xl font-bold text-white">🛍️ ShopVista</h1>
         <nav className="space-x-8 text-white items-center hidden md:flex">
-          <Link to="#" className="hover:text-pink-300 text-shadow-white transition">
+          <Link to="/" className="hover:text-pink-300 text-shadow-white transition">
             Home
           </Link>
           <Link href="#" className="hover:text-pink-300 text-white transition">
@@ -35,9 +35,9 @@ function Header() {
           <div onClick={() => {navigate('/cart')}} className="relative flex gap-[2px] cursor-pointer">
             <p className="hover:text-pink-300 text-[16px] font-normal">Cart</p>
             <AiFillShopping className="text-[24px] text-orange-500" />
-            {cartProductCount > 0 && (
+            {cartItem && cartItem?.length > 0 && (
               <span className="absolute -top-[10px] -right-[10px] bg-green-500 text-white text-[12px] rounded-full px-[6px]">
-                {cartProductCount}
+                {cartItem?.length}
               </span>
             )}
           </div>
