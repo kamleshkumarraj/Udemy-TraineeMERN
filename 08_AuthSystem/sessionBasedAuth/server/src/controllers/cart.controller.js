@@ -3,36 +3,37 @@ import { asyncErrorHandler } from '../errors/asyncErrorHandler.js';
 import { cart } from '../models/cart.model.js';
 import { productsModel } from '../models/products.models.js';
 import { ErrorHandler } from '../errors/errorHandler.js';
+import { Session } from '../models/session.models.js';
+import { addCartItemToCart, addCartItemToSession } from '../service/cart.service.js';
 
 export const addCartItem = asyncErrorHandler(async (req, res, next) => {
-  const { productId } = req.params;
-
-  const products = await productsModel.findById(productId);
-
-  if (products.availabilityStatus != 'available' && products.quantity >= 1)
-    return next(new ErrorHandler('Products out of stock !', 404));
-
-  const cartData = await cart.create({ userId: req.user, productId });
-  const cartItems = await cart
-    .findOne({ _id : cartData._id })
-    .populate(
-      'productId',
-      'title thumbnail category price quantity availabilityStatus rating _id quantity',
-    );
-
-    const transformResponse = {
-      _id : cartItems._id,
-      title: cartItems?.productId?.title,
-      thumbnail: cartItems?.productId?.thumbnail?.url || cartItems?.productId?.thumbnail,
-      category: cartItems?.productId?.category,
-      price: cartItems?.productId?.price,
-      quantity : cartItems.quantity,
-      availabilityStatus:
-        cartItems?.productId?.quantity >= cartItems?.quantity ? 'available' : 'unavailable',
-      rating: cartItems?.productId?.rating,
-      productId: cartItems?.productId?._id,
+  const {_sid} = req.signedCookies;
+  const {userId} = req.body;
+  const productId = req.params.id;
+  let transformResponse;
+  // now we check user is logged in or not.
+  const session = await Session.findOne({ _id: _sid });
+  if(session && new Date(session.expiresAt).valueOf() > Date.now()){
+    // now we check session is expired or not and user is not logged in.
+    if(!session.userId){
+      transformResponse = await addCartItemToSession(req, res, next,session);
+    }else if(session.userId.toString() == userId.toString()){
+      transformResponse = await addCartItemToCart(req, res, next);
     }
-
+  }else{
+    if(session) await session.deleteOne();
+    const newSession = await Session.create({
+      expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 10,  
+    })
+    res.cookie('_sid', newSession._id, {
+      httpOnly: true,
+      sameSite: 'None',
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 10,
+      signed: true,
+    });
+    transformResponse = await addCartItemToSession(req, res, next, newSession);
+  }
   res.status(201).json({
     success: true,
     message: 'Product added in cart list successfully',

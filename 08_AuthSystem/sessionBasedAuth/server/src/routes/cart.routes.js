@@ -11,7 +11,6 @@ import { isLoggedIn } from '../middlewares/auth.middlewares.js';
 
 export const cartRouter = Router();
 
-cartRouter.use(isLoggedIn);
 cartRouter.route('/get-all').get(getAllCartItems);
 cartRouter.route('/add/:productId').post(addCartItem);
 cartRouter.route('/remove/:cartItemId').delete(removeCartItems);
