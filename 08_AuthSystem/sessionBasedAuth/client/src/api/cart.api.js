@@ -1,4 +1,4 @@
-import { data } from "react-router";
+
 import { baseApi } from "./api";
 import { nanoid } from "@reduxjs/toolkit";
 
@@ -17,6 +17,7 @@ const cartApi = baseApi.injectEndpoints({
         url: `/cart/add/${payload?.productId}`,
         method: "POST",
         credentials: "include",
+        body : {userId : payload?.userId}
       }),
       async onQueryStarted(payload, { queryFulfilled, dispatch }) {
         // first we update store.

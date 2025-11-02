@@ -9,7 +9,6 @@ import { addCartItemToCart, addCartItemToSession } from '../service/cart.service
 export const addCartItem = asyncErrorHandler(async (req, res, next) => {
   const {_sid} = req.signedCookies;
   const {userId} = req.body;
-  const productId = req.params.id;
   let transformResponse;
   // now we check user is logged in or not.
   const session = await Session.findOne({ _id: _sid });
@@ -62,36 +61,36 @@ export const decreaseCartQty = asyncErrorHandler(async (req, res, next) => {
 });
 
 export const getAllCartItems = asyncErrorHandler(async (req, res, next) => {
-  const userId = req.user;
-  if (mongoose.isValidObjectId(userId) == false)
-    return ErrorHandler('Please send valid user id !');
-  const cartItems = await cart
-    .find({ userId })
-    .populate(
-      'productId',
-      'title thumbnail category price quantity availabilityStatus rating _id quantity',
-    );
-  // console.log(cartItems)
-  const transformData = cartItems.map(({ productId, quantity, _id }) => {
-    return {
-      _id,
-      title: productId?.title,
-      thumbnail: productId?.thumbnail?.url || productId?.thumbnail,
-      category: productId?.category,
-      price: productId?.price,
-      quantity,
-      availabilityStatus:
-        productId?.quantity >= quantity ? 'available' : 'unavailable',
-      rating: productId?.rating,
-      productId: productId?._id,
-    };
-  });
-
-  res.status(200).json({
+  // const userId = req.user;
+  const {_sid} = req.signedCookies;
+  let transformResponse;
+  // now we check user is logged in or not.
+  const session = await Session.findOne({ _id: _sid });
+  if(session && new Date(session.expiresAt).valueOf() > Date.now()){
+    // now we check session is expired or not and user is not logged in.
+    if(!session.userId){
+      transformResponse = await addCartItemToSession(req, res, next,session);
+    }else if(session.userId.toString() == userId.toString()){
+      transformResponse = await addCartItemToCart(req, res, next);
+    }
+  }else{
+    if(session) await session.deleteOne();
+    const newSession = await Session.create({
+      expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 10,  
+    })
+    res.cookie('_sid', newSession._id, {
+      httpOnly: true,
+      sameSite: 'None',
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 10,
+      signed: true,
+    });
+    
+  }
+  res.status(201).json({
     success: true,
-    message: 'You get your all cart items successfully.',
-    data: transformData,
-    length: transformData.length,
+    message: 'Product added in cart list successfully',
+    data: transformResponse,
   });
 });
 
