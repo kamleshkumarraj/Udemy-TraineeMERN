@@ -21,6 +21,7 @@ function Pair_3({ item, bgColor, cartToProductMap }) {
     })
     }
   };
+  console.log(cartToProductMap)
   const removeToCart = (payload) => {
     if(authData?.isAuthenticated){
       removeToCartFn({

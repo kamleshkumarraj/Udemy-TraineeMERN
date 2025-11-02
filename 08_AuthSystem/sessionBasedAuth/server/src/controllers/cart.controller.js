@@ -23,12 +23,12 @@ export const addCartItem = asyncErrorHandler(async (req, res, next) => {
     const transformResponse = {
       _id : cartItems._id,
       title: cartItems?.productId?.title,
-      thumbnail: cartItems?.productId?.thumbnail?.url || productId?.thumbnail,
+      thumbnail: cartItems?.productId?.thumbnail?.url || cartItems?.productId?.thumbnail,
       category: cartItems?.productId?.category,
       price: cartItems?.productId?.price,
-      quantity,
+      quantity : cartItems.quantity,
       availabilityStatus:
-        cartItems?.productId?.quantity >= quantity ? 'available' : 'unavailable',
+        cartItems?.productId?.quantity >= cartItems?.quantity ? 'available' : 'unavailable',
       rating: cartItems?.productId?.rating,
       productId: cartItems?.productId?._id,
     }

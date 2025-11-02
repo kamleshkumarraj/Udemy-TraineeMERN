@@ -18,7 +18,6 @@ const cartApi = baseApi.injectEndpoints({
         method: "POST",
         credentials: "include",
       }),
-      transformResponse : ({data}) => data,
       async onQueryStarted(payload, { queryFulfilled, dispatch }) {
         // first we update store.
         const productData = {
@@ -43,11 +42,11 @@ const cartApi = baseApi.injectEndpoints({
             cartApi.util.updateQueryData("getAllCart", undefined, (draft) => {
               const index = draft.findIndex(
                 (item) =>
-                  item?.productId?.toString() === cartItems?.productId?.toString()
+                  item?.productId?.toString() === cartItems?.data?.productId?.toString()
               );
               console.log(index);
               if (index !== -1) {
-                draft[index] = cartItems;
+                draft[index] = cartItems?.data;
               }
             })
           );
