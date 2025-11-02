@@ -12,15 +12,15 @@ export default function HomePage() {
   } = useGetProductsQuery();
   if(productsError) return <h1>We get error during fetching product data</h1> 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white">
+    <div className="min-h-screen  text-white">
       {/* ===== HERO SECTION ===== */}
-      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[100vh] flex items-center justify-center overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1585386959984-a4155224a1b9?auto=format&fit=crop&w=2000&q=80"
+          src="https://wallpapers.com/images/featured/laptop-murjp1nk4lp1idlt.jpg"
           alt="Hero Background"
-          className="absolute inset-0 w-full h-full object-cover opacity-60"
+          className="absolute inset-0 w-full h-full object-cover opacity-80"
         />
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 bg-black/40 blur-xl"></div>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

@@ -21,11 +21,11 @@ function FeaturedCard({ item }) {
       <div id="details" className="flex flex-col 2xl:gap-[10px] md:gap-[7px] gap-[5px]">
         <h1 onCopy={() => {
           window.navigator.clipboard.writeText('')
-        }} id="title" className="md:text-[15px] text-[13.5px] 2xl:text-[18px] font-[500] ">
-          {item?.title}
+        }} id="title" className="md:text-[15px] text-[13.5px] 2xl:text-[18px] font-[500] text-black">
+          {item?.title || "Title"}
         </h1>
-        <div id="rating" className="flex flex-col 2xl:gap-[10px] md:gap-[7px] gap-[5px] sm:items-center">
-                  <span className="2xl:text-[16px] md:text-[12px] text-[10px] flex gap-[5px] text-red-600">
+        <div id="rating" className="flex flex-col 2xl:gap-[10px] md:gap-[7px] gap-[5px] sm:items-center 2xl:items-start">
+                  <span className="2xl:text-[14px] md:text-[12px] text-[10px] flex gap-[5px] text-red-600">
                     {[[1,2,3,4,5] , [1,2,3,4,] , [1,2,3,] , [1,2] , [1] , []][5-Math.floor(item?.rating)].map(() => (
                       <IoStar key={Math.random()} size={20} color="#DC2626" />
                     ))}
