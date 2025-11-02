@@ -5,11 +5,9 @@ import { TbGardenCartOff } from "react-icons/tb";
 import { VscHeart } from "react-icons/vsc";
 import { Link } from "react-router-dom";
 
-function Pair_3({ item, bgColor }) {
-  const checkAvailibility = () => true;
-  const wishlist = [];
-  const cartlist = [];
-
+function Pair_3({ item, bgColor, cartSet }) {
+  const addToCart = () => {};
+  const removeToCart = () => {};
   return (
     <div
       id="button"
@@ -18,7 +16,7 @@ function Pair_3({ item, bgColor }) {
       <div
         className={`2xl:p-[10px] md:p-[7px] p-[5px] text-center rounded-full ${bgColor} border hover:cursor-pointer text-black hover:bg-[#ff3f35fa] hover:text-white`}
       >
-        {checkAvailibility(wishlist, item) ? (
+        {cartSet.has(item.id) ? (
           <p className="text-[red] hover:text-white" onClick={() => {}}>
             <FaHeart size={20} />
           </p>
@@ -30,7 +28,7 @@ function Pair_3({ item, bgColor }) {
       </div>
 
       <div id="cart-button">
-        {checkAvailibility(cartlist, item) ? (
+        {cartSet.has(item?.id) ? (
           <p
             onClick={() => {}}
             className={`p-[5px] 2xl:p-[10px] md:p-[7px] text-center rounded-full hover:cursor-pointer ${bgColor} border hover:bg-[#ff3f35fa] hover:text-white`}

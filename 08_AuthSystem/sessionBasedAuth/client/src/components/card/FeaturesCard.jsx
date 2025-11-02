@@ -1,8 +1,14 @@
 // import { FaStar } from "react-icons/fa";
 import { IoStar, IoStarOutline } from "react-icons/io5";
 import Pair_3 from "../button/Pair_3";
+import { useGetAllCartQuery } from "../../api/cart.api";
+import { useCallback } from "react";
 function FeaturedCard({ item }) {
-
+  const {data : cartItem} = useGetAllCartQuery();
+  const cartSet = new Set();
+  useCallback(() => {
+    cartItem?.forEach((item) => cartSet.add(item.productId));
+  },[cartItem])
   return (
     <div
       className="flex bg-white 2xl:px-[15px] lg:px-[12px] px-[10px] items-center 2xl:py-[10px] lg:py-[7.5px] py-[5px] border-[.5px] border-gray-200 relative hover:translate-y-[12px] hover:transition-transform hover:duration-[1500] md:gap-[15px] gap-[10px] 2xl:gap-[20px] 2xl:w-[450px]  w-[280px] xl:w-[420px] lg:w-[400px] md:w-[370px] sm:w-[320px] rounded-[10px] mx-auto"
@@ -41,7 +47,7 @@ function FeaturedCard({ item }) {
           <span className="text-gray-800">${item?.price}</span>
           <del className="text-gray-400">$500</del>
         </div>
-        <Pair_3 item={item} bgColor={'bg-gray-200'} />
+        <Pair_3 cartSet={cartSet} item={item} bgColor={'bg-gray-200'} />
       </div>
     </div>
   );
