@@ -8,7 +8,8 @@ const productsApi = baseApi.injectEndpoints({
         url : '/products',
         method : "GET",
         credentials : "include"
-      })
+      }),
+      transformResponse : (res) => res?.data
     })
   })
 })

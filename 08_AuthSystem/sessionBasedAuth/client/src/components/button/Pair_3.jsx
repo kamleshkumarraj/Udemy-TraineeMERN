@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+
 import { BsCart3 } from "react-icons/bs";
 import { FaHeart, FaRegEye } from "react-icons/fa";
 import { TbGardenCartOff } from "react-icons/tb";
@@ -6,7 +6,7 @@ import { VscHeart } from "react-icons/vsc";
 import { Link } from "react-router-dom";
 
 function Pair_3({ item, bgColor }) {
-  const checkAvailibility = true;
+  const checkAvailibility = () => true;
   const wishlist = [];
   const cartlist = [];
 
@@ -56,10 +56,5 @@ function Pair_3({ item, bgColor }) {
     </div>
   );
 }
-Pair_3.propTypes = {
-  item: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-  }).isRequired,
-  bgColor: PropTypes.string.isRequired,
-};
+
 export default Pair_3;

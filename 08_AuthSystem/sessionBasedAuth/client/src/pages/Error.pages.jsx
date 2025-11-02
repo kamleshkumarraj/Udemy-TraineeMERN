@@ -1,11 +1,11 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useRouteError } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaArrowLeft } from "react-icons/fa";
 
 const NotFound = () => {
   const navigate = useNavigate();
-
+  const error = useRouteError();
   return (
     <div className="relative flex items-center justify-center h-screen w-full bg-gradient-to-br from-gray-900 via-gray-800 to-black overflow-hidden">
       {/* Animated Gradient Circles */}
@@ -22,14 +22,18 @@ const NotFound = () => {
         <h1 className="text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-blue-500 drop-shadow-md">
           404
         </h1>
-
-        <p className="text-gray-300 text-xl mt-4">
-          Oops! The page you're looking for doesn't exist.
-        </p>
-        <p className="text-gray-400 text-sm mt-1">
-          It might have been moved or deleted.
-        </p>
-
+        {error?.message ? (
+          <p className="text-gray-300 text-xl mt-4">Error : {error?.message}</p>
+        ) : (
+          <>
+            <p className="text-gray-300 text-xl mt-4">
+              Oops! The page you're looking for doesn't exist.
+            </p>
+            <p className="text-gray-400 text-sm mt-1">
+              It might have been moved or deleted.
+            </p>
+          </>
+        )}
         {/* Animated Button */}
         <motion.button
           whileHover={{ scale: 1.05 }}

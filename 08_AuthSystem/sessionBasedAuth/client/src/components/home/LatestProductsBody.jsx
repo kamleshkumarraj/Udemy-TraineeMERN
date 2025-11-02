@@ -1,5 +1,4 @@
 
-import PropTypes from "prop-types";
 import FeaturedCard from "../card/FeaturesCard";
 
 const LatestProductsBody = ({ title, products }) => {
@@ -20,16 +19,5 @@ const LatestProductsBody = ({ title, products }) => {
   );
 };
 
-LatestProductsBody.propTypes = {
-  products: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      thumbnail: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-      quantity: PropTypes.number.isRequired,
-      title: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  title: PropTypes.string.isRequired,
-};
+
 export default LatestProductsBody;

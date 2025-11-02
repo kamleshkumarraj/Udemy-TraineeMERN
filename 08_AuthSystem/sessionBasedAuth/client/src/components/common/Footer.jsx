@@ -16,7 +16,7 @@ const Footer = () => {
     <footer className="text-white  border-t-[.5px] border-gray-600  bg-gray-900 pt-[90px]">
       {/* Top Section */}
       
-      <div className="container grid grid-cols-1 gap-[3.2rem] px-6 mx-auto text-center md:grid-cols-4 md:text-left mt-[10px] mb-[30px]">
+      <div className="container grid grid-cols-1 gap-[32px] px-6 mx-auto text-center md:grid-cols-4 md:text-left mt-[10px] mb-[30px]">
         {/* Contact Info */}
 
         <div className="flex items-center gap-4">
@@ -24,8 +24,8 @@ const Footer = () => {
             <FaPhoneAlt size={30} />
           </p>
           <div>
-            <p className="text-[1.4rem] font-semibold">Call Us 7/24</p>
-            <p className="text-[1.8rem] font-bold">+208-555-0112</p>
+            <p className="text-[14px] font-semibold">Call Us 7/24</p>
+            <p className="text-[18px] font-bold">+208-555-0112</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -34,8 +34,8 @@ const Footer = () => {
           </p>
 
           <div>
-            <p className="text-[1.4rem] font-semibold">Make a Quote</p>
-            <p className="text-[1.8rem] font-bold">example@gmail.com</p>
+            <p className="text-[14px] font-semibold">Make a Quote</p>
+            <p className="text-[18px] font-bold">example@gmail.com</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -44,8 +44,8 @@ const Footer = () => {
           </p>
 
           <div>
-            <p className="text-[1.4rem] font-semibold">Opening Hour</p>
-            <p className="text-[1.8rem] font-bold">Sunday - Fri: 9 AM - 6 PM</p>
+            <p className="text-[14px] font-semibold">Opening Hour</p>
+            <p className="text-[18px] font-bold">Sunday - Fri: 9 AM - 6 PM</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -54,8 +54,8 @@ const Footer = () => {
           </p>
 
           <div>
-            <p className="text-[1.4rem] font-semibold">Location</p>
-            <p className="text-[1.8rem] font-bold">4517 Washington Ave.</p>
+            <p className="text-[14px] font-semibold">Location</p>
+            <p className="text-[18px] font-bold">4517 Washington Ave.</p>
           </div>
         </div>
       </div>
