@@ -39,7 +39,7 @@ const authApi = baseApi.injectEndpoints({
         body: payload,
       }),
     }),
-    
+
     verifyOtp: builder.mutation({
       query: (payload) => ({
         url: "/auth/verify-otp",
@@ -60,7 +60,7 @@ const authApi = baseApi.injectEndpoints({
 
     resetPassword: builder.mutation({
       query: (payload) => ({
-        url: "/auth/reset-password",
+        url: `/auth/reset-password/${payload.token}`,
         method: "POST",
         credentials: "include",
         body: payload,

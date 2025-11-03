@@ -30,4 +30,4 @@ authRouter.route('/login').post(login);
 authRouter.route('/send-otp').post(sendOtpForMailVerification);
 authRouter.route('/verify-otp').post(verifyOtpForMailVerification);
 authRouter.route('/forgot-password').post(forgotPassword);
-authRouter.route('/reset-password').post(resetPassword);
+authRouter.route('/reset-password/:token').post(resetPassword);

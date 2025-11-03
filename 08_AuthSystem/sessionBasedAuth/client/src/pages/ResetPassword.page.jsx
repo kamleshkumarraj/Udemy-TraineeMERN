@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaLock } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useMutation } from "../hooks/useMutation.hooks";
+import { useResetPasswordMutation } from "../api/auth.api";
 
 export default function ResetPasswordPage() {
   const navigate = useNavigate();
@@ -9,7 +11,8 @@ export default function ResetPasswordPage() {
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
+  const {executeMutate : resetPassword} = useMutation(useResetPasswordMutation);
+  const param = useParams();
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
@@ -24,8 +27,17 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    setSuccess("Password reset successfully!");
-    setTimeout(() => navigate("/login"), 2000);
+    resetPassword({
+      args : {
+        password,
+        confirmPassword : confirm,
+        token : param.token
+      },
+      toastMessage : "Password reset...",
+      callback : () => {
+        navigate("/login");
+      }
+    })
   };
 
   return (

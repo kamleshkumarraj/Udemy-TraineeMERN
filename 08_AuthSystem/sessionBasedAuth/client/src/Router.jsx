@@ -8,6 +8,7 @@ import EmailVerificationPage from "./pages/MailVerification.pages";
 import SessionConflict from "./pages/MultipleDeviceLoggedIn";
 import Cart from "./pages/Cart";
 import ForgotPassword from "./pages/forgotPassword.page";
+import ResetPasswordPage from "./pages/ResetPassword.page";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
   {
     path: "/api/v1/verify-email/:token",
     element: <EmailVerificationPage />,
+  },
+  {
+    path : '/api/v1/auth/reset-password/:token',
+    element : <ResetPasswordPage />
   },
   {
     path: "/many-device-handle",

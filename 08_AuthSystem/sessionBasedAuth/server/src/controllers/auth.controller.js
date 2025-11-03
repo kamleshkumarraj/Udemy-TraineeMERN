@@ -152,7 +152,7 @@ export const forgotPassword = asyncErrorHandler(async (req, res, next) => {
   // now we create url for send request.
   const origin = req.headers.origin;
   const token = user.generatePasswordResetToken();
-  const url = `${origin}/api/v1/auth/forgot-password/${token}`;
+  const url = `${origin}/api/v1/auth/reset-password/${token}`;
   const mailTemplate = generateForgotPasswordEmail(url, user?.fullName);
 
   try {
@@ -188,7 +188,10 @@ export const resetPassword = asyncErrorHandler(async (req, res, next) => {
   user.passwordResetToken = null;
   user.passwordResetTokenExpiry = null;
   await user.save();
-  sendResponse(res, 'Password reset successfully !', null, 200);
+  res.status(200).json({
+    success: true,
+    message: 'Password reset successfully !',
+  })
 });
 
 

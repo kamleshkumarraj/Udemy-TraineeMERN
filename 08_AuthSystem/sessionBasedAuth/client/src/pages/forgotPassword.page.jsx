@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Mail, KeyRound, Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useMutation } from "../hooks/useMutation.hooks";
-import { useSendOtpMutation, useVerifyOtpMutation } from "../api/auth.api";
+import { useForgotPasswordMutation, useSendOtpMutation, useVerifyOtpMutation } from "../api/auth.api";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -14,6 +14,7 @@ export default function ForgotPassword() {
   const [timer, setTimer] = useState(0);
   const { executeMutate: sendOtp } = useMutation(useSendOtpMutation);
   const { executeMutate: verifyOtp } = useMutation(useVerifyOtpMutation);
+  const {executeMutate: forgotPassword} = useMutation(useForgotPasswordMutation)
 
   const handleSendOtp = () => {
     if (!email) return toast.error("Enter email first!");
@@ -28,7 +29,6 @@ export default function ForgotPassword() {
           setLoading(false);
           setOtpSent(true);
           setTimer(60);
-          toast.success("OTP sent successfully!");
           const interval = setInterval(() => {
             setTimer((prev) => {
               if (prev <= 1) {
@@ -53,6 +53,7 @@ export default function ForgotPassword() {
       toastMessage: "Verifying OTP...",
       callback: () => {
         setVerified(true);
+        
       },
     });
   };
@@ -63,7 +64,14 @@ export default function ForgotPassword() {
   };
 
   const handleResetPassword = () => {
-    alert("Redirecting to reset password form...");
+    forgotPassword({
+      args : {email},
+      toastMessage: "Sending mail for reset password link...",
+      callback : () => {
+        setOtpSent(false);
+        setLoading(false);
+      }
+    })
   };
 
   return (
