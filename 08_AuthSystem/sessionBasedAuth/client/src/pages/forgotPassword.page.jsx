@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, KeyRound, Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
+import { useMutation } from "../hooks/useMutation.hooks";
+import { useSendOtpMutation, useVerifyOtpMutation } from "../api/auth.api";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -10,6 +12,8 @@ export default function ForgotPassword() {
   const [verified, setVerified] = useState(false);
   const [loading, setLoading] = useState(false);
   const [timer, setTimer] = useState(0);
+  const { executeMutate: sendOtp } = useMutation(useSendOtpMutation);
+  const { executeMutate: verifyOtp } = useMutation(useVerifyOtpMutation);
 
   const handleSendOtp = () => {
     if (!email) return toast.error("Enter email first!");
@@ -17,30 +21,40 @@ export default function ForgotPassword() {
 
     // Simulate API request
     setTimeout(() => {
-      setLoading(false);
-      setOtpSent(true);
-      setTimer(60);
-      toast.success("OTP sent successfully!");
-      const interval = setInterval(() => {
-        setTimer((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+      sendOtp({
+        args: { email },
+        toastMessage: "Otp sending...",
+        callback: () => {
+          setLoading(false);
+          setOtpSent(true);
+          setTimer(60);
+          toast.success("OTP sent successfully!");
+          const interval = setInterval(() => {
+            setTimer((prev) => {
+              if (prev <= 1) {
+                clearInterval(interval);
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+        },
+        errCallback: () => {
+          setLoading(false);
+        },
+      });
     }, 1500);
   };
 
   const handleVerifyOtp = () => {
-    if (!otp) return alert("Enter OTP first!");
-    if (otp === "123456") {
-      setVerified(true);
-      alert("Email verified successfully!");
-    } else {
-      alert("Invalid OTP! Try again.");
-    }
+    if (!otp) return toast.error("Enter OTP first!");
+    verifyOtp({
+      args: { otp, email },
+      toastMessage: "Verifying OTP...",
+      callback: () => {
+        setVerified(true);
+      },
+    });
   };
 
   const handleResendOtp = () => {
@@ -126,7 +140,10 @@ export default function ForgotPassword() {
                 onChange={(e) => setOtp(e.target.value)}
                 className="w-full px-12 py-3 rounded-xl bg-white/20 text-white placeholder-white/70 outline-none border border-white/30 focus:border-white/70 transition-all"
               />
-              <KeyRound className="absolute left-4 top-3.5 text-white/70" size={20} />
+              <KeyRound
+                className="absolute left-4 top-3.5 text-white/70"
+                size={20}
+              />
 
               <button
                 onClick={handleVerifyOtp}

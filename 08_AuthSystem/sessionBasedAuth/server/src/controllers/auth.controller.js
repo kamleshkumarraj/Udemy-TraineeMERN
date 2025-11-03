@@ -216,6 +216,11 @@ export const sendOtpForMailVerification = asyncErrorHandler(async (req, res, nex
   } catch (error) {
     return next(new ErrorHandler(error.message, 400));
   }
+
+  return res.status(200).json({
+    success: true,
+    message: 'Otp send successfully !',
+  })
 })
 
 export const verifyOtpForMailVerification = asyncErrorHandler(async (req, res, next) => {

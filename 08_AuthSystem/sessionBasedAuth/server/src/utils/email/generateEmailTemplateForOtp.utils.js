@@ -38,7 +38,7 @@ export const generateEmailOTPTemplate = (otpCode, username) => {
                 </h1>
                 <p style="margin:0 0 20px; font-size:16px; line-height:24px; color:#334155;">
                   Hi ${username},<br />
-                  To verify your email address for your <strong>Auth Server</strong> account, please use the One-Time Password (OTP) below.
+                  To verify your email address for your <strong>Auth Server</strong> account for reset your password, please use the One-Time Password (OTP) below.
                 </p>
 
                 <table role="presentation" cellspacing="0" cellpadding="0" style="margin:22px auto;">
