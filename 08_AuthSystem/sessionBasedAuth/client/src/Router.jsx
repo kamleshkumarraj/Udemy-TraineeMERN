@@ -7,6 +7,7 @@ import RegisterPage from "./pages/Register.pages";
 import EmailVerificationPage from "./pages/MailVerification.pages";
 import SessionConflict from "./pages/MultipleDeviceLoggedIn";
 import Cart from "./pages/Cart";
+import ForgotPassword from "./pages/forgotPassword.page";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,8 @@ const router = createBrowserRouter([
       {
         path : '/cart',
         element : <Cart />
-      }
+      },
+
     ],
   },
   {
@@ -31,6 +33,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterPage />,
+  },
+  {
+    path : '/forgot-password',
+    element : <ForgotPassword />
   },
   {
     path: "/api/v1/verify-email/:token",

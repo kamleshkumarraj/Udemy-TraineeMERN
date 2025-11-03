@@ -133,7 +133,7 @@ export default function LoginPage() {
           className="hidden md:flex md:w-1/2 items-center justify-center bg-cover bg-center relative"
           style={{
             backgroundImage:
-              "url('https://images.unsplash.com/photo-1607083208173-7a7e2e2f6cc1?auto=format&fit=crop&w=900&q=80')",
+              "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSq43Z8epdseZzN29Tb1uC_QmDHFxtdgO-hhg&s')",
           }}
         >
           <div className="absolute inset-0 bg-black/30"></div>
@@ -222,7 +222,7 @@ export default function LoginPage() {
                 </Link>
               </p>
               <p className="text-sm mt-2">
-                <Link to="#" className="text-purple-300 hover:underline">
+                <Link to="/forgot-password" className="text-purple-300 hover:underline">
                   Forgot Password?
                 </Link>
               </p>

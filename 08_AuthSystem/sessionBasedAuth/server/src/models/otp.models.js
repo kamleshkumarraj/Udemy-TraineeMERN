@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
 
 const otpSchema = new mongoose.Schema({
+  userId : {
+    type : mongoose.Schema.Types.ObjectId,
+    ref : 'users',
+    required : true
+  },
   email : {
     type : String,
     required : true

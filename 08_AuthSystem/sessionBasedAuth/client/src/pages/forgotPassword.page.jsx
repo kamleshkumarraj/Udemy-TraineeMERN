@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, KeyRound, Loader2 } from "lucide-react";
+import { toast } from "react-toastify";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ export default function ForgotPassword() {
   const [timer, setTimer] = useState(0);
 
   const handleSendOtp = () => {
-    if (!email) return alert("Please enter your email!");
+    if (!email) return toast.error("Enter email first!");
     setLoading(true);
 
     // Simulate API request
@@ -19,7 +20,7 @@ export default function ForgotPassword() {
       setLoading(false);
       setOtpSent(true);
       setTimer(60);
-      alert(`OTP sent to ${email}`);
+      toast.success("OTP sent successfully!");
       const interval = setInterval(() => {
         setTimer((prev) => {
           if (prev <= 1) {
@@ -62,9 +63,9 @@ export default function ForgotPassword() {
         {/* Left Side - Image Section */}
         <div className="hidden md:flex w-1/2 bg-gradient-to-br from-[#06b6d4]/60 to-[#3b82f6]/60 items-center justify-center p-6">
           <motion.img
-            src="https://illustrations.popsy.co/white/password-reset.svg"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSq43Z8epdseZzN29Tb1uC_QmDHFxtdgO-hhg&s"
             alt="Forgot Password"
-            className="w-4/5 drop-shadow-2xl"
+            className="w-4/5 drop-shadow-2xl rounded-[10px]"
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.7 }}
@@ -94,14 +95,14 @@ export default function ForgotPassword() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-12 py-3 rounded-xl bg-white/20 text-white placeholder-white/70 outline-none border border-white/30 focus:border-white/70 transition-all"
             />
-            <Mail className="absolute left-4 top-3.5 text-white/70" size={20} />
+            <Mail className="absolute left-4 top-4 text-white/70" size={20} />
             <button
               onClick={handleSendOtp}
               disabled={loading || timer > 0}
-              className="absolute right-2 top-1.5 px-3 py-1.5 text-xs bg-white/20 hover:bg-white/30 rounded-lg text-white font-semibold disabled:opacity-50 transition-all"
+              className="absolute right-2 top-1.5 px-3 py-1.5 text-xs bg-white/20 hover:bg-white/30 rounded-lg text-indigo-500  font-semibold disabled:opacity-50 transition-all"
             >
               {loading ? (
-                <Loader2 className="animate-spin" size={16} />
+                <Loader2 className="animate-spin " size={16} />
               ) : timer > 0 ? (
                 `${timer}s`
               ) : (

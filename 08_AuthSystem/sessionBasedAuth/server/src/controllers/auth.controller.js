@@ -148,7 +148,7 @@ export const forgotPassword = asyncErrorHandler(async (req, res, next) => {
   const { email } = req.body;
 
   const user = await Users.findOne({ email });
-
+  if(!user) return next(new ErrorHandler('User not found', 400));
   // now we create url for send request.
   const origin = req.headers.origin;
   const token = user.generatePasswordResetToken();
@@ -194,10 +194,13 @@ export const resetPassword = asyncErrorHandler(async (req, res, next) => {
 
 export const sendOtpForMailVerification = asyncErrorHandler(async (req, res, next) => {
   const { email } = req.body;
+  const user = await Users.findOne({ email });
+  if(!user) return next(new ErrorHandler('User not found', 400));
   // create unique otp for user.
   const otp = shortId.generate();
 
   await Otp.create({
+    userId : user?._id,
     email,
     otp,
   });
