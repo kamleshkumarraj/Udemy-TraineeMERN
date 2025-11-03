@@ -9,6 +9,7 @@ import SessionConflict from "./pages/MultipleDeviceLoggedIn";
 import Cart from "./pages/Cart";
 import ForgotPassword from "./pages/forgotPassword.page";
 import ResetPasswordPage from "./pages/ResetPassword.page";
+import ProfilePage from "./pages/Profile.page";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
         path : '/cart',
         element : <Cart />
       },
+      {
+        path : '/profile',
+        element : <ProfilePage />
+      }
 
     ],
   },

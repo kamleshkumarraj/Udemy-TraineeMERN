@@ -237,3 +237,14 @@ export const verifyOtpForMailVerification = asyncErrorHandler(async (req, res, n
 
   sendResponse(res, 'Email verified successfully !', undefined, 200);
 })
+
+export const logout = asyncErrorHandler(async (req, res, next) => {
+  const { _sid } = req.cookies;
+  if (_sid) {
+    await Session.findByIdAndDelete(_sid);
+  }
+  res.clearCookie("_sid").status(200).json({
+    success: true,
+    message: 'User logged out successfully !',
+  });
+})

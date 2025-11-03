@@ -66,6 +66,14 @@ const authApi = baseApi.injectEndpoints({
         body: payload,
       }),
     }),
+
+    logout : builder.mutation({
+      query : () => ({
+        url : '/auth/logout',
+        method : "POST",
+        credentials : "include"
+      })
+    })
   }),
 });
 
@@ -77,4 +85,5 @@ export const {
   useVerifyOtpMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useLogoutMutation
 } = authApi;

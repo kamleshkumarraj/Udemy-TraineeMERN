@@ -8,6 +8,7 @@ import {
 import {
   forgotPassword,
   login,
+  logout,
   registerUser,
   resetPassword,
   sendOtpForMailVerification,
@@ -31,3 +32,5 @@ authRouter.route('/send-otp').post(sendOtpForMailVerification);
 authRouter.route('/verify-otp').post(verifyOtpForMailVerification);
 authRouter.route('/forgot-password').post(forgotPassword);
 authRouter.route('/reset-password/:token').post(resetPassword);
+
+authRouter.route('/logout').post(logout);
