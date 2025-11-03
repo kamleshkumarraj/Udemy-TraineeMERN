@@ -8,6 +8,7 @@ import { generateEmailVerification } from '../utils/generateEmailVerification.js
 import { sendResponse } from '../utils/response.utility.js';
 import { sendMail } from '../utils/sendMail.utils.js';
 import { Session } from '../models/session.models.js';
+import { generateForgotPasswordEmail } from '../utils/email/generateEmailForgotPasswordTemplate.utils.js';
 
 export const registerUser = asyncErrorHandler(async (req, res, next) => {
   const { fullName, email, username, password, role = 'user' } = req.body;
@@ -79,7 +80,7 @@ export const login = asyncErrorHandler(async (req, res, next) => {
   const { _sid } = req.signedCookies;
 
   // first we validate email and password.
-  const user = await Users.findOne({ email }).select("+password");
+  const user = await Users.findOne({ email }).select('+password');
 
   if (!user) {
     return next(new ErrorHandler('Invalid credentials !', 400));
@@ -138,4 +139,51 @@ export const login = asyncErrorHandler(async (req, res, next) => {
   });
   res.cookie('_sid', session._id, options);
   return sendResponse(res, 'User logged in successfully !', null, 200);
+});
+
+export const forgotPassword = asyncErrorHandler(async (req, res, next) => {
+  const { email } = req.body;
+
+  const user = await Users.findOne({ email });
+
+  // now we create url for send request.
+  const origin = req.headers.origin;
+  const token = user.generatePasswordResetToken();
+  const url = `${origin}/api/v1/auth/forgot-password/${token}`;
+  const mailTemplate = generateForgotPasswordEmail(url, user?.fullName);
+
+  try {
+    await sendMail({
+      message: mailTemplate,
+      subject: 'Password reset',
+      to: user.email,
+    });
+    await user.save();
+  } catch (error) {
+    user.passwordResetToken = null;
+    user.passwordResetTokenExpiry = null;
+    await user.save();
+  }
+  sendResponse(res, 'Password reset link send successfully !', null, 200);
+});
+
+export const resetPassword = asyncErrorHandler(async (req, res, next) => {
+  const token = req.params.token;
+  const { password, confirmPassword } = req.body;
+  if (password != confirmPassword)
+    return next(
+      new ErrorHandler('Password and confirm password not match', 400),
+    );
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  const user = await Users.findOne({
+    passwordResetToken: tokenHash,
+    passwordResetTokenExpiry: { $gt: Date.now() },
+  });
+  if (!user) return next(new ErrorHandler('Invalid token', 400));
+
+  user.password = password;
+  user.passwordResetToken = null;
+  user.passwordResetTokenExpiry = null;
+  await user.save();
+  sendResponse(res, 'Password reset successfully !', null, 200);
 });
