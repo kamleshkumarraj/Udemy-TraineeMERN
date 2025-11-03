@@ -9,6 +9,9 @@ import { sendResponse } from '../utils/response.utility.js';
 import { sendMail } from '../utils/sendMail.utils.js';
 import { Session } from '../models/session.models.js';
 import { generateForgotPasswordEmail } from '../utils/email/generateEmailForgotPasswordTemplate.utils.js';
+import shortId from 'short-id'
+import { Otp } from '../models/otp.models.js';
+import { generateEmailOTPTemplate } from '../utils/email/generateEmailTemplateForOtp.utils.js';
 
 export const registerUser = asyncErrorHandler(async (req, res, next) => {
   const { fullName, email, username, password, role = 'user' } = req.body;
@@ -187,3 +190,39 @@ export const resetPassword = asyncErrorHandler(async (req, res, next) => {
   await user.save();
   sendResponse(res, 'Password reset successfully !', null, 200);
 });
+
+
+export const sendOtpForMailVerification = asyncErrorHandler(async (req, res, next) => {
+  const { email } = req.body;
+  // create unique otp for user.
+  const otp = shortId.generate();
+
+  await Otp.create({
+    email,
+    otp,
+  });
+  
+  const message = generateEmailOTPTemplate(otp, email);
+
+  try {
+    await sendMail({
+      message,
+      subject: 'Email verification',
+      to: email,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+})
+
+export const verifyOtpForMailVerification = asyncErrorHandler(async (req, res, next) => {
+  const { email, otp } = req.body;
+  const dbOtp = await Otp.findOne({ email });
+  if (!dbOtp) return next(new ErrorHandler('Invalid otp', 400));
+  
+  if(! (await dbOtp.compareOtp(otp))) return next(new ErrorHandler('Invalid otp', 400));
+  
+  await dbOtp.deleteOne();
+
+  sendResponse(res, 'Email verified successfully !', undefined, 200);
+})

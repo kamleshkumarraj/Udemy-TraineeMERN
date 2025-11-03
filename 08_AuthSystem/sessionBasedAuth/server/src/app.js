@@ -29,6 +29,12 @@ app.use(cookieParser(process.env.SECRET_KEY));
 
 // now we write basic route for checking server.
 app.get('/', (req, res) => {
+  const protocol = req.protocol;
+  const host = req.hostname;
+  const port = req.socket.localPort;
+
+  console.log(`Server is running on ${protocol}://${host}:${port}`);
+
   res.status(200).json({
     success: true,
     message: 'Welcome to our auth system',
